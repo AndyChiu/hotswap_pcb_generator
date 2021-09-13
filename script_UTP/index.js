@@ -4,7 +4,7 @@ const util = require("util")
 
 
 var kle_filename = process.argv[2] ?? "layout.json";
-var output_filename = process.argv[3] ?? "../scad/layout.scad";
+var output_filename = process.argv[3] ?? "../scad_UTP/layout.scad";
 
 try {
     var kle_json = fs.readFileSync(kle_filename, "UTF-8");
@@ -54,7 +54,7 @@ include <stabilizer_spacing.scad>
             left_border,
             right_border
         ],
-        extra_data,                              // Extra data (depending on component type)
+        extra_data,                            // Extra data (depending on component type)
         labels(4)                              //Center label, Only used to compare which key
     ]
 */
