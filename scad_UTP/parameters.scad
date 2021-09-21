@@ -23,9 +23,9 @@ use_folded_contact = false;
 utp_wire = true;
 led_hole = true;
 diode_less = true;
-choc_v2=true;
-choc_v2_compatible_v1=true;
-both_deep_channels= false;
+choc_v2 = true;
+choc_v2_compatible_v1  = true;
+both_deep_channels = false;
 
 /* Stabilizer Parameters */
 stabilizer_type = "pcb";  // [pcb, plate]
@@ -80,7 +80,7 @@ pcb_backplate_spacing = 4;
 /* MCU Parameters (Default values for Pro Micro) */
 mcu_type = "socketed";  // [bare, socketed]
 mcu_width = 18;
-mcu_length = 33;
+mcu_length = 33;    // 33, 33.5
 mcu_height = 4.25;  // Distance to top of PCB
 mcu_row_spacing = 15.24;
 mcu_row_count = 2;  // Unused
@@ -224,3 +224,7 @@ ec11_plate_cutout_size=11.8;
 //EVQWGD001
 evqwgd001_plate_cutout_size_X=16.7;
 evqwgd001_plate_cutout_size_Y=13.8;
+    
+//MCU
+//add 5 pin for Elite-C
+mcu_elite_c = true;      

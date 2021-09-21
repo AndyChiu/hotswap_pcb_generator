@@ -9,10 +9,11 @@ module switch_socket(borders=[1,1,1,1], rotate_column=false) {
     }
 }
 
-module switch_socket_base(borders=[1,1,1,1]) {
+module switch_socket_base(borders=[1 ,1,1,1]) {
     translate([h_unit/2,-v_unit/2,0]) union() {
         cube([socket_size, socket_size, pcb_thickness], center=true);
-        translate([0,0,border_z_offset * 1])
+        
+        translate([0,0,border_z_offset ])
             border(
                 [socket_size,socket_size], 
                 borders, 
@@ -224,7 +225,7 @@ module mx_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
 
                 // LED cutout
                 if (led_hole==true) {
-                    translate([0,-4*grid,pcb_thickness/2])
+                    translate([0,-4*grid,0])
                         cube([5,4,10],center=true);
                 }
             }
@@ -298,7 +299,7 @@ module mx_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
 
                 // LED cutout
                 if (led_hole==true) {
-                    translate([0,-4*grid,pcb_thickness/2])
+                    translate([0,-4*grid,0])
                         cube([5,4,10],center=true);
                 }
             }
@@ -428,7 +429,7 @@ module choc_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 
                 // LED cutout
                 if (led_hole==true) {
-                    translate([0,-5,pcb_thickness/2])
+                    translate([0,-5,0])
                         cube([5,3,10],center=true);
                 }
 
@@ -520,7 +521,7 @@ module choc_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 
                 // LED cutout
                 if (led_hole==true) {
-                        translate([0,-5,pcb_thickness/2])
+                        translate([0,-5,0])
                             cube([5,3,10],center=true);
                 }
 
@@ -624,7 +625,7 @@ module choc_v2_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 
                 // LED cutout
                 if (led_hole==true) {                
-                        translate([0,-5,pcb_thickness/2])
+                        translate([0,-5,0])
                             cube([5,3,10],center=true);
                 }
             }
@@ -670,7 +671,7 @@ module choc_v2_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 // Bottom switch pin
                 translate([5,3.8,(pcb_thickness+1)/2])
                     rotate([180+diode_pin_angle,0,0])
-                        cylinder(h=pcb_thickness+1,r=0.8);
+                        cylinder(h=pcb_thickness+1+socket_depth,r=0.8);
                 // Diode cathode cutout
 //                translate([-3.125,3.8,0]) 
 //                    cylinder(h=pcb_thickness+1,r=.7,center=true);
@@ -723,7 +724,7 @@ module choc_v2_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 
                 // LED cutout
                 if (led_hole==true) {
-                        translate([0,-5,pcb_thickness/2])
+                        translate([0,-5,0])
                             cube([5,3,10],center=true);
                 }
 
@@ -770,6 +771,6 @@ module switch_plate_cutout(thickness=plate_thickness) {
         switch_plate_cutout_footprint();
 }
 
-switch_socket();
+switch_socket(borders=[1,1,1,1]);
 
 

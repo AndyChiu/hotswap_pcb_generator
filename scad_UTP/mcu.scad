@@ -47,6 +47,27 @@ module socketed_mcu(borders=[0,0,0,0]) {
                     cylinder(h=1000,d=wire_diameter);
             }
         }
+        
+        if (mcu_elite_c) {
+            iLastRow =(0+0.5)*mcu_pin_pitch;
+    //        echo ("Last Row:",iLastRow);
+            for (pin = [0:2]) {
+                translate([(pin)*mcu_pin_pitch,iLastRow,-wire_diameter/3]) 
+                    cylinder(h=pcb_thickness,d=wire_diameter*2);
+                translate([-(pin)*mcu_pin_pitch,iLastRow,-wire_diameter/3]) 
+                    cylinder(h=pcb_thickness,d=wire_diameter*2);
+                translate([
+                        (pin)*mcu_pin_pitch,iLastRow+wire_diameter,
+                        pcb_thickness-wire_diameter/3
+                    ]) rotate([90,-180,0])
+                        cylinder(h=1000,d=wire_diameter);
+                translate([
+                        -(pin)*mcu_pin_pitch,iLastRow+wire_diameter,
+                        pcb_thickness-wire_diameter/3
+                    ]) rotate([90,-180,0])
+                        cylinder(h=1000,d=wire_diameter);
+            }
+        }
     }
 
      // Retention Tabs
@@ -99,6 +120,26 @@ module bare_mcu(borders=[0,0,0,0]) {
                     cylinder(h=1000,d=wire_diameter);
             }
         }
+        
+        if (mcu_elite_c) {
+            iLastRow =(0+0.5)*mcu_pin_pitch;
+//            echo ("Last Row:",iLastRow);
+            for (pin = [0:2]) {
+                translate([
+                        (pin)*mcu_pin_pitch,iLastRow+wire_diameter,
+                        pcb_thickness-wire_diameter/3
+                    ]) rotate([90,-180,0])
+                        cylinder(h=1000,d=wire_diameter);
+                translate([
+                        -(pin)*mcu_pin_pitch,iLastRow+wire_diameter,
+                        pcb_thickness-wire_diameter/3
+                    ]) rotate([90,-180,0])
+                        cylinder(h=1000,d=wire_diameter);
+            }
+        }
+        
+        
+        
         // MCU cutout
         translate([-mcu_width/2,0,pcb_thickness]) 
             cube([mcu_width, mcu_length,mcu_pcb_thickness+1]);
@@ -112,10 +153,12 @@ module bare_mcu(borders=[0,0,0,0]) {
             cube([mcu_connector_width,mcu_connector_length+3,pcb_thickness+1]);
         
         // Relief to let you pop the MCU out
-        translate([0,0,pcb_thickness-1])
-            cylinder(h=mcu_pcb_thickness+2,d=mcu_connector_width);
-        translate([-mcu_connector_width/2,-3,pcb_thickness-1])
-            cube([mcu_connector_width,3,mcu_pcb_thickness+2]);
+        if (mcu_elite_c==false) {
+            translate([0,0,pcb_thickness-1])
+                cylinder(h=mcu_pcb_thickness+2,d=mcu_connector_width);
+            translate([-mcu_connector_width/2,-3,pcb_thickness-1])
+                cube([mcu_connector_width,3,mcu_pcb_thickness+2]);
+        }
     }
 
     // Retention Tabs

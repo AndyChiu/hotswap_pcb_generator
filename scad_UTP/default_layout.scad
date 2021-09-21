@@ -112,3 +112,10 @@ invert_layout_flag = false;
 
 // Whether the layout is staggered-row or staggered-column
 layout_type = "column";  // [column, row]
+
+
+base_ec11_layout = [
+];
+
+base_evqwgd001_layout = [
+];
