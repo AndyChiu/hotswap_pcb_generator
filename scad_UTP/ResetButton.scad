@@ -6,19 +6,22 @@ include <utils.scad>
 // 6.6-0.2=6.4
 // 5.1-0.6=4.5
 
-RB_pin_width=0.6+wire_diameter/2;
+RB_pin_width=0.6+wire_diameter;
 RB_pin_thinness=0.2+wire_diameter;
 RB_length=6;
 RB_width=6;
 RB_high=2.7;
 RB_pin_long_spacing=4.5;
 RB_Pin_width_spacing=6.4;
+RB_holder_thinness=2;
+RB_holder_width=RB_width/2;
 
 module ResetButton_socket(borders=[1,1,1,1]) {
     difference() {
-        ResetButton_socket_base(borders);
+        #ResetButton_socket_base(borders);
         ResetButton_socket_cutout(borders);
     }
+    ResetButton_socket_hold();
 }
 
 module ResetButton_socket_base(borders=[1,1,1,1]) {
@@ -54,6 +57,26 @@ module ResetButtondsocket_cutout(borders=[1,1,1,1]) {
 
         }
 }
+
+module ResetButton_socket_hold(){
+    render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
+     // Retention Tabs
+    for (x = [-(RB_length/2)-RB_holder_thinness/2,(RB_length/2)+RB_holder_thinness/2]) {
+        translate([x,0,(pcb_thickness+1)/3]) {
+            rotate([0,0,90])
+                #cube([RB_holder_width,RB_holder_thinness,(pcb_thickness/3)+RB_high+1],center=true);
+            }
+        }
+    render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])        
+    // hold the MCU 
+    for (x = [-(RB_length/2),(RB_length/2)]) {
+        translate([x,0,RB_high+1]) {
+            rotate([90,0,0])
+                    #cylinder(h=(RB_holder_width),d=0.5,center=true);
+            }
+        }
+    }
+    
 
 module ResetButton_plate_footprint(borders=[1,1,1,1]) {
     translate([h_unit/2,-v_unit/2,0])
