@@ -11,7 +11,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "choc";  // [mx, choc]
+switch_type = "ks27";  // [mx, choc, ks27]
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -162,7 +162,8 @@ socket_size =
     ? 14
     : switch_type == "choc"
         ? 15
-        : assert(false, "switch_type is invalid");
+    : switch_type == "ks27"
+        ? 15        : assert(false, "switch_type is invalid");
 // Depth of the socket holes
 socket_depth = 3.5;
 // Thickness of the plate
@@ -171,6 +172,8 @@ plate_thickness =
     ? 1.5
     : switch_type == "choc"
         ? 1.3
+    : switch_type == "ks27"
+        ? 1.3
         : assert(false, "switch_type is invalid");
 // Size of the plate cutout
 plate_cutout_size =
@@ -178,12 +181,15 @@ plate_cutout_size =
     ? 14
     : switch_type == "choc"
         ? 13.8
-        : assert(false, "switch_type is invalid");
+    : switch_type == "ks27"
+        ? 13.8        : assert(false, "switch_type is invalid");
 // Spacing between the top of the PCB and top of the plate
 pcb_plate_spacing =
     switch_type == "mx"
     ? 5
     : switch_type == "choc"
+        ? 2.2
+    : switch_type == "ks27"
         ? 2.2
         : assert(false, "switch_type is invalid");
 
