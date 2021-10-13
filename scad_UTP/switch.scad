@@ -3,18 +3,27 @@ include <utils.scad>
 
 
 module switch_socket(borders=[1,1,1,1], rotate_column=false) {
+    //    difference() { 
+    union() {
+    translate([0,0,0])    
+//    rotate(a=-5, v=[0,0,0])
     difference() {
         switch_socket_base(borders);
         switch_socket_cutout(borders, rotate_column);
     }
+    
+//    difference() {
+//        switch_socket_base2(borders);
+//        switch_socket_cutout(borders, rotate_column);
+//    }
+}
 }
 
-module switch_socket_base(borders=[1 ,1,1,1]) {
+module switch_socket_base(borders=[1,1,1,1]) {
     translate([h_unit/2,-v_unit/2,0]) 
-    #difference()
-       union() {
+    //    difference() {
+   union() {
         cube([socket_size, socket_size, pcb_thickness], center=true);
-        
         translate([0,0,border_z_offset ])
             border(
                 [socket_size,socket_size], 
@@ -24,6 +33,18 @@ module switch_socket_base(borders=[1 ,1,1,1]) {
                 v_border_width
             );
     }
+}
+
+module switch_socket_base2(borders=[1 ,1,1,1]) {
+    translate([h_unit/2,-v_unit/2,0]) 
+        translate([0,0,border_z_offset ])
+            border(
+                [socket_size,socket_size], 
+                borders, 
+                pcb_thickness-2, 
+                h_border_width, 
+                v_border_width
+            );
 }
 
 module switch_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
@@ -756,8 +777,6 @@ module choc_v2_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
         }
 }
 
-
-
 module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
         intersection() {
@@ -765,46 +784,34 @@ module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 // Central pin
                 translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
                     cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.05);
-                // Side pins (V1)       
-                if (choc_v2_compatible_v1==true){
-                    for (x = [-5.5,5.5]) {
-                        translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
-                            cylinder(h=pcb_thickness+1+socket_depth,r=0.95);
-                    }
-                }
-                
-                // Bottom Side pin (V2)
-                translate([-5,-5.15,(pcb_thickness+1)/2])
-                    rotate([180+diode_pin_angle,0,0])
-                       cylinder(h=pcb_thickness+1+socket_depth,r=0.7);
-                
+
                 // Top switch pin
-                translate([0,5.9,pcb_thickness/2-socket_depth-socket_depth])
+                translate([-2.9,5.7,pcb_thickness/2-socket_depth-socket_depth])
                     cylinder(h=pcb_thickness+1+socket_depth,r=1);
                 // Bottom switch pin
-                translate([5,3.8,(pcb_thickness+1)/2])
+                translate([4.4,4.2,(pcb_thickness+1)/2])
                     rotate([180+diode_pin_angle,0,0])
                         cylinder(h=pcb_thickness+1,r=0.7);
                 // Diode cathode cutout
-                translate([-3.125,3.8,0]) 
+                translate([-5,3.8,0]) 
                     cylinder(h=pcb_thickness+1,r=.8,center=true);
 
                         
                 // Wire Channels
                 // Row wire
-                translate([0,5.9,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
+                translate([0,5.7,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
                     cylinder(h=unit,d=wire_diameter,center=true);
 //                #translate([5,5.9,pcb_thickness/2-wire_diameter]) rotate([0,90,0])
                     cube([pcb_thickness/1.5,wire_diameter,5],center=true);
                 
-                
+                translate([(5-wire_diameter/1.2+1.5),5.7,(pcb_thickness/2-wire_diameter/3)]) 
+                        rotate([0,90,0])
+
+                        cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                        
                 // Both Deep Channels(Row and Column)
                 if (both_deep_channels==true) {
-                translate([5-wire_diameter/1.2+1.5,5.9,(pcb_thickness/2-wire_diameter/3)]) 
-                    rotate([0,90,0])
-                        cube([pcb_thickness/1.5,wire_diameter,5],center=true);
-
-                translate([-(5-wire_diameter/1.2+1.5),5.9,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([-(5-wire_diameter/1.2+1.5),5.7,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([0,90,0])
                         cube([pcb_thickness/1.5,wire_diameter,5],center=true);
                                     
@@ -813,16 +820,16 @@ module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 // Column wire
 
                 // Deep Channel
-                translate([-3.125,-3.8-2,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([-5,-3.8-2,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
 //                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
                         cube([wire_diameter,pcb_thickness/1.5,5],center=true);
                         
-                translate([-3.125,3.8+2,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([-5,3.8+2,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
 //                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
                         cube([wire_diameter,pcb_thickness/1.5,5],center=true);
-                translate([-3.125,-3.8+0.5,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([-5,-3.8+0.5,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
                     cylinder(h=15,d=wire_diameter,center=true);
     //cube([wire_diameter,wire_diameter*1.5,15],center=true);
@@ -840,10 +847,11 @@ module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                     cube([5,2,3.5],center=true);
                 
                 // LED cutout
-                if (led_hole==true) {                
-                        translate([0,-5,0])
-                            cube([5,3,10],center=true);
+                if (led_hole==true) {
+                        translate([0.5,-5,0])
+                            cube([5.5,3,10],center=true);
                 }
+
             }
 
             translate([
