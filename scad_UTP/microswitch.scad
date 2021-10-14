@@ -66,7 +66,7 @@ module microswitch_socket_hold(){
             }
         }
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])        
-    // hold the MCU 
+    // hold the micro-switch 
     for (x = [-(microswitch_length/2),(microswitch_length/2)]) {
         translate([x,0,microswitch_high+1]) {
             rotate([90,0,0])

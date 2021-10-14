@@ -36,7 +36,7 @@ module stabilizer_pcb_ChocV2(spacing=2u) {
             switch_socket_base([1,1,1+margin*unit*mm,1+margin*unit*mm]);
         }
         switch_socket_cutout([1,1,1+margin*unit*mm,1+margin*unit*mm]);
-        stabilizer_PCB_cutout_footprint_ChocV2(spacing);
+        stabilizer_PCB_cutout_ChocV2(spacing);
     }
 }
 
@@ -45,9 +45,7 @@ module stabilizer_plate(spacing=2u, thickness=plate_thickness) {
     linear_extrude(thickness, center=true)
     difference() {
         stabilizer_plate_footprint([1,1,1,1], spacing);
-        echo ("stabilizer_plate_cutout_footprint(spacing);");
         stabilizer_plate_cutout_footprint(spacing);
-        echo ("switch_plate_cutout_footprint();");
         switch_plate_cutout_footprint();
     }
 }
@@ -134,7 +132,6 @@ module stabilizer_plate_cutout_footprint(spacing=2u) {
         plate_mount_cutout();
     }
     module plate_mount_cutout() {
-        echo ("plate_mount_cutout");
         total_width = spacing[1] + spacing[2];
         wire_cutout_width = spacing == 2u
             ? unit/2
@@ -147,7 +144,6 @@ module stabilizer_plate_cutout_footprint(spacing=2u) {
         }
     }
     stabilizer_layout(spacing) {
-        echo ("stabilizer_layout");
         if (stabilizer_type == "pcb") {
             pcb_mount_cutout();
         } else if (stabilizer_type == "plate") {
@@ -158,13 +154,12 @@ module stabilizer_plate_cutout_footprint(spacing=2u) {
     }
 }
 
-module stabilizer_PCB_cutout_footprint_ChocV2(spacing=2u) {
+module stabilizer_PCB_cutout_ChocV2(spacing=2u) {
     module pcb_mount_cutout() {
         // Same profile works for both
         plate_mount_cutout();
     }
     module plate_mount_cutout() {
-        echo ("plate_mount_cutout");
         total_width = spacing[1] + spacing[2];
         wire_cutout_width = spacing == 2u
             ? unit/2
@@ -178,7 +173,6 @@ module stabilizer_PCB_cutout_footprint_ChocV2(spacing=2u) {
         }
     }
     stabilizer_layout(spacing) {
-        echo ("stabilizer_layout");
         if (stabilizer_type == "pcb") {
             pcb_mount_cutout();
         } else if (stabilizer_type == "plate") {

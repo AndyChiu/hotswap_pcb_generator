@@ -119,3 +119,6 @@ base_ec11_layout = [
 
 base_evqwgd001_layout = [
 ];
+
+base_microswitch_layout = [
+];

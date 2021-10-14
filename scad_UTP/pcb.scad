@@ -9,8 +9,9 @@ use <standoff.scad>
 use <via.scad>
 use <ec11.scad>
 use <evqwgd001.scad>
+use <microswitch.scad>
 
-module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout, stab_layout, standoff_layout, via_layout) {
+module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout) {
     difference() {
         union() {
             layout_pattern(switch_layout) {
@@ -25,12 +26,25 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout,
             layout_pattern(evqwgd001_layout) {
                 evqwgd001_socket($borders);
             }
+            layout_pattern(microswitch_layout) {
+                microswitch_socket($borders);
+            }
             layout_pattern(trrs_layout) {
                 trrs($borders);
             }
-            layout_pattern(stab_layout) {
-                stabilizer_pcb_base($borders, $extra_data);
-            }
+            if (switch_type == "ks27") {
+                layout_pattern(stab_layout) {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data);
+                }
+            } else if (switch_type == "Choc" && choc_v2 == true) {
+                layout_pattern(stab_layout) {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data);
+                }
+            } else {
+                layout_pattern(stab_layout) {
+                    stabilizer_pcb_base($borders, $extra_data);
+                }
+            }  
             layout_pattern(standoff_layout) {
                 pcb_standoff($extra_data);
             }
@@ -38,9 +52,23 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout,
         layout_pattern(switch_layout) {
             switch_socket_cutout($borders, $extra_data);
         }
-        layout_pattern(stab_layout) {
-            stabilizer_pcb_cutout($extra_data);
+        layout_pattern(standoff_layout) {
+            pcb_standoff($extra_data);
         }
+               
+        if (switch_type == "ks27") {
+            layout_pattern(stab_layout) {
+                stabilizer_PCB_cutout_ChocV2($extra_data);
+            }
+        } else if (switch_type == "Choc" && choc_v2 == true) {
+            layout_pattern(stab_layout) {
+                stabilizer_pcb_cutout_ChocV2($extra_data);
+            }
+        } else {
+            layout_pattern(stab_layout) {
+                stabilizer_pcb_cutout($extra_data);
+            }
+        }  
         layout_pattern(standoff_layout) {
             pcb_standoff_hole($extra_data);
         }
@@ -50,4 +78,4 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout,
     }
 }
 
-pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final);
+pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final);

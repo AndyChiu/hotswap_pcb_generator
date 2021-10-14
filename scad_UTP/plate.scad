@@ -5,6 +5,7 @@ use <switch.scad>
 use <mcu.scad>
 use <ec11.scad>
 use <evqwgd001.scad>
+use <microswitch.scad>
 use <trrs.scad>
 use <stabilizer.scad>
 use <standoff.scad>
@@ -16,7 +17,7 @@ function plate_borders(borders, h_unit=1, v_unit=1) = [
     borders[3] + plate_margin/h_unit,
 ];
 
-module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout, plate_layout, stab_layout) {
+module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, plate_layout, stab_layout) {
     scale_factor = use_plate_layout_only
         ? plate_precision * 100000
         : 1;
@@ -42,6 +43,8 @@ module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, 
                                 ec11_plate_footprint($borders);
                             else if (component_type == "evqwgd001")
                                 evqwgd001_plate_footprint($borders);
+                            else if (component_type == "microswitch")
+                                microswitch_plate_footprint($borders);
                             else if (component_type == "trrs")
                                 trrs_plate_footprint($borders);
                             else if (component_type == "stab")
@@ -65,6 +68,8 @@ module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, 
                             ec11_plate_footprint($borders);
                         else if (component_type == "evqwgd001")
                             evqwgd001_plate_footprint($borders);
+                        else if (component_type == "microswitch")
+                            microswitch_plate_footprint($borders);
                         else if (component_type == "trrs")
                             trrs_plate_footprint($borders);
                         else if (component_type == "stab")
@@ -80,6 +85,9 @@ module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, 
                 layout_pattern(evqwgd001_layout) {
                     evqwgd001_plate_footprint($borders);
                 }
+                layout_pattern(microswitch_layout) {
+                    microswitch_plate_footprint($borders);
+                }
                 layout_pattern(trrs_layout) {
                     trrs_plate_footprint($borders);
                 }
@@ -91,15 +99,15 @@ module plate_footprint(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, 
     }
 }
 
-module plate_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, trrs_layout, plate_layout, stab_layout, thickness=plate_thickness, offset=0) {
+module plate_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, plate_layout, stab_layout, thickness=plate_thickness, offset=0) {
     linear_extrude(thickness, center=true, convexity=10)
-        offset(offset) plate_footprint(switch_layout, mcu_layout, ec11_layout,  evqwgd001_layout, trrs_layout, plate_layout, stab_layout);
+        offset(offset) plate_footprint(switch_layout, mcu_layout, ec11_layout,  evqwgd001_layout, microswitch_layout, trrs_layout, plate_layout, stab_layout);
 }
 
-module plate(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, trrs_layout, plate_layout, stab_layout, standoff_layout) {
+module plate(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, plate_layout, stab_layout, standoff_layout) {
     difference() {
         union() {
-            plate_base(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, trrs_layout, plate_layout, stab_layout, plate_thickness);
+            plate_base(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, plate_layout, stab_layout, plate_thickness);
             layout_pattern(standoff_layout) {
                 plate_standoff($extra_data);
             }
@@ -115,7 +123,10 @@ module plate(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, trrs_layo
         }     
         layout_pattern(evqwgd001_layout) {
             evqwgd001_plate_cutout();
-        }     
+        }
+        layout_pattern(microswitch_layout) {
+            microswitch_plate_cutout();
+        }
         layout_pattern(trrs_layout) {
             trrs_plate_cutout();
         }
@@ -128,6 +139,5 @@ module plate(switch_layout, mcu_layout, ec11_layout, evqwgd001_layout, trrs_layo
     }
 }
 
-
-plate(switch_layout_final, mcu_layout_final,ec11_layout_final ,evqwgd001_layout_final, trrs_layout_final, plate_layout_final, stab_layout_final, standoff_layout_final);
+plate(switch_layout_final, mcu_layout_final,ec11_layout_final ,evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, plate_layout_final, stab_layout_final, standoff_layout_final);
 

@@ -35,6 +35,9 @@ ec11_layout_final = invert_layout_flag
 evqwgd001_layout_final = invert_layout_flag
     ? invert_layout(set_defaults(base_evqwgd001_layout))
     : set_defaults(base_evqwgd001_layout);
+microswitch_layout_final = invert_layout_flag
+    ? invert_layout(set_defaults(base_microswitch_layout))
+    : set_defaults(base_microswitch_layout);
 
 // Moves the flat part to the top if layout is row-staggered so column wires
 // can be routed. PCB should be printed upside down in this case.
