@@ -60,7 +60,7 @@ module microswitch_socket_hold(){
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
      // Retention Tabs
     for (x = [-(microswitch_length/2)-microswitch_holder_thinness/2,(microswitch_length/2)+microswitch_holder_thinness/2]) {
-        translate([x,0,(pcb_thickness+1)/3]) {
+        translate([x*1.1,0,(pcb_thickness+1)/3]) {
             rotate([0,0,90])
                 cube([microswitch_holder_width,microswitch_holder_thinness,(pcb_thickness/3)+microswitch_high+1],center=true);
             }
@@ -68,7 +68,7 @@ module microswitch_socket_hold(){
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])        
     // hold the micro-switch 
     for (x = [-(microswitch_length/2),(microswitch_length/2)]) {
-        translate([x,0,microswitch_high+1]) {
+        translate([x*1.1,0,microswitch_high+1]) {
             rotate([90,0,0])
                     cylinder(h=(microswitch_holder_width),d=0.5,center=true);
             }
