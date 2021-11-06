@@ -11,7 +11,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "ks27";  // [mx, choc, ks27]
+switch_type = "mx_low";  // [mx, choc, ks27,mx_low]
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -22,10 +22,10 @@ use_folded_contact = false;
 // disable if wire_diameter > 1 (Only for UTP cable)
 utp_wire = true;
 led_hole = true;
-diode_less = true;
+diode_less = false;
 choc_v2 = true;
 choc_v2_compatible_v1  = true;
-both_deep_channels = false;
+both_deep_channels = true;
 
 /* Stabilizer Parameters */
 stabilizer_type = "pcb";  // [pcb, plate]
@@ -163,7 +163,10 @@ socket_size =
     : switch_type == "choc"
         ? 15
     : switch_type == "ks27"
-        ? 15        : assert(false, "switch_type is invalid");
+        ? 15
+    : switch_type == "mx_low"
+        ? 15
+    : assert(false, "switch_type is invalid");
 // Depth of the socket holes
 socket_depth = 3.5;
 // Thickness of the plate
@@ -174,7 +177,9 @@ plate_thickness =
         ? 1.3
     : switch_type == "ks27"
         ? 1.3
-        : assert(false, "switch_type is invalid");
+    : switch_type == "mx_low"
+        ? 1.3        
+    : assert(false, "switch_type is invalid");
 // Size of the plate cutout
 plate_cutout_size =
     switch_type == "mx"
@@ -182,7 +187,10 @@ plate_cutout_size =
     : switch_type == "choc"
         ? 13.8
     : switch_type == "ks27"
-        ? 13.8        : assert(false, "switch_type is invalid");
+        ? 13.8
+    : switch_type == "mx_low"
+        ? 13.8        
+    : assert(false, "switch_type is invalid");
 // Spacing between the top of the PCB and top of the plate
 pcb_plate_spacing =
     switch_type == "mx"
@@ -191,7 +199,9 @@ pcb_plate_spacing =
         ? 2.2
     : switch_type == "ks27"
         ? 2.2
-        : assert(false, "switch_type is invalid");
+    : switch_type == "mx_low"
+        ? 2.2
+    : assert(false, "switch_type is invalid");
 
 // Total assembly thickness (for reference)
 total_thickness =
