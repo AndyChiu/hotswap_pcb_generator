@@ -11,7 +11,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "mx_low";  // [mx, choc, ks27,mx_low]
+switch_type = "choc";  // [mx, choc, ks27,mx_low,romer_g]
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -22,7 +22,7 @@ use_folded_contact = false;
 // disable if wire_diameter > 1 (Only for UTP cable)
 utp_wire = true;
 led_hole = true;
-diode_less = false;
+diode_less = true;
 choc_v2 = true;
 choc_v2_compatible_v1  = true;
 both_deep_channels = true;
@@ -166,6 +166,8 @@ socket_size =
         ? 15
     : switch_type == "mx_low"
         ? 15
+    : switch_type == "romer_g"
+        ? 14
     : assert(false, "switch_type is invalid");
 // Depth of the socket holes
 socket_depth = 3.5;
@@ -179,6 +181,8 @@ plate_thickness =
         ? 1.3
     : switch_type == "mx_low"
         ? 1.3        
+    : switch_type == "romer_g"
+        ? 1.5   
     : assert(false, "switch_type is invalid");
 // Size of the plate cutout
 plate_cutout_size =
@@ -190,6 +194,8 @@ plate_cutout_size =
         ? 13.8
     : switch_type == "mx_low"
         ? 13.8        
+    : switch_type == "romer_g"
+        ? 14    
     : assert(false, "switch_type is invalid");
 // Spacing between the top of the PCB and top of the plate
 pcb_plate_spacing =
@@ -201,6 +207,8 @@ pcb_plate_spacing =
         ? 2.2
     : switch_type == "mx_low"
         ? 2.2
+    : switch_type == "romer_g"
+        ? 5
     : assert(false, "switch_type is invalid");
 
 // Total assembly thickness (for reference)

@@ -167,9 +167,10 @@ module stabilizer_PCB_cutout_ChocV2(spacing=2u) {
         translate([0,-v_unit/2,0]) {
             translate([-3.6,-6.604,-5]) cube([7.2, 12.2936,10]);
             translate([-1.524,-7.7724,-5]) cube([3.048, 2,10]);
-            translate([-1.524,5.6,-5]) cube([2.5, 1,5]);
-            translate([-4.191,-0.508,-5]) cube([4.191*2, 2.794,10]);
-            translate([-4.191,-9.55,-5]) cube([4.191*2+v_unit, 2.994,5]);
+            translate([-1.3,5.6,-4.5]) cube([2.5,1,5]);
+            translate([-4.191,0,-5]) cube([4.191*2, 2.794,10]);
+            translate([-4.191,-10.05,-5]) cube([4.191*2+v_unit, 3.794,5]);
+            translate([3,-10.05,-6]) cube([v_unit, 5.794,5]);
         }
     }
     stabilizer_layout(spacing) {

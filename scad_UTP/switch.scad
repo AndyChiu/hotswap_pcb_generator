@@ -91,7 +91,15 @@ module switch_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
         } else {
             mxlow_socket_cutout(borders, rotate_column);
         }  
-    } else {
+    } else if (switch_type == "romer_g") {
+        if (utp_wire==true && diode_less==false && wire_diameter<=1) {
+            romerg_socket_cutout_led(borders, rotate_column);
+        } else if (utp_wire==true && diode_less==true && wire_diameter<=1) {
+            romerg_socket_cutout_led_dl(borders, rotate_column);
+        } else {
+            romerg_socket_cutout(borders, rotate_column);
+        }  
+        } else {
         assert(false, "switch_type is invalid");
     }
 }
@@ -791,7 +799,7 @@ module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
             union() {
                 // Central pin
                 translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
-                    cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.05);
+                    cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.02);
 
                 // Top switch pin
                 translate([-2.9,5.7,pcb_thickness/2-socket_depth-socket_depth])
@@ -883,7 +891,7 @@ module ks27_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
             union() {
                 // Central pin
                 translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
-                    cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.05);
+                    cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.02);
                            
                 // Top switch pin
                 translate([-2.9,5.7,pcb_thickness/2-socket_depth-socket_depth])
@@ -1162,6 +1170,203 @@ module mxlow_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 }
 
             
+            }
+
+            translate([
+                h_border_width/2 * (borders[3] - borders[2]),
+                v_border_width/2 * (borders[0] - borders[1]),
+                -1
+            ]) {
+                cube([
+                    socket_size+h_border_width*(borders[2]+borders[3])+0.02,
+                    socket_size+v_border_width*(borders[0]+borders[1])+0.02,
+                    2*pcb_thickness
+                ], center=true);
+            }
+        }
+}
+
+module romerg_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
+    render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
+        intersection() {
+            union() {
+                // Central pin
+                translate([(11.6/2)-(1.5/2),0,pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                translate([-((11.6/2)-(1.5/2)),0,pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+ 
+                // Top switch pin
+                translate([-((5/2)-0.5),-(9.6/2-(0.3/2)),pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                // Bottom switch pin
+                translate([((5/2)-0.5),9.6/2-(0.3/2),(pcb_thickness+1)/2])
+                    rotate([180+diode_pin_angle,0,0])
+                        cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                // Diode cathode cutout
+                translate([4*grid,-(9.6/2-(0.3/2)),0])
+                    cylinder(h=pcb_thickness+1,r=.7,center=true);
+                // Diode cathode cutout - TO RETURN
+                translate([6*grid,-(9.6/2-(0.3/2)),0])
+                    cylinder(h=pcb_thickness+1,r=.7,center=true);
+                translate([-4*grid,-(9.6/2-(0.3/2)),0])
+                    cylinder(h=pcb_thickness+1,r=.7,center=true);                
+                // Wire Channels
+                // Row wire
+//                translate([0,6,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
+//                    #cylinder(h=unit,d=wire_diameter,center=true); 
+
+
+                translate([0,9.6/2-(0.3/2),pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
+                    cylinder(h=unit,d=wire_diameter,center=true); 
+     
+                //ROW left deep channel
+                   translate([5-wire_diameter/1.2+1.5,9.6/2-(0.3/2),(pcb_thickness/2-wire_diameter/3)]) 
+                        rotate([0,90,0])
+                            cube([pcb_thickness/1.5,wire_diameter,7],center=true);
+
+                // Both Deep Channels(Row and Column)
+                if (both_deep_channels==true) {
+ 
+                    translate([(5.5-wire_diameter/1.2),9.6/2-(0.3/2),(pcb_thickness/2-wire_diameter/3)]) 
+                            rotate([0,90,0])
+                                cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+
+                } 
+//                #translate([5,5.9,pcb_thickness/2-wire_diameter]) rotate([0,90,0])
+                    //cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                
+                // Column wire
+
+                // Deep Channels
+                translate([4,4.2+1,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
+                        cube([wire_diameter,pcb_thickness/1.5,5],center=true);
+                        
+                translate([5.5,-3.8-2,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
+                        cube([wire_diameter,pcb_thickness/1.5,4],center=true);
+                       
+                       
+//                translate([3.5,-3.8+0.5+3,(pcb_thickness/2-wire_diameter/3)]) 
+//                    rotate([90,0,rotate_column?90:0])
+//                    cylinder(h=10,d=wire_diameter,center=true);
+    //cube([wire_diameter,wire_diameter*1.5,15],center=true);
+
+                // Diode Channel
+                translate([3.125,0,pcb_thickness/2])
+                    cube([1,9,2],center=true);
+                translate([4.5,-3.5,pcb_thickness/2])
+                    cube([2,2,2],center=true);
+                translate([1,-(9.6/2-(0.3/2)),pcb_thickness/2])
+                    #cube([13,1,2],center=true);
+                translate([2,-(9.6/2-(0.3/2)),pcb_thickness/2])
+                    cube([5,2,3.5],center=true);
+                
+                // LED cutout
+                if (led_hole==true) {
+                    translate([0,0,0])
+                        cube([4,4,pcb_thickness+1+socket_depth],center=true);
+
+                }
+            }
+
+            translate([
+                h_border_width/2 * (borders[3] - borders[2]),
+                v_border_width/2 * (borders[0] - borders[1]),
+                -1
+            ]) {
+                cube([
+                    socket_size+h_border_width*(borders[2]+borders[3])+0.02,
+                    socket_size+v_border_width*(borders[0]+borders[1])+0.02,
+                    2*pcb_thickness
+                ], center=true);
+            }
+        }
+}
+
+
+module romerg_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
+    render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
+        intersection() {
+            union() {
+                // Central pin
+                translate([(11.6/2)-(1.5/2),0,pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                translate([-((11.6/2)-(1.5/2)),0,pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+ 
+                // Top switch pin
+                translate([-((5/2)-0.5),-(9.6/2-(0.3/2)),pcb_thickness/2-socket_depth-socket_depth])
+                    cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                // Bottom switch pin
+                translate([((5/2)-0.5),9.6/2-(0.3/2),(pcb_thickness+1)/2])
+                    rotate([180+diode_pin_angle,0,0])
+                        cylinder(h=pcb_thickness+1+socket_depth,r=1);
+                // Diode cathode cutout
+//                translate([-3.125,3.8,0]) 
+//                    cylinder(h=pcb_thickness+1,r=.7,center=true);
+
+                // Wire Channels
+                // Row wire
+//                translate([0,6,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
+//                    #cylinder(h=unit,d=wire_diameter,center=true); 
+
+
+                translate([0,9.6/2-(0.3/2),pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
+                    cylinder(h=unit,d=wire_diameter,center=true); 
+     
+                //ROW left deep channel
+                   translate([5-wire_diameter/1.2+1.5,9.6/2-(0.3/2),(pcb_thickness/2-wire_diameter/3)]) 
+                        rotate([0,90,0])
+                            cube([pcb_thickness/1.5,wire_diameter,7],center=true);
+
+                // Both Deep Channels(Row and Column)
+                if (both_deep_channels==true) {
+ 
+                    translate([-(4.5-wire_diameter/1.2),9.6/2-(0.3/2),(pcb_thickness/2-wire_diameter/3)]) 
+                            rotate([0,90,0])
+                                cube([pcb_thickness/1.5,wire_diameter,7],center=true);
+
+                } 
+//                #translate([5,5.9,pcb_thickness/2-wire_diameter]) rotate([0,90,0])
+                    //cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                
+                // Column wire
+
+                // Deep Channels
+                translate([-(5/2)-0.5,4.2+1,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
+                        cube([wire_diameter,pcb_thickness/1.5,5],center=true);
+                        
+                translate([-((5/2)-0.5),-3.8-2,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
+                        cube([wire_diameter,pcb_thickness/1.5,4],center=true);
+                       
+                       
+                translate([-(5/2)-0.5,-3.8+0.5+3,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+                    cylinder(h=10,d=wire_diameter,center=true);
+    //cube([wire_diameter,wire_diameter*1.5,15],center=true);
+
+                // Diode Channel
+//                translate([-3.125,0,pcb_thickness/2])
+//                    cube([1,7.6,2],center=true);
+//                translate([.75-2,3.8,pcb_thickness/2])
+//                    cube([8.5+4,1,2],center=true);
+//                translate([1,3.75,pcb_thickness/2])
+//                    cube([5,2,3.5],center=true);
+                
+                // LED cutout
+                if (led_hole==true) {
+                    translate([0,0,0])
+                        cube([4,4,pcb_thickness+1+socket_depth],center=true);
+
+                }
             }
 
             translate([
