@@ -11,7 +11,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "choc";  // [mx, choc, ks27,mx_low,romer_g]
+switch_type = "choc";  // [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g]
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -23,7 +23,6 @@ use_folded_contact = false;
 utp_wire = true;
 led_hole = true;
 diode_less = true;
-choc_v2 = true;
 choc_v2_compatible_v1  = true;
 both_deep_channels = true;
 
@@ -80,7 +79,7 @@ pcb_backplate_spacing = 4;
 /* MCU Parameters (Default values for Pro Micro) */
 mcu_type = "socketed";  // [bare, socketed]
 mcu_width = 18;
-mcu_length = 33;    // 33, 33.5
+mcu_length = 35;    // Normal:33, 33.5, Clone Type-C: 35,36
 mcu_height = 4.25;  // Distance to top of PCB
 mcu_row_spacing = 15.24;
 mcu_row_count = 2;  // Unused
@@ -149,11 +148,11 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance
-unit = 19.05;
+unit = 16; //(19.05)
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = unit;
+h_unit = 16;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = unit;
+v_unit = 16;
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -162,6 +161,10 @@ socket_size =
     ? 14
     : switch_type == "choc"
         ? 15
+    : switch_type == "chocV2"
+        ? 15
+    : switch_type == "chocMini"
+        ? 14
     : switch_type == "ks27"
         ? 15
     : switch_type == "mx_low"
@@ -177,6 +180,10 @@ plate_thickness =
     ? 1.5
     : switch_type == "choc"
         ? 1.3
+    : switch_type == "chocV2"
+        ? 1.3
+    : switch_type == "chocMini"
+        ? 1.3
     : switch_type == "ks27"
         ? 1.3
     : switch_type == "mx_low"
@@ -190,6 +197,10 @@ plate_cutout_size =
     ? 14
     : switch_type == "choc"
         ? 13.8
+    : switch_type == "chocV2"
+        ? 13.8
+    : switch_type == "chocMini"
+        ? 13.4
     : switch_type == "ks27"
         ? 13.8
     : switch_type == "mx_low"
@@ -202,6 +213,10 @@ pcb_plate_spacing =
     switch_type == "mx"
     ? 5
     : switch_type == "choc"
+        ? 2.2
+    : switch_type == "chocV2"
+        ? 2.2
+    : switch_type == "chocMini"
         ? 2.2
     : switch_type == "ks27"
         ? 2.2
@@ -242,13 +257,13 @@ function slice(array, bounds) = [
 ];
 
 // Andy Add:
-//EC11
-ec11_plate_cutout_size=11.8;
 
-//EVQWGD001
-evqwgd001_plate_cutout_size_X=16.7;
-evqwgd001_plate_cutout_size_Y=13.8;
-    
+  
 //MCU
 //add 5 pin for Elite-C
-mcu_elite_c = true;      
+mcu_elite_c = true;
+mcu_base_thickness =10-pcb_thickness;
+mcu_wire_channels_length=10;
+
+//TRRS
+trrs_wire_channels_length=16;

@@ -1,6 +1,11 @@
 include <parameters.scad>
 include <utils.scad>
 
+//EC11
+ec11_socket_size = 14;
+ec11_plate_cutout_size=11.8;
+ec11_pin_lenght=3.5;
+ec11_base_add_thickness= ec11_pin_lenght-(pcb_thickness-2);
 
 module ec11_socket(borders=[1,1,1,1], rotate_column=false) {
     difference() {
@@ -10,17 +15,18 @@ module ec11_socket(borders=[1,1,1,1], rotate_column=false) {
 }
 
 module ec11_socket_base(borders=[1,1,1,1]) {
-    translate([h_unit/2,-v_unit/2,0]) union() {
-        cube([socket_size, socket_size, 0], center=true);
-        translate([0,0,border_z_offset * 1])
+    translate([h_unit/2,-v_unit/2,ec11_base_add_thickness/2]) {
+        cube([ec11_socket_size, ec11_socket_size, ec11_base_add_thickness], center=true);
+        }
+    translate([h_unit/2,-v_unit/2,border_z_offset * 1])
             border(
-                [socket_size,socket_size], 
+                [ec11_socket_size,ec11_socket_size], 
                 borders, 
                 pcb_thickness-2, 
-                h_border_width, 
-                v_border_width
+                h_border_width+3, 
+                v_border_width+3
             );
-    }
+
 }
 
 module ec11_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
@@ -46,7 +52,7 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                 //寬度1.6改成1,不然太寬
                 for (x = [-6,6]) {
                     translate([x,0,pcb_thickness/2-socket_depth])
-                        cube([1,2.6,pcb_thickness+1+socket_depth],true);
+                        cube([1,2.5,pcb_thickness+1+socket_depth],true);
                         
                 }
                 
@@ -61,16 +67,21 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                         
                     translate([x,7.5,(pcb_thickness+1)/2])
                         rotate([180,0,0])
-                            cylinder(h=pcb_thickness+1,r=1);
+                            cylinder(h=pcb_thickness+1,r=0.8);
+                   
                 }
                 for (x = [-2.5,0,2.5]) {
                         
                     translate([x,-7.5,(pcb_thickness+1)/2])
                         rotate([180,0,0])
-                            cylinder(h=pcb_thickness+1,r=1);
-                        
+                            cylinder(h=pcb_thickness+1,r=0.8);
+                    translate([x,0,wire_diameter/2+ec11_base_add_thickness-wire_diameter])
+                        cube([wire_diameter,ec11_socket_size,wire_diameter],true);                   
                 }
-
+                for (y = [-4.5,-2.5,2.5,4.5]) {
+                    translate([0,y,wire_diameter/2+ec11_base_add_thickness-wire_diameter])
+                        cube([ec11_socket_size,wire_diameter,wire_diameter],true);                   
+                }
 
             }
 

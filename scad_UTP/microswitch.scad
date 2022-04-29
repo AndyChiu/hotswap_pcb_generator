@@ -6,13 +6,16 @@ include <utils.scad>
 
 microswitch_pin_width=0.6+wire_diameter;
 microswitch_pin_thinness=0.2+wire_diameter;
+microswitch_pin_length=4.5;
+microswitch_Base_add_thickness = microswitch_pin_length-(pcb_thickness-2);
+
 microswitch_length=6;
 microswitch_width=6;
 microswitch_high=2.7;
 microswitch_pin_long_spacing=4.5;
 microswitch_Pin_width_spacing=6.5;
 microswitch_holder_thinness=2;
-microswitch_holder_width=microswitch_width/2;
+microswitch_holder_width=microswitch_width/3*2;
 
 module microswitch_socket(borders=[1,1,1,1]) {
     difference() {
@@ -24,10 +27,10 @@ module microswitch_socket(borders=[1,1,1,1]) {
 
 module microswitch_socket_base(borders=[1,1,1,1]) {
     translate([h_unit/2,-v_unit/2,0]) union() {
-        cube([microswitch_length+2, microswitch_width+2, 0], center=true);
+        cube([microswitch_length+4, microswitch_width+4, microswitch_Base_add_thickness], center=true);
         translate([0,0,border_z_offset * 1])
             border(
-                [microswitch_length+2, microswitch_width+2], 
+                [microswitch_length+3, microswitch_width+3], 
                 borders, 
                 pcb_thickness-2, 
                 h_border_width, 
@@ -47,7 +50,7 @@ module microswitchdsocket_cutout(borders=[1,1,1,1]) {
                 for (x = [-microswitch_pin_long_spacing/2,microswitch_pin_long_spacing/2]) {
                     for (y = [-microswitch_Pin_width_spacing/2,microswitch_Pin_width_spacing/2]) {
                     translate([x,y,pcb_thickness/2-socket_depth])
-                        cube([microswitch_pin_width,microswitch_pin_thinness,pcb_thickness+10+socket_depth],true);
+                        cube([microswitch_pin_width,microswitch_pin_thinness,pcb_thickness+1+socket_depth],true);
                         
                 }
             }            
@@ -60,15 +63,15 @@ module microswitch_socket_hold(){
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
      // Retention Tabs
     for (x = [-(microswitch_length/2)-microswitch_holder_thinness/2,(microswitch_length/2)+microswitch_holder_thinness/2]) {
-        translate([x*1.1,0,(pcb_thickness+1)/3]) {
+        translate([x,0,(microswitch_Base_add_thickness+pcb_thickness-2)/2]) {
             rotate([0,0,90])
-                cube([microswitch_holder_width,microswitch_holder_thinness,(pcb_thickness/3)+microswitch_high+1],center=true);
+                cube([microswitch_holder_width,microswitch_holder_thinness,(pcb_thickness/2)+microswitch_high+0.5+microswitch_Base_add_thickness/2],center=true);
             }
         }
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])        
     // hold the micro-switch 
     for (x = [-(microswitch_length/2),(microswitch_length/2)]) {
-        translate([x*1.1,0,microswitch_high+1]) {
+        translate([x,0,microswitch_high+microswitch_Base_add_thickness-0.1]) {
             rotate([90,0,0])
                     cylinder(h=(microswitch_holder_width),d=0.5,center=true);
             }
