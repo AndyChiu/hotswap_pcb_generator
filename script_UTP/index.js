@@ -15,11 +15,12 @@ try {
 var keyboard = kle.Serial.parse(kle_json);
 
 //key.labels[4]
-
+//,"&quot" + key.labels[4] + "&quot"
+//"//" + key.labels[4] + " " + 
 var formatted_keys = keyboard.keys.map(
     key => {
         let side_border = ((key.width-1)/2);
-        return  [
+        return  ["//" + key.labels[4] + "aaaaa",
             [
                 [key.x, key.y],
                 key.width,
@@ -31,7 +32,7 @@ var formatted_keys = keyboard.keys.map(
                 side_border ? "1+" + side_border.toString() + "*unit*mm" : 1,
                 side_border ? "1+" + side_border.toString() + "*unit*mm" : 1,
             ],
-            false,"&quot" + key.labels[4] + "&quot"
+            [false,"switch_type"]
         ];
     }
 )
@@ -42,7 +43,7 @@ include <stabilizer_spacing.scad>
 
 /* [Layout Values] */
 /* Layout Format (each key):
-    [
+    [//labels(4)                                // Center label, Only used for marking keys
         [                                       // Location Data
             [x_location, y_location],
             key_size,
@@ -68,6 +69,8 @@ file_content += formatted_keys.reduce(
 );
 
 file_content =file_content.replace(/&quot/g, "\"")
+file_content =file_content.replace(/aaaaa,/g, "\n")
+
 	
 file_content +=
 `];
@@ -98,17 +101,22 @@ use_plate_layout_only = false;
 //     (extra_data = [standoff_integration_override, standoff_attachment_override])
 base_standoff_layout = [];
 
+// EC11 Position(s)
+base_ec11_layout = [];
+
+// EVQWGD001 Position(s)
+base_evqwgd001_layout = [];
+
+//Microswitch (Reset button)
+base_microswitch_layout = [];
+
 // Whether to flip the layout
 invert_layout_flag = false;
 
 // Whether the layout is staggered-row or staggered-column
 layout_type = "column";  // [column, row]
 
-// EC11 Position(s)
-base_ec11_layout = [];
 
-// EVQWGD001 Position(s)
-base_evqwgd001_layout = [];
 `;
 
 try {

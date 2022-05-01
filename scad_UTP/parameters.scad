@@ -148,11 +148,11 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance
-unit = 16; //(19.05)
+unit = 19.05; //(19.05)
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 16;
+h_unit = 19.05;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 16;
+v_unit = 19.05;
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -261,7 +261,7 @@ function slice(array, bounds) = [
   
 //MCU
 //add 5 pin for Elite-C
-mcu_elite_c = true;
+mcu_elite_c = false;
 mcu_base_thickness =10-pcb_thickness;
 mcu_wire_channels_length=10;
 

@@ -533,7 +533,7 @@ module choc_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 // Wire Channels
                 // Row wire
                 translate([0,5.9,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
-                    #cylinder(h=unit,d=wire_diameter,center=true); 
+                    cylinder(h=unit,d=wire_diameter,center=true); 
                 //h=unit or row_cutout_length
                 
                 // Add deep chnnels

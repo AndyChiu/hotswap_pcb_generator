@@ -50,7 +50,7 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_
             }
         }
         layout_pattern(switch_layout) {
-            switch_socket_cutout($borders, $extra_data);
+            switch_socket_cutout($borders, $extra_data[0], $extra_data[1]);
         }
         layout_pattern(standoff_layout) {
             pcb_standoff($extra_data);
