@@ -44,7 +44,7 @@ module microswitch_socket_cutout(borders=[1,1,1,1]) {
 }
 
 module microswitchdsocket_cutout(borders=[1,1,1,1]) {
-    render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
+    translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
         intersection() {
             union() {
                 for (x = [-microswitch_pin_long_spacing/2,microswitch_pin_long_spacing/2]) {
@@ -70,14 +70,15 @@ module microswitch_socket_hold(){
         }
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])        
     // hold the micro-switch 
-    for (x = [-(microswitch_length/2),(microswitch_length/2)]) {
+    if (microswitch_hold_bar == true) {
+        for (x = [-(microswitch_length/2),(microswitch_length/2)]) {
         translate([x,0,microswitch_high+microswitch_Base_add_thickness-0.1]) {
             rotate([90,0,0])
-                    cylinder(h=(microswitch_holder_width),d=0.5,center=true);
+                    cylinder(h=(microswitch_holder_width),d=0.4,center=true);
             }
         }
     }
-    
+}
 
 module microswitch_plate_footprint(borders=[1,1,1,1]) {
     translate([h_unit/2,-v_unit/2,0])

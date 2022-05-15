@@ -12,8 +12,9 @@ module mcu(borders=[0,0,0,0]) {
             if (mcu_type == "bare") {
                 bare_mcu(invert_borders(borders,layout_type == "row"));
             } else if (mcu_type == "socketed") {
-                socketed_mcu2(invert_borders(borders,layout_type == "row"));
-            } else {
+                socketed_mcu(invert_borders(borders,layout_type == "row"));
+            } else if (mcu_type == "socketed2") {
+                socketed_mcu2(invert_borders(borders,layout_type == "row"));            } else {
                 assert(false, "mcu_type is invalid");
             }
     }
@@ -121,17 +122,17 @@ module socketed_mcu2(borders=[0,0,0,0]) {
         // Wire Channels
         for (row = [-1,1]) {
             for (pin = [0:mcu_pin_count/2-1]) {
-                translate([row*mcu_row_spacing/2,(pin+0.5)*mcu_pin_pitch,-wire_diameter/3]) 
-                    cylinder(h=mcu_base_thickness-wire_diameter/2,d=wire_diameter*1.5);
+                translate([row*mcu_row_spacing/2,(pin+0.5)*mcu_pin_pitch,0]) 
+                    cylinder(h=mcu_base_thickness,d=wire_diameter*1.5);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    (pin+0.5)*mcu_pin_pitch,
+                    (pin+0.35)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    (pin+0.5)*mcu_pin_pitch,
+                    (pin+0.35)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2-wire_diameter*2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);                
@@ -174,21 +175,30 @@ module socketed_mcu2(borders=[0,0,0,0]) {
 
      // Retention Tabs
     for (x = [-1,1]) {
-        translate([x*(mcu_width+mcu_connector_width)/4,0,(mcu_base_thickness+mcu_height+1)/2]) {
+        translate([x*(mcu_width+mcu_connector_width)/3.65,0,(mcu_base_thickness+mcu_height+1)/2]) {
             for (y = [-1,mcu_length+1]) {
                 translate([0,y,0])
-                    cube(
-                        [(mcu_width-mcu_connector_width)/2,2,mcu_base_thickness+mcu_height+1],
+                    if (mcu_hold_the_mcu) {
+                        cube(
+                            [(mcu_width-mcu_connector_width),2,mcu_base_thickness+mcu_height+1],
+                            center=true
+                        );
+                    } else {
+                        cube(
+                        [(mcu_width-mcu_connector_width),2,mcu_base_thickness+mcu_height-2],
                         center=true
                     );
+                        }
             }
         }
     // hold the MCU 
-        translate([x*(mcu_width+mcu_connector_width)/4,0,mcu_base_thickness+mcu_height+0.5]) {
-            rotate([0,90,0]) {
-                for (y = [0,mcu_length]) {
-                translate([0,y,0]) 
-                    cylinder(h=(mcu_width-mcu_connector_width)/2,d=0.5,center=true);
+        if (mcu_hold_the_mcu) {
+            translate([x*(mcu_width+mcu_connector_width)/4,0,mcu_base_thickness+mcu_height+0.5]) {
+                rotate([0,90,0]) {
+                    for (y = [0,mcu_length]) {
+                    translate([0,y,0]) 
+                        cylinder(h=(mcu_width-mcu_connector_width)/2,d=0.5,center=true);
+                    }
                 }
             }
         }

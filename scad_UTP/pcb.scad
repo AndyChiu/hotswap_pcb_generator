@@ -15,7 +15,11 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_
     difference() {
         union() {
             layout_pattern(switch_layout) {
-                switch_socket_base($borders);
+                if ($extra_data[1]=="chocMini") {
+                    switch_socket_base1($borders);
+                } else {
+                    switch_socket_base($borders);
+                }
             }
             layout_pattern(mcu_layout) {
                 mcu($borders);

@@ -8,7 +8,11 @@ module switch_socket(borders=[1,1,1,1], rotate_column=false,use_switch_type=swit
     translate([0,0,0])    
 //    rotate(a=-5, v=[0,0,0])
     difference() {
-        switch_socket_base(borders);
+        if (use_switch_type=="chocMini") {
+            switch_socket_base1(borders);
+        } else {
+            switch_socket_base(borders);
+        }
         switch_socket_cutout(borders, rotate_column,use_switch_type);
     }
     
@@ -24,6 +28,22 @@ module switch_socket_base(borders=[1,1,1,1]) {
     //    difference() {
    union() {
         cube([socket_size, socket_size, pcb_thickness], center=true);
+        translate([0,0,border_z_offset ])
+            border(
+                [socket_size,socket_size], 
+                borders, 
+                pcb_thickness-2, 
+                h_border_width, 
+                v_border_width
+            );
+    }
+}
+
+module switch_socket_base1(borders=[1,1,1,1]) {
+    translate([h_unit/2,-v_unit/2,0]) 
+    //    difference() {
+   union() {
+        cube([socket_size, socket_size, pcb_thickness-2], center=true);
         translate([0,0,border_z_offset ])
             border(
                 [socket_size,socket_size], 
@@ -385,7 +405,7 @@ module choc_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
                 // Side pins
                 for (x = [-5.5,5.5]) {
                     translate([x,0,pcb_thickness/2-socket_depth])
-                        cylinder(h=pcb_thickness+1,r=1.05);
+                        cylinder(h=pcb_thickness+1,d=1.75);
                 }
                 // Top switch pin
                 translate([0,5.9,pcb_thickness/2-socket_depth])
@@ -441,7 +461,7 @@ module choc_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 // Side pins
                 for (x = [-5.5,5.5]) {
                     translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
-                        cylinder(h=pcb_thickness+1+socket_depth,r=1.05);
+                        cylinder(h=pcb_thickness+1+socket_depth,d=1.75);
                 }
                 // Top switch pin
                 translate([0,5.9,pcb_thickness/2-socket_depth-socket_depth])
@@ -517,7 +537,7 @@ module choc_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 // Side pins
                 for (x = [-5.5,5.5]) {
                     translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
-                        cylinder(h=pcb_thickness+1+socket_depth,r=1.05);
+                        cylinder(h=pcb_thickness+1+socket_depth,d=1.75);
                 }
                 // Top switch pin
                 translate([0,5.9,pcb_thickness/2-socket_depth-socket_depth])
@@ -629,32 +649,33 @@ module chocMini_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
 
                 // Wire Channels
                 // Row wire
-                translate([-unit/5,5.3,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
-                    cylinder(h=unit/2-1,d=wire_diameter,center=true); 
-                translate([unit/4,4.3,pcb_thickness/2-wire_diameter/3]) rotate([12,90,0])
-                    cylinder(h=unit/2,d=wire_diameter,center=true); 
+//                translate([-unit/5,5.3,(pcb_thickness-2)/2-wire_diameter/3]) rotate([0,90,0])
+//                    cylinder(h=unit/2-1,d=wire_diameter,center=true); 
+//                translate([unit/4,4.6,(pcb_thickness-2)/2-wire_diameter/3]) rotate([12,90,0])
+//                    cylinder(h=unit/2,d=wire_diameter,center=true); 
                     
                 // Add deep chnnels
-                translate([-5.3,5.3,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([-3.8,5.3,((pcb_thickness-2)/2-wire_diameter/3)]) 
                     rotate([0,90,0])
-                        cube([pcb_thickness/1.5,wire_diameter,5],center=true);
-                translate([5.3,4.3,(pcb_thickness/2-wire_diameter/3)]) 
+                        cube([pcb_thickness/1.5,wire_diameter,8],center=true);
+                translate([3.7,4.5,((pcb_thickness-2)/2-wire_diameter/3)]) 
                     rotate([12,90,0])
-                        cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                        cube([pcb_thickness/1.5,wire_diameter,8],center=true);
 
                 // Column wire
-                translate([6.1,-2,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([6.1,-2,((pcb_thickness-2)/2-wire_diameter/2)]) 
                     rotate([90,0,rotate_column?90:0])
-                    cylinder(h=12,d=wire_diameter,center=true);
+                    //cylinder(h=12,d=wire_diameter,center=true);
+                    cube([wire_diameter,wire_diameter,13],center=true);
                 // Add deep Channels
-                translate([4.5,5.8,(pcb_thickness/2-wire_diameter/2)]) 
+                translate([4.5,6.8,((pcb_thickness-2)/2-wire_diameter/2)]) 
                     rotate([90,0,rotate_column?90:0])
-                    cube([wire_diameter,wire_diameter,3.5],center=true);
+                    cube([wire_diameter,wire_diameter,4.5],center=true);
                 
                 // LED cutout
                 if (led_hole==true) {
                         translate([0,-4,0])
-                            cube([5.5,6,10],center=true);
+                            cube([5.5,4,10],center=true);
                 }
 
             
@@ -685,7 +706,7 @@ module choc_v2_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 if (choc_v2_compatible_v1==true){
                     for (x = [-5.5,5.5]) {
                         translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
-                            cylinder(h=pcb_thickness+1+socket_depth,r=0.95);
+                            cylinder(h=pcb_thickness+1+socket_depth,d=1.75);
                     }
                 }
                 
@@ -788,7 +809,7 @@ module choc_v2_socket_cutout_led_dl(borders=[1,1,1,1], rotate_column=false) {
                 if (choc_v2_compatible_v1==true){
                     for (x = [-5.5,5.5]) {
                         translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
-                            cylinder(h=pcb_thickness+1+socket_depth,r=0.95);
+                            cylinder(h=pcb_thickness+1+socket_depth,d=1.75);
                     }
                 }
                 
@@ -1492,6 +1513,7 @@ module switch_plate_cutout(thickness=plate_thickness) {
     linear_extrude(thickness+1, center=true)
         switch_plate_cutout_footprint();
 }
+
 
 translate([h_unit*1,-v_unit*1,0]){
     switch_socket(borders=[1,1,1,1],use_switch_type="choc");

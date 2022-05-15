@@ -77,7 +77,7 @@ pcb_backplate_spacing = 4;
 
 
 /* MCU Parameters (Default values for Pro Micro) */
-mcu_type = "socketed";  // [bare, socketed]
+mcu_type = "socketed2";  // [bare, socketed, socketed2]
 mcu_width = 18;
 mcu_length = 35;    // Normal:33, 33.5, Clone Type-C: 35,36
 mcu_height = 4.25;  // Distance to top of PCB
@@ -147,12 +147,12 @@ $fn=12;
 
 
 /* Advanced Parameters (related to switch size) */
-// Switch spacing distance
-unit = 19.05; //(19.05)
+// Switch spacing distance (19.05mm for MX keycaps,18mm for choc)
+unit = 19.05;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 19.05;
+h_unit = unit;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 19.05;
+v_unit = unit;
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -262,8 +262,12 @@ function slice(array, bounds) = [
 //MCU
 //add 5 pin for Elite-C
 mcu_elite_c = false;
-mcu_base_thickness =10-pcb_thickness;
-mcu_wire_channels_length=10;
+mcu_base_thickness = 10-pcb_thickness;
+mcu_wire_channels_length = 10;
+mcu_hold_the_mcu = false;
 
 //TRRS
-trrs_wire_channels_length=16;
+trrs_wire_channels_length = 16;
+    
+//Microswitch (reset button)
+microswitch_hold_bar = false;
