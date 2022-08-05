@@ -1,0 +1,31 @@
+mcu_name = "Pico_RP2040";
+mcu_width = 23.1;
+mcu_length = 53.34;    // Normal:33, 33.5, Clone Type-C: 35,36
+mcu_height = 4.25;  // Distance to top of PCB
+mcu_row_spacing = 17.78;
+mcu_row_count = 2;  // Unused
+mcu_pin_count = 40;
+mcu_pin_pitch = 2.54;
+mcu_pin_offset = 2;  // Offset from the rear of the PCB
+mcu_connector_width = 13;  // Width of the connector (for plate cutout)
+mcu_connector_length = 4;  // Distance the connector extends onto the MCU (for plate cutout)
+mcu_connector_height = 8;  // Height of the plug housing
+mcu_connector_offset = 2; // Vertical offset of plug center from PCB center
+mcu_pcb_thickness = 1.6;
+mcu_socket_width = mcu_width;
+mcu_socket_length = mcu_length+4;
+expose_mcu = true;
+grid_size = 8;
+grid_spacing = 1.6;
+
+// Andy Add:
+mcu_base_thickness = 10-pcb_thickness;
+mcu_wire_channels_length = 13;
+mcu_center_cube_cut_width = mcu_socket_width-mcu_wire_channels_length+4;
+mcu_hold_the_mcu = true;
+mcu_RetentionTabs = true;
+mcu_RetentionTabs_length = 5;
+mcu_RetentionTabs_width = 2;
+mcu_RetentionTabs_x = (mcu_width+mcu_connector_width)/4;
+mcu_RetentionTabs_y1 = 0; //Offset RetentionTabs y1
+mcu_RetentionTabs_y2 = 1; //Offset RetentionTabs y1
