@@ -11,7 +11,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "choc";  // [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g]
+switch_type = "choc";  // [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g, redragon_low]
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -76,27 +76,9 @@ backplate_case_flange = 1;
 pcb_backplate_spacing = 4;
 
 
-/* MCU Parameters (Default values for Pro Micro) */
+/* MCU Parameters */
+include <parameters_mcu_Pico_RP2040.scad> // ProMicro,ProMicro_C, Elite_C, Pico_RP2040
 mcu_type = "socketed2";  // [bare, socketed, socketed2]
-mcu_width = 18;
-mcu_length = 35;    // Normal:33, 33.5, Clone Type-C: 35,36
-mcu_height = 4.25;  // Distance to top of PCB
-mcu_row_spacing = 15.24;
-mcu_row_count = 2;  // Unused
-mcu_pin_count = 24;
-mcu_pin_pitch = 2.54;
-mcu_pin_offset = 0;  // Offset from the rear of the PCB
-mcu_connector_width = 13;  // Width of the connector (for plate cutout)
-mcu_connector_length = 4;  // Distance the connector extends onto the MCU (for plate cutout)
-mcu_connector_height = 8;  // Height of the plug housing
-mcu_connector_offset = 2; // Vertical offset of plug center from PCB center
-mcu_pcb_thickness = 1.6;
-mcu_socket_width = mcu_width+4;
-mcu_socket_length = mcu_length+4;
-expose_mcu = true;
-grid_size = 8;
-grid_spacing = 1.6;
-
 
 /* TRRS Socket Parameters */
 // add * 1.1
@@ -147,8 +129,8 @@ $fn=12;
 
 
 /* Advanced Parameters (related to switch size) */
-// Switch spacing distance (19.05mm for MX keycaps,18mm for choc)
-unit = 19.05;
+// Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
+unit = 17.5;
 // Horizontal unit size (18mm for choc keycaps)
 h_unit = unit;
 // Vertical unit size (17mm for choc keycaps)
@@ -169,6 +151,8 @@ socket_size =
         ? 15
     : switch_type == "mx_low"
         ? 15
+    : switch_type == "redragon_low"
+        ? 15
     : switch_type == "romer_g"
         ? 14
     : assert(false, "switch_type is invalid");
@@ -188,6 +172,8 @@ plate_thickness =
         ? 1.3
     : switch_type == "mx_low"
         ? 1.3        
+    : switch_type == "redragon_low"
+        ? 1.3        
     : switch_type == "romer_g"
         ? 1.5   
     : assert(false, "switch_type is invalid");
@@ -205,6 +191,8 @@ plate_cutout_size =
         ? 13.8
     : switch_type == "mx_low"
         ? 13.8        
+    : switch_type == "redragon_low"
+        ? 13.8        
     : switch_type == "romer_g"
         ? 14    
     : assert(false, "switch_type is invalid");
@@ -221,6 +209,8 @@ pcb_plate_spacing =
     : switch_type == "ks27"
         ? 2.2
     : switch_type == "mx_low"
+        ? 2.2
+    : switch_type == "redragon_low"
         ? 2.2
     : switch_type == "romer_g"
         ? 5
@@ -257,14 +247,6 @@ function slice(array, bounds) = [
 ];
 
 // Andy Add:
-
-  
-//MCU
-//add 5 pin for Elite-C
-mcu_elite_c = false;
-mcu_base_thickness = 10-pcb_thickness;
-mcu_wire_channels_length = 10;
-mcu_hold_the_mcu = false;
 
 //TRRS
 trrs_wire_channels_length = 16;

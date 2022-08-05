@@ -49,7 +49,7 @@ module socketed_mcu(borders=[0,0,0,0]) {
             }
         }
         
-        if (mcu_elite_c) {
+        if (mcu_name=="Elite_C") {
             iLastRow =(0+0.5)*mcu_pin_pitch;
     //        echo ("Last Row:",iLastRow);
             for (pin = [0:2]) {
@@ -110,36 +110,36 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                 );
             }
         
-        
-            if (mcu_elite_c) {
+        //Center cube cut
+        if (mcu_name=="Elite_C") {
                 translate([-(mcu_socket_width)/2+mcu_wire_channels_length/2,mcu_wire_channels_length/2-2,pcb_thickness-2]) 
-                cube([mcu_socket_width-mcu_wire_channels_length,mcu_socket_length,pcb_thickness]);
+                cube([mcu_center_cube_cut_width,mcu_socket_length,pcb_thickness]);
             } else {
-                translate([-(mcu_socket_width)/2+mcu_wire_channels_length/2,-2,pcb_thickness-2]) 
-                cube([mcu_socket_width-mcu_wire_channels_length,mcu_socket_length,pcb_thickness]);
+                translate([-(mcu_center_cube_cut_width)/2,-2,pcb_thickness-2]) 
+                cube([mcu_center_cube_cut_width,mcu_socket_length,pcb_thickness]);
                 };
             
         // Wire Channels
         for (row = [-1,1]) {
             for (pin = [0:mcu_pin_count/2-1]) {
-                translate([row*mcu_row_spacing/2,(pin+0.5)*mcu_pin_pitch,0]) 
+                translate([row*mcu_row_spacing/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,0]) 
                     cylinder(h=mcu_base_thickness,d=wire_diameter*1.5);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    (pin+0.35)*mcu_pin_pitch,
+                    mcu_pin_offset+(pin+0.35)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    (pin+0.35)*mcu_pin_pitch,
+                    mcu_pin_offset+(pin+0.35)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2-wire_diameter*2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);                
             }
         }
         
-        if (mcu_elite_c) {
+        if (mcu_name=="Elite_C") {
             iLastRow =(0+0.5)*mcu_pin_pitch;
     //        echo ("Last Row:",iLastRow);
             for (pin = [0:2]) {
@@ -151,18 +151,18 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                         (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2
                     ]) rotate([90,-180,0])
-                #cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 translate([
                         -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2
                     ]) rotate([90,0,0])
-                #cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 
                 translate([
                         (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2-wire_diameter*2
                     ]) rotate([90,-180,0])
-                #cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 translate([
                         -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2-wire_diameter*2
@@ -174,13 +174,14 @@ module socketed_mcu2(borders=[0,0,0,0]) {
     }
 
      // Retention Tabs
-    for (x = [-1,1]) {
-        translate([x*(mcu_width+mcu_connector_width)/3.65,0,(mcu_base_thickness+mcu_height+1)/2]) {
-            for (y = [-1,mcu_length+1]) {
+        if (mcu_RetentionTabs) {
+            for (x = [-1,1]) {
+        translate([x*mcu_RetentionTabs_x,0,(mcu_base_thickness+mcu_height+1)/2]) {
+            for (y = [-1*mcu_RetentionTabs_width/2+mcu_RetentionTabs_y1,mcu_length+mcu_RetentionTabs_width/2+mcu_RetentionTabs_y2]) {
                 translate([0,y,0])
                     if (mcu_hold_the_mcu) {
                         cube(
-                            [(mcu_width-mcu_connector_width),2,mcu_base_thickness+mcu_height+1],
+                            [(mcu_RetentionTabs_length),mcu_RetentionTabs_width,mcu_base_thickness+mcu_height+1],
                             center=true
                         );
                     } else {
@@ -191,19 +192,21 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                         }
             }
         }
+    
+    
     // hold the MCU 
         if (mcu_hold_the_mcu) {
-            translate([x*(mcu_width+mcu_connector_width)/4,0,mcu_base_thickness+mcu_height+0.5]) {
+            translate([x*mcu_RetentionTabs_x,0,mcu_base_thickness+mcu_height+0.5]) {
                 rotate([0,90,0]) {
-                    for (y = [0,mcu_length]) {
+                    for (y = [0+mcu_RetentionTabs_y1,mcu_length+mcu_RetentionTabs_y2]) {
                     translate([0,y,0]) 
-                        cylinder(h=(mcu_width-mcu_connector_width)/2,d=0.5,center=true);
+                        #cylinder(h=mcu_RetentionTabs_length,d=0.5,center=true);
                     }
                 }
             }
         }
     }
-
+    }
 }
 
 module bare_mcu(borders=[0,0,0,0]) {    
@@ -233,7 +236,7 @@ module bare_mcu(borders=[0,0,0,0]) {
             }
         }
         
-        if (mcu_elite_c) {
+        if (mcu_name=="Elite_C") {
             iLastRow =(0+0.5)*mcu_pin_pitch;
 //            echo ("Last Row:",iLastRow);
             for (pin = [0:2]) {
@@ -265,7 +268,7 @@ module bare_mcu(borders=[0,0,0,0]) {
             cube([mcu_connector_width,mcu_connector_length+3,pcb_thickness+1]);
         
         // Relief to let you pop the MCU out
-        if (mcu_elite_c==false) {
+        if (mcu_name!="Elite_C") {
             translate([0,0,pcb_thickness-1])
                 cylinder(h=mcu_pcb_thickness+2,d=mcu_connector_width);
             translate([-mcu_connector_width/2,-3,pcb_thickness-1])
@@ -384,4 +387,4 @@ module mcu_case_cutout() {
     }
 }
 
-mcu();
+mcu([0,0,0,0]);
