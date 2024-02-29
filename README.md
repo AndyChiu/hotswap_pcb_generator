@@ -10,13 +10,13 @@
 ### 額外特性
 - 支援多種軸體：Cherry MX-style、MX Low profile、Kailh Choc V1、Choc V2、Choc Mini，Gateron KS27、Romer G、Redragon low profile。
 - 單PCB可以放上多種不同軸體，layout.scad可以進行調整。
-- 支援多種MCU：ProMicro、ProMicro C、Pico RP2040、Elite C。
+- 支援多種MCU：ProMicro、ProMicro C、Elite C、Pico RP2040、RP2040 Zero。
 - 支援編碼器：EC11、EVQWGD001。
 - Choc V2 矮軸可以使用MX規格的衛星軸（穩定器)。
 - 支援4pin微動開關(microswitch)。
 
 ### 限制
-由於主要著重在矮軸的使用，由於矮軸上PCB板後高度較低，較不易被撥動掉落，所以上板、底板、外殼、墊高都沒有跟著調整，主要是PCB主板印出來，直接裝上軸體使用，所以除了pcb.scad外，其他部份使用上可能會有點問題。
+因目前著重在Kailh Choc矮軸的使用開發，因矮軸上PCB板後高度較低，較不易被撥動掉落，所以定位板、底板、外殼、墊高都沒有跟著調整，主要是PCB主板印出來，直接裝上軸體使用，所以除了pcb.scad外，其他部份使用上可能會有點問題。
 
 ### 資料夾/檔案命名
 由於對GitHub作業還不是很熟悉，且自己的改動太多，所以不好直接更動原作者的檔案，因此目前先把自己處理的檔案與資料夾，後綴都加上UTP，相關程式也有調整。

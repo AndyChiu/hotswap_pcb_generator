@@ -1,6 +1,8 @@
 include <parameters.scad>
 include <stabilizer_spacing.scad>
 
+//default_layout.scad
+
 /* [Layout Values] */
 /* Layout Format (each key):
     [
@@ -22,31 +24,31 @@ include <stabilizer_spacing.scad>
 // Keyswitch Layout
 //     (extra_data = rotate_column)
 base_switch_layout = [
-    [[[0,0.125],1,[0,0,0]],[0,1,0,2],false],
-    [[[0,1.125],1,[0,0,0]],[1,1,0,1],false],
-    [[[0,2.125],1,[0,0,0]],[1,1,0,1],false],
-    [[[0,3.125],1,[0,0,0]],[1,0,0,0],false],
-    [[[1,0],1,[0,0,0]],[0,1,0,0],false],
-    [[[1,1],1,[0,0,0]],[1,1,1,1],false],
-    [[[1,2],1,[0,0,0]],[1,1,1,1],false],
-    [[[1,3],1,[0,0,0]],[1,0,2,2],false],
-    [[[2,0.125],1,[0,0,0]],[0,1,2,2],false],
-    [[[2,1.125],1,[0,0,0]],[1,1,1,1],false],
-    [[[2,2.125],1,[0,0,0]],[1,1,1,1],false],
-    [[[2,3.125],1,[0,0,0]],[1,0,0,0],false],
-    [[[3,0],1,[0,0,0]],[0,1,0,0],false],
-    [[[3,1],1,[0,0,0]],[1,1,1,1],false],
-    [[[3,2],1,[0,0,0]],[1,1,1,1],false],
-    [[[3,3],1,[0,0,0]],[1,0,2,2],false],
-    [[[4,0.125],1,[0,0,0]],[0,1,2,0],false],
-    [[[4,1.125],1,[0,0,0]],[1,1,1,1],false],
-    [[[4,2.125],1,[0,0,0]],[1,1,1,0],false],
-    [[[4,3.125],1,[0,0,0]],[1,0,0,0],false],
-    [[[5,0.25],1,[0,0,0]],[0,1,2,0],false],
-    [[[5,1.25],1,[0,0,0]],[1,1,2,0],false],
-    [[[5,2.25],1,[0,0,0]],[1,1+15*mm,2,0],false],
-    [[[4.875,4.625],1.5,[60,4.875,4.625]],[30*mm,1,0.25*unit*mm,17.11*mm],true],
-    [[[4.875,5.625],1.5,[60,4.875,4.625]],[1,0,0.25*unit*mm,17.11*mm],true],
+    [[[0,0.125],1,[0,0,0]],[0,1,0,2],[false,switch_type]],
+    [[[0,1.125],1,[0,0,0]],[1,1,0,1],[false,switch_type]],
+    [[[0,2.125],1,[0,0,0]],[1,1,0,1],[false,switch_type]],
+    [[[0,3.125],1,[0,0,0]],[1,0,0,0],[false,switch_type]],
+    [[[1,0],1,[0,0,0]],[0,1,0,0],[false,switch_type]],
+    [[[1,1],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[1,2],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[1,3],1,[0,0,0]],[1,0,2,2],[false,switch_type]],
+    [[[2,0.125],1,[0,0,0]],[0,1,2,2],[false,switch_type]],
+    [[[2,1.125],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[2,2.125],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[2,3.125],1,[0,0,0]],[1,0,0,0],[false,switch_type]],
+    [[[3,0],1,[0,0,0]],[0,1,0,0],[false,switch_type]],
+    [[[3,1],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[3,2],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[3,3],1,[0,0,0]],[1,0,2,2],[false,switch_type]],
+    [[[4,0.125],1,[0,0,0]],[0,1,2,0],[false,switch_type]],
+    [[[4,1.125],1,[0,0,0]],[1,1,1,1],[false,switch_type]],
+    [[[4,2.125],1,[0,0,0]],[1,1,1,0],[false,switch_type]],
+    [[[4,3.125],1,[0,0,0]],[1,0,0,0],[false,switch_type]],
+    [[[5,0.25],1,[0,0,0]],[0,1,2,0],[false,switch_type]],
+    [[[5,1.25],1,[0,0,0]],[1,1,2,0],[false,switch_type]],
+    [[[5,2.25],1,[0,0,0]],[1,1+15*mm,2,0],[false,switch_type]],
+    [[[4.875,4.625],1.5,[60,4.875,4.625]],[30*mm,1,0.25*unit*mm,17.11*mm],[true,switch_type]],
+    [[[4.875,5.625],1.5,[60,4.875,4.625]],[1,0,0.25*unit*mm,17.11*mm],[true,switch_type]],
 ];
 
 // MCU Position(s)
@@ -73,12 +75,12 @@ base_via_layout = [
 // Plate Layout (if different than PCB)
 //     (extra_data = component_type)
 base_plate_layout = [
-    concat(
-        slice(base_switch_layout, [0,-2], ["switch"]),
-        [[[[6,0.5],mcu_h_unit_size],[-2,0,h_border_width,0], ["mcu"]]],
-        slice(base_trrs_layout, [0,0], ["trrs"])
-    ),
-    slice(base_switch_layout, [-2,0], ["switch"])
+//    concat(
+//        slice(base_switch_layout, [0,-2], ["switch"]),
+//        [[[[6,0.5],mcu_h_unit_size],[-2,0,h_border_width,0], ["mcu"]]],
+//        slice(base_trrs_layout, [0,0], ["trrs"])
+//    ),
+//    slice(base_switch_layout, [-2,0], ["switch"])
 ];
 
 // Whether to only use base_plate_layout to generate the plate footprint
@@ -104,6 +106,17 @@ base_standoff_layout = [
     [[[5.5,-0.1875]],[0,0,0,0],["plate", "backplate"]],
     [[[7,0]],[0,0,0,0],["plate", "backplate"]],
 ];
+
+// EC11 Position(s)
+base_ec11_layout = [
+    ];
+
+// EVQWGD001 Position(s)
+base_evqwgd001_layout = [
+];
+
+//Microswitch (Reset button)
+base_microswitch_layout = [];
 
 // Whether to flip the layout
 invert_layout_flag = false;

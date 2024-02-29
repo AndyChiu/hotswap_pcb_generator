@@ -71,6 +71,18 @@ switch_rotation =
         ? 180
         : assert(false, "switch_orientation is invalid");
 
+// Useful for manipulating layout elements
+function slice(array, bounds, extra_data_override="") = [
+    let(
+        lower = bounds[0] >= 0 ? bounds[0] : max(len(array)+bounds[0], 0),
+        upper = bounds[1] > 0 ? min(bounds[1], len(array)) : len(array)+bounds[1],
+        step = len(bounds) == 3 ? bounds[2] : 1
+    )
+    for (i = [lower:step:upper-1])
+       (len(array[i]) >= 2 && extra_data_override != "")
+            ? [array[i][0], array[i][1], extra_data_override, array[i][3]]
+            : array[i]
+];
 
 function set_defaults(layout, extra_data_default=[]) = [
     for (item = layout)
@@ -156,3 +168,37 @@ module border_footprint(base_size, borders, h_unit=1, v_unit=1) {
         ], center=true);
     }
 }
+
+
+// 曲面倒角
+module chamfer(length,width,height) {
+    $fn=40;
+    translate([-length/2,-width/2,height/2]) {
+        rotate([0,90.0]) {
+            resize([height,width,length]) {
+            difference(){
+            cube([2,2,10]);
+            cylinder(h=10*2,r=2,center=true);
+            }
+            }
+        }
+    }
+}
+
+//直角三角形
+module right_triangle(length, width, height,rx=0,ry=0,rz=0) {
+
+    points = [
+        [0, 0],
+        [length, 0],
+        [0, height]
+    ];
+    translate([-length/2,-width/2,-height/2]) {
+    rotate([90+rx,0+ry,0+rz]) {
+    linear_extrude(width,center=true) {
+        polygon(points);
+    }
+    }
+}
+}
+

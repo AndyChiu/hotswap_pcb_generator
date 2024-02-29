@@ -111,9 +111,11 @@ module socketed_mcu2(borders=[0,0,0,0]) {
             }
         
         //Center cube cut
-        if (mcu_name=="Elite_C") {
-                translate([-(mcu_socket_width)/2+mcu_wire_channels_length/2,mcu_wire_channels_length/2-2,pcb_thickness-2]) 
-                cube([mcu_center_cube_cut_width,mcu_socket_length,pcb_thickness]);
+        if (mcu_name=="Elite_C" || mcu_name=="RP2040_Zero") {
+                translate([-(mcu_center_cube_cut_width)/2,(mcu_wire_channels_length/2)-2,pcb_thickness-2]) 
+                cube([mcu_center_cube_cut_width,mcu_center_cube_cut_length,pcb_thickness]);
+            
+            
             } else {
                 translate([-(mcu_center_cube_cut_width)/2,-2,pcb_thickness-2]) 
                 cube([mcu_center_cube_cut_width,mcu_socket_length,pcb_thickness]);
@@ -126,20 +128,20 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                     cylinder(h=mcu_base_thickness,d=wire_diameter*1.5);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    mcu_pin_offset+(pin+0.35)*mcu_pin_pitch,
+                    mcu_pin_offset+(pin+0.25)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
                 translate([
                     row*((mcu_row_spacing+mcu_wire_channels_length)/2-2),
-                    mcu_pin_offset+(pin+0.35)*mcu_pin_pitch,
+                    mcu_pin_offset+(pin+0.25)*mcu_pin_pitch,
                     mcu_base_thickness-wire_diameter/2-wire_diameter*2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);                
             }
         }
         
-        if (mcu_name=="Elite_C") {
+        if (mcu_name=="Elite_C" || mcu_name=="RP2040_Zero") {
             iLastRow =(0+0.5)*mcu_pin_pitch;
     //        echo ("Last Row:",iLastRow);
             for (pin = [0:2]) {
@@ -167,7 +169,7 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                         -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2-wire_diameter*2
                     ]) rotate([90,0,0])
-                #cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
 
             }
         }

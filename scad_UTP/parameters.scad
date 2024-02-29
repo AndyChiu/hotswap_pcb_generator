@@ -1,6 +1,6 @@
 /* PCB Parameters */
 // Diameter of row/column wire channels
-wire_diameter = 0.91;
+wire_diameter = 1;//0.91;
 // Upward angle of switch pin in contact with diode anode (gives more reliable
 // connections but slightly deforms pin)
 diode_pin_angle = 5;  // [0:15]
@@ -11,7 +11,8 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-switch_type = "choc";  // [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g, redragon_low]
+// [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g, redragon_low]
+switch_type = "choc";
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -22,8 +23,8 @@ use_folded_contact = false;
 // disable if wire_diameter > 1 (Only for UTP cable)
 utp_wire = true;
 led_hole = true;
-diode_less = true;
-choc_v2_compatible_v1  = true;
+diode_less = false;
+choc_v2_compatible_v1  = false;
 both_deep_channels = true;
 
 /* Stabilizer Parameters */
@@ -77,23 +78,19 @@ pcb_backplate_spacing = 4;
 
 
 /* MCU Parameters */
-include <parameters_mcu_Pico_RP2040.scad> // ProMicro,ProMicro_C, Elite_C, Pico_RP2040
+// [ProMicro, ProMicro_C, Elite_C,RP2040_Pico, RP2040_Zero]
+//include <parameters_mcu_ProMicro.scad>
+//include <parameters_mcu_ProMicro_C.scad>
+//include <parameters_mcu_Elite_C.scad>
+//include <parameters_mcu_RP2040_Pico.scad>
+include <parameters_mcu_RP2040_Zero.scad>
+
 mcu_type = "socketed2";  // [bare, socketed, socketed2]
 
 /* TRRS Socket Parameters */
-// add * 1.1
-trrs_width = 6.2 * 1.1;
-trrs_length = 12.2 * 1.1;
-trrs_height = 5;
-trrs_flange_length = 2;
-trrs_flange_diameter = 5;
-trrs_pin_spacing = 4.4;
-trrs_nub_diameter = 1.5;  // Little locating nubs on the bottom of the socket
-trrs_nub_height = 1;
-trrs_nub_spacing = 7;
-trrs_nub_offset = 1.5;  // Distance from the front of the socket (not including flange)
-trrs_plug_width = 10;  // Width of a plug for plate clearance
-
+// [pj320a,pj324m]
+include <parameters_trrs_pj320a.scad>
+//include <parameters_trrs_pj324m.scad>
 
 /* Via Parameters */
 via_width = 5;
@@ -130,11 +127,11 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
-unit = 17.5;
+unit = 18;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = unit;
+h_unit = 18;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = unit;
+v_unit = 17;
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -216,6 +213,11 @@ pcb_plate_spacing =
         ? 5
     : assert(false, "switch_type is invalid");
 
+// Align mcu to a unit
+mcu_unit_resolution = .5;  // Grid size to snap to (as fractional unit)
+mcu_h_unit_size = ceil(mcu_socket_width/mcu_unit_resolution/h_unit) * mcu_unit_resolution;
+mcu_v_unit_size = ceil(mcu_socket_length/mcu_unit_resolution/v_unit) * mcu_unit_resolution;
+
 // Total assembly thickness (for reference)
 total_thickness =
     pcb_plate_spacing + pcb_thickness + pcb_backplate_spacing + backplate_thickness;
@@ -230,26 +232,16 @@ mm = 1/border_width;
 h_mm = 1/h_border_width;
 v_mm = 1/v_border_width;
 
-// Align mcu to a unit
-mcu_unit_resolution = .5;  // Grid size to snap to (as fractional unit)
-mcu_h_unit_size = ceil(mcu_socket_width/mcu_unit_resolution/h_unit) * mcu_unit_resolution;
-mcu_v_unit_size = ceil(mcu_socket_length/mcu_unit_resolution/v_unit) * mcu_unit_resolution;
-
-// Useful for manipulating layout elements
-function slice(array, bounds) = [
-    let(
-        lower = bounds[0] >= 0 ? bounds[0] : max(len(array)+bounds[0], 0),
-        upper = bounds[1] > 0 ? min(bounds[1], len(array)) : len(array)+bounds[1],
-        step = len(bounds) == 3 ? bounds[2] : 1
-    )
-    for (i = [lower:step:upper-1])
-       array[i]
-];
-
 // Andy Add:
+
+//Switch socket base
+switch_socket_base_holder = false;
 
 //TRRS
 trrs_wire_channels_length = 16;
     
 //Microswitch (reset button)
 microswitch_hold_bar = false;
+//    
+//右側位移
+iRSOffSet=1;    
