@@ -23,7 +23,8 @@
 
 ### 元件圖片
 
-#### 軸座
+#### 軸座 (Switch base)
+
 ##### Cherry
 | MX-style | MX Low profile |
 | -------- | -------- | 
@@ -39,21 +40,52 @@
 | -------- | -------- | -------- | 
 | ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/redragon_low.png)|
 
-#### 軸座含固定架
+##### 軸座含固定架
 | Cherry MX-style | Kailh Choc V1 |
 | -------- | -------- |
 | ![switch_mx_holder](img_UTP/switch_mx_holder.png)|![switch_choc_holder](img_UTP/switch_choc_holder.png)|
 
-#### Dactyl類型使用的1U PCB
+##### Dactyl類型使用的1U PCB
 | Kailh Choc V2  |
 | -------- |
 | ![switch_chocV2_1u](img_UTP/switch_chocV2_1u.png)|
 
-### MCU
+#### MCU
 
-#### ProMicro
+##### ProMicro
 
-#### RP2040
+| ProMicro|ProMicro-C|Elite-C|
+| -------- | -------- | -------- |
+| ![mcu_ProMicro.png](img_UTP/mcu_ProMicro.png)|![mcu_ProMicro_C.png](img_UTP/mcu_ProMicro_C.png)|![mcu_Elite_C.png](img_UTP/mcu_Elite_C.png)|
+
+##### RP2040
+
+| RP2040 Pico|RP2040 Zero|
+| -------- |-------- |
+| ![mcu_RP2040_Pico](img_UTP/mcu_RP2040_Pico.png)| ![mcu_RP2040_Zero](img_UTP/mcu_RP2040_Zero.png)|
+
+
+#### 編碼器(Encoder)
+
+|EC11|EVQWGD001|
+| -------- |-------- |
+|![EC11](img_UTP/EC11.png)|![EVQWGD001](img_UTP/EVQWGD001.png)|
+
+#### 穩定器(Stabilizer)
+
+|PCB(2u)|PCB Choc V2(2u)|Plate(2u)|
+| -------- | -------- | -------- |
+|![stabilizer_pcb(2u)](img_UTP/stabilizer_pcb(2u).png)|![stabilizer_pcb_ChocV2(2u)](img_UTP/stabilizer_pcb_ChocV2(2u).png)|![stabilizer_plate(2u)](img_UTP/stabilizer_plate(2u).png)|
+
+#### TRRS
+|PJ320A|PJ324M|
+| -------- | -------- |
+|![trrs_pj320a.png](img_UTP/trrs_pj320a.png)|![trrs_pj320a.png](img_UTP/trrs_pj324m.png)|
+
+#### 其他
+|Micro Switch|
+| -------- |
+|![microswitch.png](img_UTP/microswitch.png)|
 
 
 ### 設計
