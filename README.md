@@ -46,7 +46,7 @@
 
 #### Dactyl類型使用的1U PCB
 | Kailh Choc V2  |
-| -------- | -------- |
+| -------- |
 | ![switch_chocV2_1u](img_UTP/switch_chocV2_1u.png)|
 
 ### MCU
