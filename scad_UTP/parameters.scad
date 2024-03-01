@@ -80,10 +80,10 @@ pcb_backplate_spacing = 4;
 /* MCU Parameters */
 // [ProMicro, ProMicro_C, Elite_C,RP2040_Pico, RP2040_Zero]
 //include <parameters_mcu_ProMicro.scad>
-//include <parameters_mcu_ProMicro_C.scad>
+include <parameters_mcu_ProMicro_C.scad>
 //include <parameters_mcu_Elite_C.scad>
 //include <parameters_mcu_RP2040_Pico.scad>
-include <parameters_mcu_RP2040_Zero.scad>
+//include <parameters_mcu_RP2040_Zero.scad>
 
 mcu_type = "socketed2";  // [bare, socketed, socketed2]
 
@@ -235,7 +235,7 @@ v_mm = 1/v_border_width;
 // Andy Add:
 
 //Switch socket base
-switch_socket_base_holder = false;
+switch_socket_base_holder = true;
 
 //TRRS
 trrs_wire_channels_length = 16;

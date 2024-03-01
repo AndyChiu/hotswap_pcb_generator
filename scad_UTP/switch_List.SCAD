@@ -1,9 +1,9 @@
 include <switch.scad>
 
-sSW = ["mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","chocV2_1u"];
+sSW = ["mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low","chocV2_1u"];
 
 //一般
-//"mx","choc","chocV2","chocMini","ks27","mx_low","romer_g"
+//"mx","choc","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low"
 
 //含固定架,用於單PCB鍵盤
 //"mx_holder","choc_holder"
