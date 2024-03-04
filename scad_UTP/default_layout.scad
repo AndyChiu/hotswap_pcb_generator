@@ -118,8 +118,14 @@ base_evqwgd001_layout = [
 //Microswitch (Reset button)
 base_microswitch_layout = [];
 
+base_pcb_layout_outer=[
+//hull all group
+];
+
+
 // Whether to flip the layout
 invert_layout_flag = false;
 
 // Whether the layout is staggered-row or staggered-column
 layout_type = "column";  // [column, row]
+

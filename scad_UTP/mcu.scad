@@ -169,7 +169,7 @@ module socketed_mcu2(borders=[0,0,0,0]) {
                         -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
                         mcu_base_thickness-wire_diameter/2-wire_diameter*2
                     ]) rotate([90,0,0])
-                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                #cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
 
             }
         }
@@ -344,6 +344,15 @@ module mcu_plate_cutout_footprint() {
                 [1000,0,0,0]
             );
         }
+    } else if (mcu_type == "socketed2") {
+        // Will interfere with plate, so cutout must fit the whole MCU. 
+        // Extend cutout above for connector
+        translate([h_unit/2,-mcu_v_unit_size*v_unit/2,0]) {
+            border_footprint(
+                [mcu_socket_width,mcu_socket_length], 
+                [1000,0,0,0]
+            );
+        }
     } else {
         assert(false, "mcu_type is invalid");
     }
@@ -389,4 +398,36 @@ module mcu_case_cutout() {
     }
 }
 
+//Andy add:
+module mcu_socket_base(borders=[0,0,0,0]) {
+    translate([
+        h_unit/2,
+        -(mcu_v_unit_size*v_unit+mcu_socket_length)/2+2,
+        0
+    ]) rotate([0,layout_type == "row"?180:0,0]) translate([0,0,-pcb_thickness/2]) {
+        socketed_mcu_base(invert_borders(borders,layout_type == "row"));
+
+    }
+}
+
+
+module socketed_mcu_base(borders=[0,0,0,0]) {
+
+        union() {
+            // Base
+            translate([-mcu_socket_width/2,-2,0]) 
+                cube([mcu_socket_width,mcu_socket_length,pcb_thickness]);
+            // Border
+            translate([0,mcu_socket_length/2-2,pcb_thickness/2-1])
+                border(
+                    [mcu_h_unit_size*h_unit,mcu_v_unit_size*v_unit], 
+                    borders, 
+                    pcb_thickness-2
+                );
+            }
+
+
+}
+
 mcu([0,0,0,0]);
+

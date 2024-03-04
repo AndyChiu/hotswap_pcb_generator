@@ -197,4 +197,4 @@ module stabilizer_plate_cutout(spacing=2u, thickness=plate_thickness) {
 
 //stabilizer_pcb(2u);
 //stabilizer_plate(2u);
-stabilizer_pcb_ChocV2(2u);
+//stabilizer_pcb_ChocV2(2u);

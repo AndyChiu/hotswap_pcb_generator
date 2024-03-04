@@ -1,6 +1,6 @@
 include <switch.scad>
-//"mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low","chocV2_1u"
-sSW = ["mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low","chocV2_1u"];
+
+sSW = ["mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","chocV2_1u","redragon_low"];
 
 //一般
 //"mx","choc","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low"
@@ -14,7 +14,7 @@ sSW = ["mx","mx_holder","choc","choc_holder","chocV2","chocMini","ks27","mx_low"
 for(i=[0:1:len(sSW)-1]){
     echo (sSW[i]);
     translate([10+unit*i*2,0,0])
-    switch_socket(borders=[1,1,1,1],use_switch_type=sSW[i]);
+    switch_socket(borders=[2.5,2.5,2,2],use_switch_type=sSW[i]);
     
     if (i % 2 == 0){
         translate([10+unit*i*2,-25,0]) color("red") linear_extrude(1)  text(sSW[i],3);
