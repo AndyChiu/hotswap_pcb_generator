@@ -79,16 +79,16 @@ pcb_backplate_spacing = 4;
 
 /* MCU Parameters */
 // [ProMicro, ProMicro_C, Elite_C,RP2040_Pico, RP2040_Zero]
-include <parameters_mcu_ProMicro.scad>
+//include <parameters_mcu_ProMicro.scad>
 //include <parameters_mcu_ProMicro_C.scad>
 //include <parameters_mcu_Elite_C.scad>
 //include <parameters_mcu_RP2040_Pico.scad>
-//include <parameters_mcu_RP2040_Zero.scad>
+include <parameters_mcu_RP2040_Zero.scad>
 
 mcu_type = "socketed2";  // [bare, socketed, socketed2]
 
 /* TRRS Socket Parameters */
-// [pj320a,pj324m]
+// [RP2040_Pico, RP2040_Zero]
 include <parameters_trrs_pj320a.scad>
 //include <parameters_trrs_pj324m.scad>
 
@@ -127,11 +127,11 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
-unit = 18;
+unit = 16;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 18;
+h_unit = 16;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 17;
+v_unit = 16;
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -235,7 +235,10 @@ v_mm = 1/v_border_width;
 // Andy Add:
 
 //Switch socket base
-switch_socket_base_holder = false;
+//軸座上的軸體扣夾
+switch_socket_base_holder = true;
+//扣夾是否支撐
+switch_socket_base_holder_support_frame = false;
 
 //TRRS
 trrs_wire_channels_length = 16;
@@ -245,3 +248,11 @@ microswitch_hold_bar = false;
 //    
 //右側位移
 iRSOffSet=1;    
+
+//PCB layout 相關
+base_pcb_layout_outer_DesignMode = false;
+
+base_pcb_layout_outer_EdgeFrame = true;
+
+base_pcb_layout_outer_EdgeFrame_size = 4;
+base_pcb_layout_outer_EdgeFrame_hight = 5;
