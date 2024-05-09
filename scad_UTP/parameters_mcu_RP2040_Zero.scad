@@ -28,5 +28,5 @@ mcu_RetentionTabs = true;
 mcu_RetentionTabs_length = mcu_width-mcu_connector_width;
 mcu_RetentionTabs_width = 2;
 mcu_RetentionTabs_x = (mcu_width+mcu_connector_width)/4;
-mcu_RetentionTabs_y1 = -0.5; //Offset RetentionTabs y1
+mcu_RetentionTabs_y1 = 0; //Offset RetentionTabs y1
 mcu_RetentionTabs_y2 = 0; //Offset RetentionTabs y1
