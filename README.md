@@ -18,7 +18,8 @@
 - Choc V1軸與MX軸有從PCB板上開啟固定架的選項可用，用於固定軸體，代替定位板的作用。
 
 ### 曲面鍵盤設計
-- [UC36系列](https://github.com/AndyChiu/UC36)中，曲面鍵盤的相關程式與檔案，可由此[查閱](scad_UTP/Curved_PCB_KB)。
+- 方式1: [UC36系列](https://github.com/AndyChiu/UC36)中，曲面鍵盤的相關程式與檔案，可由此[查閱](scad_UTP/Curved_PCB_KB)。
+- 方式2: PCB板直接可以設定軸體的角度與高度，達到曲面鍵盤的效果。
 
 ### 限制
 因目前著重在Kailh Choc矮軸的使用開發，因矮軸上PCB板後高度較低，較不易被撥動掉落，所以定位板、底板、外殼、墊高都沒有跟著調整，主要是PCB主板印出來，直接裝上軸體使用，所以除了pcb.scad外，其他部份使用上可能會有點問題。
@@ -108,6 +109,21 @@
 原作者的[組裝指南(Build Guide)](https://github.com/50an6xy06r6n/hotswap_pcb_generator/blob/main/guide/build_guide.md)
 
 ### 照片集
+PCB板設計時，可以直接設計成曲面
+![PCB KB Curve Design1](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/88231095-c524-4259-bd4f-2d6100bf90d0)
+![PCB KB Curve Design2](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/6479dd1b-d6f8-4ab8-b8cf-6f1a796fc83b)
+
+印出的PCB曲面鍵盤
+![GMvE2cgXMAA4j0y](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/f525d89a-75df-4152-8a4d-fab229edecbf)
+
+上軸體與鍵帽後
+![GMvKBvrWIAEK0nz](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/d59ee837-e23f-4b93-b5f4-c3c55fd7a036)
+![GMvKBzpXUAAMyPL](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/f2f767ab-b060-4370-8da1-856eb54d79c8)
+![GMvKB7nXAAAX0QT](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/fbc1e343-561e-4b8e-8903-3e6760b4104f)
+
+
+改良的EC11編碼器底座
+![EC11 Base](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/c44865c3-b339-4316-93d8-a0f1fa3c9cf8)
 
 UC2 鍵盤 Choc V1 軸體 左手
 ![UC2 Left Hand](img_UTP/_20210910_013504.JPG)
