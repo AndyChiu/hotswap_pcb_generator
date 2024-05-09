@@ -52,35 +52,60 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                 //寬度1.6改成1,不然太寬
                 for (x = [-6,6]) {
                     translate([x,0,pcb_thickness/2-socket_depth])
-                        cube([1,2.5,pcb_thickness+1+socket_depth],true);
-                        
+                        cube([1,2.5,pcb_thickness+1+socket_depth],true);                         
                 }
-                
+                for (x = [-5,5]) {
+                    //底部槽
+                    translate([x,0,-wire_diameter/2-wire_diameter])
+                        cube([1,2.5,wire_diameter],true);                           
+                }                
                 //基座長寬 11.8
                 //針腳距離14.8 x 12.5   
                 //針腳 0.7
                 //兩針之間距離5
-                
-                //三針一樣,只是多一針在中央
-                // Bottom switch pin
-                for (x = [-2.5,2.5]) {
-                        
+                for (x = [-2.5,2.5]) {                     
                     translate([x,7.5,(pcb_thickness+1)/2])
                         rotate([180,0,0])
-                            cylinder(h=pcb_thickness+1,r=0.8);
+                            cylinder(h=pcb_thickness+1,r=0.8,$fn=30);
                    
+                    translate([x,4.5,(pcb_thickness+1)/2])
+                        rotate([180,0,0])
+                            cylinder(h=pcb_thickness+1,r=0.8,$fn=30);
+
+                    //底部線槽
+                    translate([x,6,-wire_diameter/2-wire_diameter*1.25])
+                        #cube([wire_diameter,3,wire_diameter/2],true);                    
                 }
+                
+                //三針一樣,只是多一針在中央,
+                // Bottom switch pin                
                 for (x = [-2.5,0,2.5]) {
-                        
                     translate([x,-7.5,(pcb_thickness+1)/2])
                         rotate([180,0,0])
-                            cylinder(h=pcb_thickness+1,r=0.8);
-                    translate([x,0,wire_diameter/2+ec11_base_add_thickness-wire_diameter])
-                        cube([wire_diameter,ec11_socket_size,wire_diameter],true);                   
-                }
+                            cylinder(h=pcb_thickness+1,r=0.8,$fn=30);
+
+                    translate([x,-4.5,(pcb_thickness+1)/2])
+                        rotate([180,0,0])
+                            cylinder(h=pcb_thickness+1,r=0.8,$fn=30);
+
+                    //直線槽
+                    translate([x,0,wire_diameter/2+ec11_base_add_thickness-wire_diameter*0.9])
+                        rotate([90,90,0])
+                            cylinder(h=ec11_socket_size,d=wire_diameter,center=true,$fn=40);                   
+                    translate([x,0,wire_diameter/2+ec11_base_add_thickness-wire_diameter*1.25])
+                        cube([wire_diameter,ec11_socket_size,wire_diameter/2],true);
+                    
+                    //底部線槽
+                    translate([x,-6,-wire_diameter/2-wire_diameter*1.25])
+                        #cube([wire_diameter,3,wire_diameter/2],true); 
+                    }
+                //橫線槽        
                 for (y = [-4.5,-2.5,2.5,4.5]) {
-                    translate([0,y,wire_diameter/2+ec11_base_add_thickness-wire_diameter])
-                        cube([ec11_socket_size,wire_diameter,wire_diameter],true);                   
+                    translate([0,y,wire_diameter/2+ec11_base_add_thickness-wire_diameter*0.9])
+                        rotate([0,90,0])
+                            cylinder(h=ec11_socket_size,d=wire_diameter,center=true,$fn=40);                            
+                    translate([0,y,wire_diameter/2+ec11_base_add_thickness-wire_diameter*1.25])
+                    cube([ec11_socket_size,wire_diameter,wire_diameter/2],true);                   
                 }
 
             }
