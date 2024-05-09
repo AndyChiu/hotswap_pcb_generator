@@ -321,7 +321,7 @@ base_pcb_layout_Rubber_Pads_DesignMode = true;
 
 //No cutout the switch socket hole, which can increase the view speed
 //不挖軸坐上的洞，可以增加速檢視速度
-base_pcb_layout_DesignMode = true;
+base_pcb_layout_DesignMode = false;
 
 //Draw an outer frame
 //是否繪製外框
