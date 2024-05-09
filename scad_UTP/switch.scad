@@ -20,12 +20,18 @@ module switch_socket(borders=[1,1,1,1], rotate_column=false,use_switch_type=swit
         } else if (use_switch_type=="chocV2_1u") {
             switch_socket_base_1U_PCB(borders);
             
-        } else if (use_switch_type=="mx" && switch_socket_base_holder==true) {
-            switch_socket_base_mx(borders);
+        } else if (use_switch_type=="mx_s_holder") {
+            switch_socket_base_mx_stabilizer(borders);  
+            
+        } else if (use_switch_type=="mx_s_holder2") {
+            switch_socket_base_mx_stabilizer2(borders);  
             
         } else if (use_switch_type=="mx_holder") {
-            switch_socket_base_mx(borders);
+            switch_socket_base_mx(borders);  
             
+        } else if (use_switch_type=="mx" && switch_socket_base_holder==true) {
+            switch_socket_base_mx(borders);
+   
         } else {
             switch_socket_base(borders);
             
@@ -105,25 +111,38 @@ module switch_socket_base_1U(borders=[1,1,1,1]) {
 //Choc軸加勾釦的底座
 module switch_socket_base_choc(borders=[1,1,1,1]) {
     //choc_holder_wall_h_thickness=(h_unit/2)-(14.5/2);
-    //choc_holder_wall_h_thickness_add=1.5-(socket_size-13.8);
+    //choc_holder_wall_h_thickness_add=1.5-(choc_socket_size-13.8);
     choc_holder_wall_h_thickness_add=0;
     
-    choc_holder_wall_h_thickness=socket_size-13.8+choc_holder_wall_h_thickness_add;
+    choc_holder_wall_h_thickness=choc_socket_size-13.8+choc_holder_wall_h_thickness_add;
     choc_holder_wall_h_width_r=3.8;
     choc_holder_wall_h_width_l=4.5;
     choc_holder_wall_height=2.2;  //2.2
+
+    //檢測用
+    if (base_pcb_layout_ShowVKeySwitch) {
+        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[2])/2])
+            cube(VKeySwitch_Size,center=true);   
+    }
+    
+    if (base_pcb_layout_ShowVKeycap) {
+        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeycap_Size[2])/2+VKeySwitch_Size[2]])
+            color(VKeycap_Color,VKeycap_Alpha) cube(VKeycap_Size,center=true);
+    }
     
 //    //上牆 
-//    translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_h_width_r/2,-(v_unit-socket_size)/2-choc_holder_wall_h_thickness/2+choc_holder_wall_h_thickness_add,(choc_holder_wall_height/2)]) 
+//    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_h_width_r/2,-(v_unit-choc_socket_size)/2-choc_holder_wall_h_thickness/2+choc_holder_wall_h_thickness_add,(choc_holder_wall_height/2)]) 
 //        cube([choc_holder_wall_h_width_r, choc_holder_wall_h_thickness, pcb_thickness+choc_holder_wall_height], center=true);
 //
-//    translate([(h_unit-socket_size)/2+choc_holder_wall_h_width_l/2,-(v_unit-socket_size)/2-choc_holder_wall_h_thickness/2+choc_holder_wall_h_thickness_add,(choc_holder_wall_height/2)]) 
+//    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_h_width_l/2,-(v_unit-choc_socket_size)/2-choc_holder_wall_h_thickness/2+choc_holder_wall_h_thickness_add,(choc_holder_wall_height/2)]) 
 //        cube([choc_holder_wall_h_width_l, choc_holder_wall_h_thickness, pcb_thickness+choc_holder_wall_height], center=true);
 
-    //choc_holder_wall_v_thickness_add=1.5-(socket_size-14.5);
+    //choc_holder_wall_v_thickness_add=1.5-(choc_socket_size-14.5);
     choc_holder_wall_v_thickness_add=0.5;
     //choc_holder_wall_v_thickness_add=0;
-    choc_holder_wall_v_thickness=socket_size-14.5+choc_holder_wall_v_thickness_add;
+    choc_holder_wall_v_thickness=choc_socket_size-14.5+choc_holder_wall_v_thickness_add;
     choc_holder_wall_v_width_r=5+7.85;
     choc_holder_wall_v_width_l=5+7.85;
     choc_holder_wall_v_offset=0.2;
@@ -137,22 +156,22 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
     choc_holder_hook_margin2=choc_holder_hook_margin1+7;     //10.5
 
     //右牆
-    translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit-socket_size)/2-choc_holder_wall_v_width_r/2,(choc_holder_wall_height/2)]) {
-        cube([choc_holder_wall_v_thickness,choc_holder_wall_v_width_r,  pcb_thickness+choc_holder_wall_height], center=true);
+    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_r/2,(choc_holder_wall_height/2)]) {
+         cube([choc_holder_wall_v_thickness,choc_holder_wall_v_width_r,  pcb_thickness+choc_holder_wall_height], center=true);
     }
 //    
-//    translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset+choc_holder_wall_v_thickness_add+choc_holder_wall_support_width/2, -(v_unit-socket_size)/2-choc_holder_wall_v_width_r/2, (choc_holder_wall_height+2)/2]) 
+//    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset+choc_holder_wall_v_thickness_add+choc_holder_wall_support_width/2, -(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_r/2, (choc_holder_wall_height+2)/2]) 
 //    {
 //        rotate([0,0,90])
 //        chamfer(choc_holder_wall_v_width_r, choc_holder_wall_support_width, choc_holder_wall_height+2);
 //    
 //    }
 //    
-   //-(v_unit-socket_size)/2-choc_holder_wall_v_width_r/2
+   //-(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_r/2
 
     if (switch_socket_base_holder_support_frame) {
 
-    translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset+choc_holder_wall_v_thickness_add+choc_holder_wall_support_width/2, -(socket_size+choc_holder_wall_v_thickness)/2, (choc_holder_wall_height+2)/2]) 
+    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset+choc_holder_wall_v_thickness_add+choc_holder_wall_support_width/2, -(choc_socket_size+choc_holder_wall_v_thickness)/2, (choc_holder_wall_height+2)/2]) 
     {
         rotate([0,0,0])
         right_triangle(choc_holder_wall_support_width,choc_holder_wall_v_thickness,(choc_holder_wall_height+2),0,0,0);
@@ -160,63 +179,63 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
 }
 //        }
     //右短牆
-//     translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
+//     translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
 //        cube([choc_holder_wall_v_thickness,choc_holder_hook_length, pcb_thickness+choc_holder_wall_height ], center=true);
 //
-//     translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
+//     translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
 //        cube([choc_holder_wall_v_thickness,choc_holder_hook_length, pcb_thickness+choc_holder_wall_height ], center=true);
 
     //右短牆連橫牆
-//    translate([socket_size+(h_unit-socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2,(choc_holder_wall_height/2)-choc_holder_hook_height/2]) 
+//    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit)/2,(choc_holder_wall_height/2)-choc_holder_hook_height/2]) 
 //        cube([choc_holder_wall_v_thickness,5, pcb_thickness+choc_holder_wall_height -choc_holder_hook_height], center=true);
 
 
         
-     translate([socket_size+(h_unit-socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+     translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
 
         cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
  
-     translate([socket_size+(h_unit-socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+     translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
     
     cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
  
     //左牆
-    translate([(h_unit-socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset, -(v_unit-socket_size)/2-choc_holder_wall_v_width_l/2, (choc_holder_wall_height/2)]) {
+    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset, -(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_l/2, (choc_holder_wall_height/2)]) {
         cube([choc_holder_wall_v_thickness,choc_holder_wall_v_width_l,  pcb_thickness+choc_holder_wall_height], center=true);
     }
     
-//    translate([(h_unit-socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2,  -(v_unit-socket_size)/2-choc_holder_wall_v_width_l/2,  (choc_holder_wall_height+2)/2]) {
+//    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2,  -(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_l/2,  (choc_holder_wall_height+2)/2]) {
 //        rotate([0,0,90+180])
 //        chamfer(choc_holder_wall_v_width_l, choc_holder_wall_support_width, choc_holder_wall_height+2);
 //    }
 
 if (switch_socket_base_holder_support_frame) {
 
-    translate([(h_unit-socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2+choc_holder_wall_support_width,  -(socket_size+choc_holder_wall_v_thickness)/2,  (choc_holder_wall_height+2)/2]) {
+    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2+choc_holder_wall_support_width,  -(choc_socket_size+choc_holder_wall_v_thickness)/2,  (choc_holder_wall_height+2)/2]) {
         right_triangle(choc_holder_wall_support_width,choc_holder_wall_v_thickness,(choc_holder_wall_height+2),0,0,180);
     }
 }
-//     translate([(h_unit-socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit-socket_size)/2-choc_holder_wall_v_width_l/2-(choc_holder_hook_margin1/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+//     translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_l/2-(choc_holder_hook_margin1/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
 
     //左短牆
 
-//    translate([(h_unit-socket_size)/2+(choc_holder_wall_v_thickness)/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
+//    translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness)/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
 //     #cube([choc_holder_wall_v_thickness,choc_holder_hook_length,  pcb_thickness+choc_holder_wall_height ], center=true);
 //
-//    translate([(h_unit-socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
+//    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(choc_holder_wall_height/2)]) 
 //     #cube([choc_holder_wall_v_thickness,choc_holder_hook_length,  pcb_thickness+choc_holder_wall_height ], center=true);
 //
 
     //左短牆連橫牆
-//    translate([(h_unit-socket_size)/2+(choc_holder_wall_v_thickness)/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2,(choc_holder_wall_height/2)-choc_holder_hook_height/2]) 
+//    translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness)/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset,-(v_unit)/2,(choc_holder_wall_height/2)-choc_holder_hook_height/2]) 
 //        cube([choc_holder_wall_v_thickness,5, pcb_thickness+choc_holder_wall_height -choc_holder_hook_height], center=true);
         
         
-    translate([(h_unit-socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+    translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
      
     cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
 
-     translate([(h_unit-socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+     translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
      
      cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
 
@@ -226,10 +245,10 @@ if (switch_socket_base_holder_support_frame) {
     translate([h_unit/2,-v_unit/2,0]) 
     //    difference() {
     union() {
-        cube([socket_size, socket_size, pcb_thickness], center=true);
+        cube([choc_socket_size, choc_socket_size, pcb_thickness], center=true);
         translate([0,0,border_z_offset ])
             border(
-                [socket_size,socket_size], 
+                [choc_socket_size,choc_socket_size], 
                 borders, 
                 pcb_thickness-2, 
                 h_border_width, 
@@ -255,15 +274,18 @@ module switch_socket_base_mx(borders=[1,1,1,1]) {
     mx_holder_wall_h_thickness_add=1;
     mx_holder_wall_v_thickness_add=1;
     
-    mx_holder_wall_h_thickness=socket_size-mx_socket_size_v+mx_holder_wall_h_thickness_add;
+    //socket_size=15
+    mx_holder_wall_h_thickness=15-mx_socket_size_v+mx_holder_wall_h_thickness_add;
     
-    mx_holder_wall_v_thickness=socket_size-mx_socket_size_h+mx_holder_wall_v_thickness_add;
+    mx_holder_wall_v_thickness=15-mx_socket_size_h+mx_holder_wall_v_thickness_add;
     
     mx_holder_wall_h_width_u=17; //5 //10;
     mx_holder_wall_h_width_d=17; //5 //10;
     mx_holder_wall_h_width=10; 
     mx_holder_wall_h_width_u_offset=0;// 5/2;
     mx_holder_wall_h_width_d_offset=0; //5/2;
+    mx_holder_wall_v_width_u_offset=-0.3;// 5/2;
+    mx_holder_wall_v_width_d_offset=0.3; //5/2;
 
     mx_holder_wall_v_width_r=17.5; //5 //16;
     mx_holder_wall_v_width_l=17.5; //4.5
@@ -274,23 +296,33 @@ module switch_socket_base_mx(borders=[1,1,1,1]) {
     mx_holder_wall_v_width=5; 
     mx_holder_wall_v_width_r_offset=0;
     mx_holder_wall_v_width_l_offset=0;
-    mx_holder_wall_v_width_ru_offset=0.25;
-    mx_holder_wall_v_width_lu_offset=0.25;
-    mx_holder_wall_v_width_rd_offset=0.25;
-    mx_holder_wall_v_width_ld_offset=0.25;
+    mx_holder_wall_v_width_ru_offset=0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_lu_offset=0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_rd_offset=0.25+(v_unit-17)/2;
+    mx_holder_wall_v_width_ld_offset=0.25+(v_unit-17)/2;
     
     mx_holder_wall_height=5; //5
 
-    mx_holder_hook_thickness=0.25; //0.25
+    mx_holder_hook_thickness=0.45; //0.25->0.45 resin test result
     mx_holder_hook_height=1.4;//1.4;     //1.3
     mx_holder_hook_length=14; //5;     //2.5
     mx_holder_hook_margin1=3.5;     //3.5
     mx_holder_hook_margin2=mx_holder_hook_margin1+7;     //10.5
 
     
-//    //檢測用軸體14x14x5
-    %translate([h_unit/2,-v_unit/2,(pcb_thickness+5)/2])
-    cube([14,14,5],center=true);
+    //檢測用
+    if (base_pcb_layout_ShowVKeySwitch) {
+        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+5)/2])
+            cube(VKeySwitch_Size,center=true);   
+    }
+    
+    if (base_pcb_layout_ShowVKeycap) {
+        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+5)/2+5.5])
+            cube(VKeycap_Size,center=true);
+    }
+    
 //     
 //    echo("pcb_thickness:",pcb_thickness);
 //    echo("socket_size:",socket_size);
@@ -302,8 +334,8 @@ module switch_socket_base_mx(borders=[1,1,1,1]) {
 //    echo("mx_holder_wall_h_thickness_add:",mx_holder_wall_h_thickness_add)
      
 //上牆
-    translate([unit/2+mx_holder_wall_h_width_u_offset, -(v_unit-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2, (mx_holder_wall_height)/2]) 
-        cube([mx_holder_wall_h_width_u, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height], center=true);
+    translate([unit/2+mx_holder_wall_h_width_u_offset, -(v_unit-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2 + mx_holder_wall_v_width_u_offset, (mx_holder_wall_height-5)/2]) 
+        cube([mx_holder_wall_h_width_u, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height-5], center=true);
 
     //鉤子
     translate([unit/2, -(v_unit-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2 - mx_holder_hook_thickness/2,(pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
@@ -321,8 +353,10 @@ module switch_socket_base_mx(borders=[1,1,1,1]) {
 
     }
 //下牆
-    translate([h_unit/2+mx_holder_wall_h_width_d_offset, -v_unit/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2, (mx_holder_wall_height/2)]) 
-        cube([mx_holder_wall_h_width_d, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height], center=true);
+    translate([h_unit/2+mx_holder_wall_h_width_d_offset, -v_unit/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2 + mx_holder_wall_v_width_d_offset, ((mx_holder_wall_height-5)/2)]) 
+        cube([mx_holder_wall_h_width_d, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height-5], center=true);
+
+
 
     //鉤子
     translate([h_unit/2, -v_unit/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2+mx_holder_hook_thickness/2, (pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
@@ -391,9 +425,308 @@ module switch_socket_base_mx(borders=[1,1,1,1]) {
     }
 }
 
+module switch_socket_base_mx_stabilizer(borders=[1,1,1,1]) {
+    //MX軸的定位板為方形14mm的空間
+    //因此模擬溝槽的部分，應該是夾起來要14mm
+    //也就是牆厚與鉤子寬度不論怎麼設定，都要讓空間保留14mm
+    //頂多少0.5mm做為緩衝
+    //
+    //stabilizer 用的版本
+    
+    //多0.5是預留給卡榫的空間
+    mx_socket_size_v =14.5; //+0.25;
+    mx_socket_size_h =14; //+0.25;
+    //mx_holder_wall_h_thickness=(h_unit_stb/2)-(14.5/2);
+    
+    //mx_holder_wall_h_thickness_add=1.25-(socket_size-mx_socket_size_v);
+    //mx_holder_wall_v_thickness_add=1.25-(socket_size-mx_socket_size_v);
+    
+    mx_holder_wall_h_thickness_add=0.3;
+    mx_holder_wall_v_thickness_add=0.3;
+    
+    //socket_size=15
+    mx_holder_wall_h_thickness=15-mx_socket_size_v+mx_holder_wall_h_thickness_add;
+    
+    mx_holder_wall_v_thickness=15-mx_socket_size_h+mx_holder_wall_v_thickness_add;
+    
+    mx_holder_wall_h_width_u=17; //5 //10;
+    mx_holder_wall_h_width_d=16.5; //5 //10;
+    mx_holder_wall_h_width=10; 
+    mx_holder_wall_h_width_u_offset=0;// 5/2;
+    mx_holder_wall_h_width_d_offset=0; //5/2;
+    mx_holder_wall_v_width_u_offset=-0.3;// 5/2;
+    mx_holder_wall_v_width_d_offset=0.3; //5/2;
+
+    mx_holder_wall_v_width_r=17.5; //5 //16;
+    mx_holder_wall_v_width_l=17.5; //4.5
+    mx_holder_wall_v_width_ru=1.5; //5 //16;
+    mx_holder_wall_v_width_lu=1.5; //4.5
+    mx_holder_wall_v_width_rd=3; //5 //16;
+    mx_holder_wall_v_width_ld=3; //4.5
+    mx_holder_wall_v_width=5; 
+    mx_holder_wall_v_width_r_offset=0;
+    mx_holder_wall_v_width_l_offset=0;
+    mx_holder_wall_v_width_ru_offset=-mx_holder_wall_v_width_ru; //0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_lu_offset=-mx_holder_wall_v_width_lu; //0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_rd_offset=0; //0.25+(v_unit-17)/2;
+    mx_holder_wall_v_width_ld_offset=0; //0.25+(v_unit-17)/2;
+    
+    mx_holder_wall_height=5; //5
+
+    mx_holder_hook_thickness=0.45; //0.25->0.45 resin test result
+    mx_holder_hook_height=1.4;//1.4;     //1.3
+    mx_holder_hook_length=16.7; //5;     //2.5
+    mx_holder_hook_margin1=3.5;     //3.5
+    mx_holder_hook_margin2=mx_holder_hook_margin1+7;     //10.5
+
+    
+//    //檢測用軸體14x14x5
+//    %translate([h_unit_stb/2,-v_unit_stb/2,(pcb_thickness+5)/2])
+//    cube([14,14,5],center=true);
+
+//     
+//    echo("pcb_thickness:",pcb_thickness);
+//    echo("socket_size:",socket_size);
+//    echo("unit_stb:", unit_stb);
+//    echo("v_unit_stb:", v_unit_stb);
+//    echo("h_unit_stb:", h_unit_stb);
+//    echo("mx_socket_size_v",mx_socket_size_v);
+//    echo("mx_holder_wall_h_thickness:",mx_holder_wall_h_thickness);
+//    echo("mx_holder_wall_h_thickness_add:",mx_holder_wall_h_thickness_add)
+     
+//上牆
+    translate([unit_stb/2+mx_holder_wall_h_width_u_offset, -(v_unit_stb-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2+mx_holder_wall_v_width_u_offset, (mx_holder_wall_height-5)/2]) 
+        cube([mx_holder_wall_h_width_u, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height-5], center=true);
+
+    //鉤子
+    translate([unit_stb/2, -(v_unit_stb-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2 - mx_holder_hook_thickness/2,(pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
+     
+        cube([mx_holder_hook_length, mx_holder_wall_h_thickness+mx_holder_hook_thickness, mx_holder_hook_height ], center=true);
+    
+    //支撐
+    if (switch_socket_base_holder_support_frame) {
+
+    translate([unit_stb/2 - mx_holder_wall_h_thickness /2 , -(v_unit_stb-mx_socket_size_v)/2 +   mx_holder_wall_h_thickness + mx_holder_wall_support_width/2, (mx_holder_wall_height)/2]) 
+    {
+        rotate([0,0,90])
+        right_triangle(mx_holder_wall_support_width,mx_holder_wall_h_thickness,(mx_holder_wall_height+pcb_thickness),0,0,0);
+    }
+
+    }
+//下牆
+//    translate([h_unit_stb/2+mx_holder_wall_h_width_d_offset, -v_unit_stb/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2+mx_holder_wall_v_width_d_offset, ((pcb_thickness+mx_holder_wall_height-6)/2)+4]) 
+//        cube([mx_holder_wall_h_width_d, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height-6], center=true);
+
+    //鉤子
+    translate([h_unit_stb/2, -v_unit_stb/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2+mx_holder_hook_thickness/2, (pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
+     
+        cube([mx_holder_hook_length, mx_holder_wall_h_thickness+mx_holder_hook_thickness, mx_holder_hook_height ], center=true);
+
+//支撐
+    if (switch_socket_base_holder_support_frame) {
+    translate([h_unit_stb/2 + mx_holder_wall_h_thickness/2 , -v_unit_stb/2-mx_holder_wall_h_thickness-mx_socket_size_v/2 -  mx_holder_wall_support_width/2, (mx_holder_wall_height/2)])
+    {
+        rotate([0,0,-90])
+        right_triangle(mx_holder_wall_support_width,mx_holder_wall_h_thickness,(mx_holder_wall_height+pcb_thickness),0,0,0);
+    }
+}
+    
+    
+    mx_holder_wall_v_offset=0.2;
+    mx_holder_wall_support_width=1;
+    
+
+//    //右牆
+//    translate([(h_unit_stb)/2 + mx_socket_size_h/2 +mx_holder_wall_v_thickness/2, -(v_unit_stb)/2+mx_holder_wall_v_width_r_offset, (mx_holder_wall_height/2)]) {
+//        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_r,  pcb_thickness+mx_holder_wall_height], center=true);
+//    }
+//    
+//    //左牆
+//    translate([(h_unit_stb)/2 - mx_socket_size_h/2 -mx_holder_wall_v_thickness/2 , -(v_unit_stb)/2 +mx_holder_wall_v_width_l_offset, (mx_holder_wall_height/2)]) {
+//        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_l,  pcb_thickness+mx_holder_wall_height], center=true);
+//    }
+    
+    //右牆-兩側式
+    //-(v_unit_stb)/2
+    translate([(h_unit_stb)/2 + mx_socket_size_h/2 +mx_holder_wall_v_thickness/2, -mx_holder_wall_v_width_ru/2 +mx_holder_wall_v_width_ru_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_ru,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+
+    translate([(h_unit_stb)/2 + mx_socket_size_h/2 +mx_holder_wall_v_thickness/2, -14 - (mx_holder_wall_v_width_rd/2) -mx_holder_wall_v_width_rd_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_rd-1,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+    
+    //左牆-兩側式
+    //
+    translate([(h_unit_stb)/2 - mx_socket_size_h/2 -mx_holder_wall_v_thickness/2 , -(mx_holder_wall_v_width_lu)/2 +mx_holder_wall_v_width_lu_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_lu,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+    
+    translate([(h_unit_stb)/2 - mx_socket_size_h/2 -mx_holder_wall_v_thickness/2 ,-14 -(mx_holder_wall_v_width_ld)/2 - mx_holder_wall_v_width_ld_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_ld-1,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+
+ 
+/////
+
+    translate([h_unit_stb/2,-v_unit_stb/2,0]) 
+    //    difference() {
+    union() {
+        cube([socket_size, socket_size, pcb_thickness], center=true);
+        translate([0,0,border_z_offset ])
+            border(
+                [socket_size,socket_size], 
+                borders, 
+                pcb_thickness-2, 
+                h_border_width, 
+                v_border_width
+            );
+    }
+}
+
+module switch_socket_base_mx_stabilizer2(borders=[1,1,1,1]) {
+    //MX軸的定位板為方形14mm的空間
+    //因此模擬溝槽的部分，應該是夾起來要14mm
+    //也就是牆厚與鉤子寬度不論怎麼設定，都要讓空間保留14mm
+    //頂多少0.5mm做為緩衝
+    //
+    //stabilizer 用的版本
+    
+    //多0.5是預留給卡榫的空間
+    mx_socket_size_v =14.5; //+0.25;
+    mx_socket_size_h =14; //+0.25;
+
+    
+    mx_holder_wall_h_thickness_add=0.3;
+    mx_holder_wall_v_thickness_add=0;
+    
+    //socket_size=15
+    mx_holder_wall_h_thickness=15-mx_socket_size_v+mx_holder_wall_h_thickness_add;
+    
+    mx_holder_wall_v_thickness=15-mx_socket_size_h+mx_holder_wall_v_thickness_add;
+    
+    mx_holder_wall_h_width_u=14; //5 //10;
+    mx_holder_wall_h_width_d=14; //5 //10;
+    mx_holder_wall_h_width=10; 
+    mx_holder_wall_h_width_u_offset=0.1;// 5/2;
+    mx_holder_wall_h_width_d_offset=0.1; //5/2;
+    mx_holder_wall_v_width_u_offset=-0.1;// 5/2;
+    mx_holder_wall_v_width_d_offset=-0.1; //5/2;
+
+    mx_holder_wall_v_width_r=17.5; //5 //16;
+    mx_holder_wall_v_width_l=17.5; //4.5
+    mx_holder_wall_v_width_ru=2; //5 //16;
+    mx_holder_wall_v_width_lu=2; //4.5
+    mx_holder_wall_v_width_rd=3; //5 //16;
+    mx_holder_wall_v_width_ld=3; //4.5
+    mx_holder_wall_v_width=5; 
+    mx_holder_wall_v_width_r_offset=0;
+    mx_holder_wall_v_width_l_offset=0;
+    mx_holder_wall_v_width_ru_offset=-mx_holder_wall_v_width_ru+0.6; //0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_lu_offset=-mx_holder_wall_v_width_lu+0.6; //0.25-(v_unit-17)/2;
+    mx_holder_wall_v_width_rd_offset=1.1; //0.25+(v_unit-17)/2;
+    mx_holder_wall_v_width_ld_offset=1.1; //0.25+(v_unit-17)/2;
+    
+    mx_holder_wall_height=5; //5
+
+    mx_holder_hook_thickness=0.45; //0.25->0.45 resin test result
+    mx_holder_hook_height=1.4;//1.4;     //1.3
+    mx_holder_hook_length=13.8; //5;     //2.5
+    mx_holder_hook_margin1=3.5;     //3.5
+    mx_holder_hook_margin2=mx_holder_hook_margin1+7;     //10.5
+
+    
+//    //檢測用軸體14x14x5
+//    %translate([h_unit_stb/2,-v_unit_stb/2,(pcb_thickness+5)/2])
+//    cube([14,14,5],center=true);
+
+     
+//上牆
+    translate([unit_stb/2+mx_holder_wall_h_width_u_offset, -(v_unit_stb-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2+mx_holder_wall_v_width_u_offset, (mx_holder_wall_height)/2]) 
+        cube([mx_holder_wall_h_width_u, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height], center=true);
+
+    //鉤子
+    translate([unit_stb/2, -(v_unit_stb-mx_socket_size_v)/2 + mx_holder_wall_h_thickness/2 - mx_holder_hook_thickness/2,(pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
+     
+        cube([mx_holder_hook_length, mx_holder_wall_h_thickness+mx_holder_hook_thickness, mx_holder_hook_height ], center=true);
+    
+    //支撐
+    if (switch_socket_base_holder_support_frame) {
+
+    translate([unit_stb/2 - mx_holder_wall_h_thickness /2 , -(v_unit_stb-mx_socket_size_v)/2 +   mx_holder_wall_h_thickness + mx_holder_wall_support_width/2, (mx_holder_wall_height)/2]) 
+    {
+        rotate([0,0,90])
+        right_triangle(mx_holder_wall_support_width,mx_holder_wall_h_thickness,(mx_holder_wall_height+pcb_thickness),0,0,0);
+    }
+
+    }
+
+   
+//下牆
+    translate([unit_stb/2+mx_holder_wall_h_width_d_offset, -v_unit_stb/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2 + mx_holder_wall_v_width_d_offset, ((mx_holder_wall_height)/2)]) 
+        cube([mx_holder_wall_h_width_d, mx_holder_wall_h_thickness, pcb_thickness+mx_holder_wall_height], center=true);
+
+
+    //鉤子
+    translate([h_unit_stb/2, -v_unit_stb/2-mx_holder_wall_h_thickness/2-mx_socket_size_v/2+mx_holder_hook_thickness/2, (pcb_thickness+mx_holder_hook_height)/2+mx_holder_wall_height-mx_holder_hook_height]) 
+     
+        cube([mx_holder_hook_length, mx_holder_wall_h_thickness+mx_holder_hook_thickness, mx_holder_hook_height ], center=true);
+
+//支撐
+    if (switch_socket_base_holder_support_frame) {
+    translate([h_unit_stb/2 + mx_holder_wall_h_thickness/2 , -v_unit_stb/2-mx_holder_wall_h_thickness-mx_socket_size_v/2 -  mx_holder_wall_support_width/2, (mx_holder_wall_height/2)])
+    {
+        rotate([0,0,-90])
+        right_triangle(mx_holder_wall_support_width,mx_holder_wall_h_thickness,(mx_holder_wall_height+pcb_thickness),0,0,0);
+    }
+}
+    
+    
+    mx_holder_wall_v_offset=0.2;
+    mx_holder_wall_support_width=1;
+    
+    //右牆-兩側式
+    //-(v_unit_stb)/2
+    translate([(h_unit_stb)/2 + mx_socket_size_h/2 +mx_holder_wall_v_thickness/2, -mx_holder_wall_v_width_ru/2 +mx_holder_wall_v_width_ru_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_ru,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+
+    translate([(h_unit_stb)/2 + mx_socket_size_h/2 +mx_holder_wall_v_thickness/2, -14 - (mx_holder_wall_v_width_rd/2) -mx_holder_wall_v_width_rd_offset, (mx_holder_wall_height/2)]) {
+        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_rd-1,  pcb_thickness+mx_holder_wall_height], center=true);
+    }
+    
+    //左牆-兩側式
+    //
+//    translate([(h_unit_stb)/2 - mx_socket_size_h/2 -mx_holder_wall_v_thickness/2 , -(mx_holder_wall_v_width_lu)/2 +mx_holder_wall_v_width_lu_offset, (mx_holder_wall_height/2)]) {
+//        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_lu,  pcb_thickness+mx_holder_wall_height], center=true);
+//    }
+    
+//    translate([(h_unit_stb)/2 - mx_socket_size_h/2 -mx_holder_wall_v_thickness/2 ,-14 -(mx_holder_wall_v_width_ld)/2 - mx_holder_wall_v_width_ld_offset, (mx_holder_wall_height/2)]) {
+//        cube([mx_holder_wall_v_thickness,mx_holder_wall_v_width_ld-1,  pcb_thickness+mx_holder_wall_height], center=true);
+//    }
+
+ 
+/////
+
+    translate([h_unit_stb/2,-v_unit_stb/2,0]) 
+    //    difference() {
+    union() {
+        cube([socket_size, socket_size, pcb_thickness], center=true);
+        translate([0,0,border_z_offset ])
+            border(
+                [socket_size,socket_size], 
+                borders, 
+                pcb_thickness-2, 
+                h_border_width, 
+                v_border_width
+            );
+    }
+}
+
+
 module switch_socket_cutout(borders=[1,1,1,1], rotate_column=false,use_switch_type=switch_type) {
     
-    if (use_switch_type == "mx" || use_switch_type == "mx_holder") {
+    if (use_switch_type == "mx" || use_switch_type == "mx_holder" || use_switch_type == "mx_s_holder" || use_switch_type == "mx_s_holder2") {
         if (use_folded_contact) {
             mx_improved_socket_cutout(borders, rotate_column);
         } else if (utp_wire==true && diode_less==false && wire_diameter<=1) {
@@ -648,7 +981,7 @@ module mx_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 // Row wire
                 translate([0,4*grid,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
                     //cylinder(h=18,d=wire_diameter,center=true);
-                cube([pcb_thickness/1.5,wire_diameter,18],center=true);
+                cube([pcb_thickness/1.5,wire_diameter,18+14],center=true);
                 
                 // Column wire
                 //Lower channel
@@ -658,12 +991,12 @@ module mx_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
 //                        cylinder(h=col_cutout_length,d=wire_diameter*1.5,center=true);
 
                 //Upper channel
-                translate([3.5*grid,3.8+2,(pcb_thickness/2-wire_diameter/3)]) 
+                translate([3.5*grid,3.8+2+5,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
-                        cube([wire_diameter,pcb_thickness/1.5,5],center=true);
-                translate([2.5*grid,-3.8-0.3,(pcb_thickness/2-wire_diameter/3)]) 
+                        cube([wire_diameter,pcb_thickness/1.5,15],center=true);
+                translate([2.5*grid,-3.8-0.3-3,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
-                    cube([wire_diameter,pcb_thickness/1.5,15],center=true);
+                    cube([wire_diameter,pcb_thickness/1.5,15+4],center=true);
                     //cylinder(h=15,d=wire_diameter,center=true);
     //Deep Channels
     if (both_deep_channels==true) {
@@ -970,73 +1303,82 @@ module choc_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
     render() translate([h_unit/2,-v_unit/2,0]) rotate([0,0,switch_rotation])
         intersection() {
             union() {
-                // Central pin
-                translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
-                    cylinder(h=pcb_thickness+1+socket_depth,d=3.5*1.1, $fn=40);
+                // Central pin and Bottom Side pin
+                if (choc_v1_compatible_v2==true){
+                    //Choc V2 Central pin
+                    translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
+                        cylinder(h=pcb_thickness+1+socket_depth,d=4.8*1.05, $fn=40);                    
+                    //Bottom Side pin (V2)
+                    translate([-5,-5.15,(pcb_thickness+1)/2])
+                        rotate([180+diode_pin_angle,0,0])
+                           cylinder(h=pcb_thickness+1+socket_depth,r=0.7,$fn=20);                    
+                } else {                    
+                    //Choc V1 Central pin
+                    translate([0,0,pcb_thickness/2-socket_depth-socket_depth])
+                        cylinder(h=pcb_thickness+1+socket_depth,d=3.5*1.1, $fn=40);
+                }
+
                 // Side pins
                 for (x = [-5.5,5.5]) {
                     translate([x,0,pcb_thickness/2-socket_depth-socket_depth])
                         cylinder(h=pcb_thickness+1+socket_depth,d=1.75*1.1, $fn=40);
                 }
-                // Top switch pin
+                // Center switch pin
                 translate([0,5.9,pcb_thickness/2-socket_depth-socket_depth])
                     cylinder(h=pcb_thickness+1+socket_depth,r=1, $fn=40);
-                // Bottom switch pin
+                // Left side switch pin
                 translate([5,3.8-0.5,(pcb_thickness+1)/2])
                     rotate([180+diode_pin_angle,0,0])
                         cylinder(h=pcb_thickness+1,d=1.6*1.1, $fn=40);
-                // Diode cathode cutout
-                translate([-3.125,3.8,0]) 
+                // Diode cathode cutout (R)
+                translate([-3.125,3.8-0.3,0]) 
                     cylinder(h=pcb_thickness+1,d=1.75*1.1,center=true, $fn=40);
 
                 // Wire Channels
+                
                 // Row wire
-                if (both_deep_channels==true) {
-    translate([0,5.9,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
-                cube([pcb_thickness/1.5,wire_diameter*1.1,unit],center=true);
-//test
-    translate([-1*unit/2+6,5.9,pcb_thickness/2-wire_diameter/3-1]) rotate([0,90,0])
-                cube([pcb_thickness/1.5,wire_diameter*1.1,6],center=true);
-                    
-                    } else {
                 translate([0,5.9,pcb_thickness/2-wire_diameter/3]) rotate([0,90,0])
-                    cylinder(h=unit,d=wire_diameter,center=true);                        
-                        }
-//                #translate([5,5.9,pcb_thickness/2-wire_diameter]) rotate([0,90,0])
-//                    cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                    cylinder(h=unit,d=wire_diameter,center=true,$fn=40);                                        
+                if (both_deep_channels==true) {
+                    translate([0,5.9,pcb_thickness/2-1.1]) rotate([0,90,0])
+                        cube([1.5,wire_diameter*1.1,unit],center=true);
+                    //更深的線槽,避免兩條線路交錯時,高度過高 
+                    translate([-1*unit/2+6,5.9,pcb_thickness/2-2.1]) rotate([0,90,0])
+                        cube([2.5,wire_diameter*1.1,6],center=true);
+//                  #translate([5,5.9,pcb_thickness/2-wire_diameter]) rotate([0,90,0])
+//                      cube([pcb_thickness/1.5,wire_diameter,5],center=true);
+                }
                 
                 // Column wire
+                translate([-3.125,0,(pcb_thickness/2-wire_diameter/3)]) 
+                    rotate([90,0,rotate_column?90:0])
+                    cylinder(h=15,d=wire_diameter,center=true,$fn=40);
+                    //cube([wire_diameter,wire_diameter*1.5,15],center=true);                
+                
                 if (both_deep_channels==true) {
-translate([-3.125,0,(pcb_thickness/2-wire_diameter/3)])  
-                    rotate([90,0,rotate_column?90:0])
-//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
-                        cube([wire_diameter*1.1,pcb_thickness/1.5,unit],center=true);
+                    translate([-3.125,0,pcb_thickness/2-1.1])  
+                        rotate([90,0,rotate_column?90:0])
+    //                      cylinder(h=col_cutout_length,d=wire_diameter,center=true);
+                            cube([wire_diameter*1.1,1.5,unit],center=true);
 
-//test
-translate([-3.125,unit/2-3,(pcb_thickness/2-wire_diameter/3-1)])  
-                    rotate([90,0,rotate_column?90:0])
-//                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
-                        cube([wire_diameter*1.1,pcb_thickness/1.5,6],center=true);
+                    //相交處加深
+                    translate([-3.125,unit/2-3,(pcb_thickness/2-2.1)])  
+                        rotate([90,0,rotate_column?90:0])
+                            cube([wire_diameter*1.1,2.5,6],center=true);
                     
                 } else {
+                //相交處加深
                 translate([-3.125,3.8+2,(pcb_thickness/2-wire_diameter/3)]) 
                     rotate([90,0,rotate_column?90:0])
 //                        cylinder(h=col_cutout_length,d=wire_diameter,center=true);
                         cube([wire_diameter,pcb_thickness/1.5,5],center=true);
-                translate([-3.125,-3.8+0.5,(pcb_thickness/2-wire_diameter/3)]) 
-                    rotate([90,0,rotate_column?90:0])
-                    cylinder(h=15,d=wire_diameter,center=true);
-    //cube([wire_diameter,wire_diameter*1.5,15],center=true);
+
                 }
+                
                 // Diode cathode cutout - TO RETURN
 //                translate([-6*grid,3.8,0])
 //                    cylinder(h=pcb_thickness+1,r=.7,center=true);
-
-                translate([-5*grid,3.8,0])
-                    cylinder(h=pcb_thickness+1,r=.7,center=true,$fn=40);
-                translate([2.5*grid,0-0.5,0])
-                    cylinder(h=pcb_thickness+1,r=.7,center=true,$fn=40);
-                
+           
                     
                 // Diode Channel
 //                translate([-3.125,0,pcb_thickness/2])
@@ -1047,36 +1389,51 @@ translate([-3.125,unit/2-3,(pcb_thickness/2-wire_diameter/3-1)])
 //                    cube([8.5+4,1,2],center=true);
 //                translate([1,3.75,pcb_thickness/2-0.2])
 //                    cube([5,2,3.5],center=true);
-                //for 5.1mm x 2.5mm diode
-                translate([.75-2,3.5,3/2-0.35])
-                    cube([8.5+4,1,3/2+0.2],center=true);
-//測試 test            
+
+                // Diode main Channel 二極體主通道
+                translate([.75-2.05,3.5,3/2-0.35+0.5])
+                    cube([8.5+4,1,3/2+0.2+0.5],center=true);
+                    
+                //Diode hole channel(R) 右側穿孔            
+                translate([-5*grid,3.8-0.3,0])
+                    cylinder(h=pcb_thickness+1,r=.7,center=true,$fn=40);
+                    
+                //Diode bottom channel(R) 右側底部通道            
                 translate([.75-5.5,3.5,-3/2-0.35])
                     cube([3,1,1],center=true);
-// for 3.3mm x 1.9mm
-                translate([0.2,3.5,3-pcb_thickness/2])
+                    
+                //Diode groov 放置凹槽
+                translate([0.2,3.5,3-pcb_thickness/2+0.5])
+                    //for 5.1mm x 2.5mm diode
                     //cube([5.6,2.9,3],center=true);
-                    cube([3.5,2,2],center=true);
+                    //for 3.3mm x 1.9mm
+                    cube([3.5,2,2.5],center=true);
                 //去除薄邊
                 translate([0,3.5,3-pcb_thickness/2])
                     cube([2,5,3],center=true);
-               
-                translate([4,2-0.5,pcb_thickness/2])
-                    rotate(a=[0,0,65])
-                    cube([5,1,2],center=true);
 
-//測試 test
-                translate([4,2-0.5,-pcb_thickness/2+0.35])
-                    rotate(a=[0,0,65])
+                //Diode hole channel(L) 左側穿孔   
+                translate([2.8*grid,-1,0])
+                    cylinder(h=pcb_thickness+1,r=.7,center=true,$fn=40);
+                
+                //Diode channel(L) 左側通道   
+                translate([4.2,2-0.5,pcb_thickness/2])
+                    rotate(a=[0,0,72])
+                    cube([5,1,2],center=true);
+                //Diode bottom channel(L) 左側底部通道   
+                translate([4.2,2-0.5,-pcb_thickness/2+0.35])
+                    rotate(a=[0,0,72])
                     cube([5,1,1],center=true);
 
-                // LED cutout
+                // LED cutout 
                 if (led_hole==true) {
                     translate([0,-5,0])
                         cube([5,3,10],center=true);
+                    //去除掉跟線槽間的細牆
+                    translate([-0.5,-5,pcb_thickness+1.15])
+                        cube([5,3,10],center=true);
                 }
 
-            
             }
 
             translate([

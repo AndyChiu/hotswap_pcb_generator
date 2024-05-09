@@ -1,3 +1,4 @@
+
 /* PCB Parameters */
 // Diameter of row/column wire channels
 wire_diameter = 1;//0.91;
@@ -24,6 +25,7 @@ use_folded_contact = false;
 utp_wire = true;
 led_hole = true;
 diode_less = false;
+choc_v1_compatible_v2  = true;
 choc_v2_compatible_v1  = false;
 both_deep_channels = true;
 
@@ -127,11 +129,29 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
-unit = 16;
+unit = 18;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 16;
+h_unit = 18;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 16;
+v_unit = 17;
+
+//Andy add:
+//unit size for stabilizer
+unit_stb = 19.02;
+// Horizontal unit size (18mm for choc keycaps)
+h_unit_stb = 19.02;
+// Vertical unit size (17mm for choc keycaps)
+v_unit_stb = 19.02;
+
+unit_choc = 18;
+// Horizontal unit size (18mm for choc keycaps)
+h_unit_choc = 18;
+// Vertical unit size (17mm for choc keycaps)
+v_unit_choc = 17;
+
+choc_socket_size=15;
+
+
 // Spacing of grid for MX pins
 grid = 1.27;
 // Size of socket body
@@ -143,7 +163,17 @@ socket_size =
     : switch_type == "chocV2"
         ? 15
     : switch_type == "chocMini"
+        ? 15
+    : switch_type == "mx_holder"
         ? 14
+    : switch_type == "mx_s_holder"
+        ? 14
+    : switch_type == "mx_s_holder2"
+        ? 14
+    : switch_type == "choc_holer"
+        ? 15
+    : switch_type == "chocV2_1u"
+        ? 15
     : switch_type == "ks27"
         ? 15
     : switch_type == "mx_low"
@@ -165,6 +195,16 @@ plate_thickness =
         ? 1.3
     : switch_type == "chocMini"
         ? 1.3
+    : switch_type == "mx_holder"
+        ? 1.5
+    : switch_type == "mx_s_holder"
+        ? 1.5
+    : switch_type == "mx_s_holder2"
+        ? 1.5
+    : switch_type == "choc_holer"
+        ? 1.3
+    : switch_type == "chocV2_1u"
+        ? 1.3
     : switch_type == "ks27"
         ? 1.3
     : switch_type == "mx_low"
@@ -184,6 +224,16 @@ plate_cutout_size =
         ? 13.8
     : switch_type == "chocMini"
         ? 13.4
+    : switch_type == "mx_holder"
+        ? 14
+    : switch_type == "mx_s_holder"
+        ? 14
+    : switch_type == "mx_s_holder2"
+        ? 14
+    : switch_type == "choc_holer"
+        ? 13.8
+    : switch_type == "chocV2_1u"
+        ? 13.8
     : switch_type == "ks27"
         ? 13.8
     : switch_type == "mx_low"
@@ -202,6 +252,16 @@ pcb_plate_spacing =
     : switch_type == "chocV2"
         ? 2.2
     : switch_type == "chocMini"
+        ? 2.2
+    : switch_type == "mx_holder"
+        ? 5
+    : switch_type == "mx_s_holder"
+        ? 5
+    : switch_type == "mx_s_holder2"
+        ? 5
+    : switch_type == "choc_holer"
+        ? 2.2
+    : switch_type == "chocV2_1u"
         ? 2.2
     : switch_type == "ks27"
         ? 2.2
@@ -249,10 +309,40 @@ microswitch_hold_bar = false;
 //右側位移
 iRSOffSet=1;    
 
-//PCB layout 相關
+//PCB layout 設計相關
+
+//Mark out PCB layout design points set, no hull the objects.
+//將外圍設定的點標註出來,不產hull畫面 true, false, "DontShow"
 base_pcb_layout_outer_DesignMode = false;
 
+//Mark out the grooves of the circular self-adhesive rubber pad
+//將圓形自黏膠墊凹槽標註出來
+base_pcb_layout_Rubber_Pads_DesignMode = true;
+
+//No cutout the switch socket hole, which can increase the view speed
+//不挖軸坐上的洞，可以增加速檢視速度
+base_pcb_layout_DesignMode = true;
+
+//Draw an outer frame
+//是否繪製外框
 base_pcb_layout_outer_EdgeFrame = true;
 
-base_pcb_layout_outer_EdgeFrame_size = 4;
-base_pcb_layout_outer_EdgeFrame_hight = 5;
+//apply the setting of the Switch angle and height
+//是否套用軸體角度與高度的設定
+base_pcb_layout_ApyAdjSwitchAngleAndHeight = true;
+
+//Show virtual KeySwitch
+//是否顯示虛擬軸體
+base_pcb_layout_ShowVKeySwitch = true;
+
+//Show virtual Keycaps
+//是否顯示虛擬鍵帽
+base_pcb_layout_ShowVKeycap = true;
+
+//Show keycap Legend text
+//是否顯示軸座對應的按鍵文字
+base_pcb_layout_ShowKeycapLegend = true;
+
+//keycap Legend text location height
+//按鍵文字放置高度
+base_pcb_layout_ShowKeycapLegend_H = 0;

@@ -71,6 +71,17 @@ switch_rotation =
         ? 180
         : assert(false, "switch_orientation is invalid");
 
+
+
+//unit、h_unit、v_unit 尺寸與版面設定的比例
+unit_ratio = unit/base_pcb_layout_unit_size;
+// Horizontal unit size (18mm for choc keycaps)
+h_unit_ratio = h_unit/base_pcb_layout_h_unit_size;
+// Vertical unit size Ratio to layout settings
+v_unit_ratio = v_unit/base_pcb_layout_v_unit_size;
+
+
+
 // Useful for manipulating layout elements
 function slice(array, bounds, extra_data_override="") = [
     let(
@@ -129,24 +140,245 @@ function invert_layout(layout) = [
         ]
 ];
 
-module layout_pattern(layout) {
+module layout_pattern(layout,pattern_type="") {
     union() {
         for (item = layout) {
             location = item[0];
             $borders = item[1];
             $extra_data = item[2];
+            
+//            echo("location:",location);
+//            echo("$borders:",$borders);
+//            echo("$extra_data:",$extra_data);
+
+//            echo("location:",item[0]);
+//     (extra_data = rotate_column, switch_type,srp="N",rx=0,ry=0,h=0,w=1)
+            
+            srp=item[2][2][0];
+            keycapLegend=item[2][3];
+            if (srp==undef || !base_pcb_layout_ApyAdjSwitchAngleAndHeight) {
+
+                switch_offset = (location[1]-1)/2;  // Coordinate offset based on key shape
+                if (pattern_type=="mcu_cutout") {
+                    
+                    translate([location[2][1]*h_unit+mcu_socket_width/2+1,-location[2][2]*v_unit-mcu_socket_length-2,-pcb_thickness/2-0.01]) {
+                        rotate([0,0,location[2][0]]) {
+                            translate([(location[0][0]-location[2][1]-switch_offset)*h_unit,
+                                       (location[2][2]-location[0][1])*v_unit,
+                                       0]) {
+                                #cube([mcu_socket_width,mcu_socket_length,pcb_thickness/2+0.02]);
+                            }
+                        }
+                    }
+                } else {
+                    translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
+                        rotate([0,0,location[2][0]]) {
+                            translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
+                                       (location[2][2]-location[0][1])*v_unit,
+                                       0]) {
+                                children();
+                                           if (base_pcb_layout_ShowKeycapLegend) {
+                                translate([0+h_unit/2-3,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+2])     
+                                    color("Black") %text(keycapLegend,size=3);
+                            }
+                            }
+                        }
+                    }
+                }
+            
+            } else {
+
+            h=item[2][2][3];
+            w=item[2][2][4];
+                
+            rz=0;
+            pz=-2;
+            
+            bx=item[2][2][5];
+            by=item[2][2][6];
+            bz=2;
+                
+            rx =
+                srp == "N"
+                ? 0
+                : srp == "LU"
+                    ? item[2][2][1]
+                : srp == "L"
+                    ? 0
+                : srp == "LD"
+                    ? -item[2][2][1]
+                : srp == "U"
+                    ? item[2][2][1]
+                : srp == "D"
+                    ? -item[2][2][1]                   
+                : srp == "RU"
+                    ? item[2][2][1]
+                : srp == "R"
+                    ? 0
+                : srp == "RD"
+                    ? -item[2][2][1]
+                : "";
+            ry =
+                srp == "N"
+                ? 0
+                : srp == "LU"
+                    ? item[2][2][2]
+                : srp == "L"
+                    ? item[2][2][2]
+                : srp == "LD"
+                    ? item[2][2][2]
+                : srp == "U"
+                    ? 0
+                : srp == "D"
+                    ? 0                   
+                : srp == "RU"
+                    ? -item[2][2][2]
+                : srp == "R"
+                    ? -item[2][2][2]
+                : srp == "RD"
+                    ? -item[2][2][2]
+                : "";
+
+            px =
+                srp == "N"
+                ? v_unit
+                : srp == "LU"
+                    ? bx
+                : srp == "L"
+                    ? bx
+                : srp == "LD"
+                    ? bx
+                : srp == "U"
+                    ? bx
+                : srp == "D"
+                    ? bx                  
+                : srp == "RU"
+                    ? 0
+                : srp == "R"
+                    ? 0
+                : srp == "RD"
+                    ? 0
+                : "";
+
+            py =
+                srp == "N"
+                ? -h_unit
+                : srp == "LU"
+                    ? -by
+                : srp == "L"
+                    ? -by
+                : srp == "LD"
+                    ? 0
+                : srp == "U"
+                    ? -by
+                : srp == "D"
+                    ? 0                  
+                : srp == "RU"
+                    ? -by
+                : srp == "R"
+                    ? -by
+                : srp == "RD"
+                    ? 0
+                : "";    
+            //左上 LU (+x,+y) (px,-py)
+            //左 L    (0,+y) (px,-py)
+            //左下 LD (-x,+y) (px,0)
+            //上 U    (+x,0) (px,-py)
+            //無 N    (0,0)  (px,-py)
+            //下 D    (-x,0) (px,0)
+            //右上 RU (+x,-y) (0,-py)
+            //右 R    (0,-y) (0,-py)
+            //右下 RD (-x,-y) (0,0)
+
+
+            
+//            echo("srp:",srp);
+//            echo("rx,ry,rz:",rx,ry,rz);
+//            echo("px,py,pz:",px,py,pz);
+//            echo("bx,by,bz:",bx,by,bz);
+//            echo("w:",w);
+//            echo("h:",h);
 
             switch_offset = (location[1]-1)/2;  // Coordinate offset based on key shape
+
 
             translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
                 rotate([0,0,location[2][0]]) {
                     translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
                                (location[2][2]-location[0][1])*v_unit,
                                0]) {
-                        children();
+                    if (pattern_type=="switch_socket_cutout") {
+                        rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                        translate([0,0,h]){
+                            children();  
+                                          }                      
+                    } else if (pattern_type=="switch_socket_base_cutout") {
+                        translate([0,-1*by,-1*bz-0.01]) 
+                        cube([bx,by,bz+0.02]);
+                       
+                    } else {
+                        difference() {
+                            union() {
+
+                                //建立突起的部分
+                                hull(){
+                                    rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                                    translate([0,-1*by,-1*bz+h]) 
+                                    cube([bx,by,bz]);
+
+                                    translate([0,-1*by,-1*bz]) 
+                                    cube([bx,by,bz]);
+                                }
+                                
+                                //建立choc基座
+                                rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                                translate([0,0,h])
+                                    children();
+
+                            }
+                            
+                            //掏空突起部分的內部，預留 w mm壁厚度
+                            hull(){
+                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+                                translate([w,-1*by+w,-1*bz-2+h]) 
+                                cube([bx-(w*2),by-(w*2),bz+0.01]);
+
+                                translate([w,-1*by+w,-1*bz-2]) 
+                                cube([bx-(w*2),by-(w*2),bz]);
+                            }
+                        }
+                        if (base_pcb_layout_ShowKeycapLegend) {
+                            ShowKeycapLegend_H_add =
+                                  base_pcb_layout_ShowVKeycap == true
+                                    ? VKeySwitch_Size[2]+VKeycap_Size[2]
+                                : base_pcb_layout_ShowVKeySwitch == true
+                                    ? VKeySwitch_Size[2]
+                                : 0;
+                            rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                                translate([0+h_unit/2-3,-1*by+v_unit/2,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
+                                color("Black") %text(keycapLegend,size=3);
+                        }
+                                       
+                        }
                     }
                 }
             }
+            
+            }
+
+//            if (base_pcb_layout_ShowKeycapLegend) {
+//                switch_offset = (location[1]-1)/2;
+//                        translate([location[2][1]*h_unit+h_unit/2,-location[2][2]*v_unit-v_unit/2,0]) {
+//                            rotate([0,0,location[2][0]]) {
+//                                    translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
+//                                           (location[2][2]-location[0][1])*v_unit,
+//                                           12]) {     
+//                                                color("Black") %text(keycapLegend,size=3);
+//                                               }
+//                                     
+//                                     }
+//                                }
+//                            }
         }
     }
 }
@@ -185,6 +417,7 @@ module chamfer(length,width,height) {
     }
 }
 
+
 //直角三角形
 module right_triangle(length, width, height,rx=0,ry=0,rz=0) {
 
@@ -202,3 +435,13 @@ module right_triangle(length, width, height,rx=0,ry=0,rz=0) {
 }
 }
 
+
+//在指定位置旋轉
+//Rotate at specified position
+module rotate_p(a, orig) 
+{
+    translate(orig)
+    rotate(a)
+    translate(-orig)
+    children();
+}
