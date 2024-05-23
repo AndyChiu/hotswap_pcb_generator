@@ -312,8 +312,12 @@ iRSOffSet=1;
 //PCB layout 設計相關
 
 //Mark out PCB layout design points set, no hull the objects.
-//將外圍設定的點標註出來,不產hull畫面 true, false, "DontShow"
+//將外圍設定的點標註出來,不產hull畫面: true, false, "DontShow"
 base_pcb_layout_outer_DesignMode = false;
+
+//What color should be displayed when the outer hull is surrounded
+//外圍hull包圍起來時，要產生什麼顏色: "ColorName","None","Group"
+base_pcb_layout_outer_hull_color = "Group";
 
 //Mark out the grooves of the circular self-adhesive rubber pad
 //將圓形自黏膠墊凹槽標註出來
@@ -333,11 +337,11 @@ base_pcb_layout_ApyAdjSwitchAngleAndHeight = true;
 
 //Show virtual KeySwitch
 //是否顯示虛擬軸體
-base_pcb_layout_ShowVKeySwitch = true;
+base_pcb_layout_ShowVKeySwitch = false;
 
 //Show virtual Keycaps
 //是否顯示虛擬鍵帽
-base_pcb_layout_ShowVKeycap = true;
+base_pcb_layout_ShowVKeycap = false;
 
 //Show keycap Legend text
 //是否顯示軸座對應的按鍵文字

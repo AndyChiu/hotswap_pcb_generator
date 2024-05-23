@@ -178,8 +178,14 @@ module layout_pattern(layout,pattern_type="") {
                                        0]) {
                                 children();
                                            if (base_pcb_layout_ShowKeycapLegend) {
-                                translate([0+h_unit/2-3,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+2])     
-                                    color("Black") %text(keycapLegend,size=3);
+                                                ShowKeycapLegend_H_add =
+                                                      base_pcb_layout_ShowVKeycap == true
+                                                        ? VKeySwitch_Size[2]+VKeycap_Size[2]
+                                                    : base_pcb_layout_ShowVKeySwitch == true
+                                                        ? VKeySwitch_Size[2]
+                                                    : 0;
+                                                translate([0+h_unit/2-3,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
+ color("Black") %text(keycapLegend,size=3);
                             }
                             }
                         }

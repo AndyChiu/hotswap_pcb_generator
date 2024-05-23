@@ -192,8 +192,15 @@ module pcb_layout_outer(groups, LE_height=2, trans_z=-2,resize_x=0,resize_y=0,mo
     } else {
         //正常模式，產生hull結構
         translate([0,0,trans_z])
-        linear_extrude(LE_height) 
         union() for (group = groups) {
+            hull_color =
+                (base_pcb_layout_outer_hull_color!="None" &&base_pcb_layout_outer_hull_color!="Group")
+                ? base_pcb_layout_outer_hull_color
+                : base_pcb_layout_outer_hull_color=="Group"
+                ? group[0][2]        
+                : false ;
+            color(hull_color)
+            linear_extrude(LE_height) 
             hull() {
                 for (point = group) {
                      translate([point[0][0]*h_unit_ratio,
