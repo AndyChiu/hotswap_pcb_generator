@@ -17,7 +17,7 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_
         
         pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout);
         
-        if (base_pcb_layout_DesignMode==false) {
+        if (base_pcb_layout_DesignMode==false || $preview==false) {
             
             layout_pattern(switch_layout,"switch_socket_cutout") {
                 switch_socket_cutout($borders, $extra_data[0], $extra_data[1]);
@@ -144,7 +144,9 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
         
         layout_pattern(ec11_layout) {
             ec11_socket_base($borders);
-        }    
+        }
+    
+        layout_pattern(base_switch_layout,"switch_socket_base_cutout2");    
 
     }
     
@@ -156,11 +158,17 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
     }    
 
     //建立外框
-    if (base_pcb_layout_outer_EdgeFrame==true) {
+    if (base_pcb_layout_outer_EdgeFrame=="RoundedCorners") {
         difference() {
-            pcb_layout_outer(base_pcb_layout_outer, base_pcb_layout_outer_EdgeFrame_hight,-2,base_pcb_layout_outer_EdgeFrame_size_x,base_pcb_layout_outer_EdgeFrame_size_y,"EdgeFrame");
-            pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrame");   
+             pcb_layout_outer(base_pcb_layout_outer, base_pcb_layout_outer_EdgeFrame_hight,-2,base_pcb_layout_outer_EdgeFrame_size_x,base_pcb_layout_outer_EdgeFrame_size_y,"EdgeFrameOuter");
+           pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrameInner");   
         }
+    } else if (base_pcb_layout_outer_EdgeFrame=="Basic") {
+        difference() {
+             pcb_layout_outer(base_pcb_layout_outer, base_pcb_layout_outer_EdgeFrame_hight,-2,base_pcb_layout_outer_EdgeFrame_size_x,base_pcb_layout_outer_EdgeFrame_size_y,"EdgeFrame");
+           pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrame");   
+        }
+
     }
 
 }
@@ -189,6 +197,47 @@ module pcb_layout_outer(groups, LE_height=2, trans_z=-2,resize_x=0,resize_y=0,mo
         }
     } else if (base_pcb_layout_outer_DesignMode=="DontShow" && modeType=="") {
         echo ("DontShow");
+        
+    } else if (modeType=="EdgeFrameOuter") {
+        //外框外側
+        translate([0,0,trans_z])
+        union() for (group = groups) {
+            hull_color =
+                (base_pcb_layout_outer_hull_color!="None" &&base_pcb_layout_outer_hull_color!="Group")
+                ? base_pcb_layout_outer_hull_color
+                : base_pcb_layout_outer_hull_color=="Group"
+                ? group[0][2]        
+                : false ;
+            color(hull_color)      
+            hull() {
+                for (point = group) {
+                     translate([point[0][0]*h_unit_ratio,
+                                point[0][1]*v_unit_ratio,
+                                point[0][2]+LE_height/2]) resize([point[1]*2+resize_x, point[1]*2+resize_y],0) circleRC(point[1],LE_height,1,true,$fn=point[1]*20);
+                 }
+            }
+        }
+    } else if (modeType=="EdgeFrameInner") {
+        //外框內側
+    //circleRC(diameter,height,rc_size=1,center=false,vertical_base=true,vertical_top=false,concave=false)
+        translate([0,0,trans_z])
+        union() for (group = groups) {
+            hull_color =
+                (base_pcb_layout_outer_hull_color!="None" &&base_pcb_layout_outer_hull_color!="Group")
+                ? base_pcb_layout_outer_hull_color
+                : base_pcb_layout_outer_hull_color=="Group"
+                ? group[0][2]        
+                : false ;
+            color(hull_color)      
+            hull() {
+                for (point = group) {
+                     translate([point[0][0]*h_unit_ratio,
+                                point[0][1]*v_unit_ratio,
+                                point[0][2]+LE_height/2]) resize([point[1]*2+resize_x, point[1]*2+resize_y],0) circleRC(point[1],LE_height,1,true,true,false,true,$fn=point[1]*20);
+                 }
+            }
+        }
+
     } else {
         //正常模式，產生hull結構
         translate([0,0,trans_z])
@@ -208,6 +257,8 @@ module pcb_layout_outer(groups, LE_height=2, trans_z=-2,resize_x=0,resize_y=0,mo
                                 point[0][2]]) resize([point[1]*2+resize_x, point[1]*2+resize_y],0) circle(point[1],$fn=point[1]*20);
                  }
             }
+            
+
         }
 
         }
@@ -305,3 +356,7 @@ pcb_layout_IDC(base_pcb_layout_IDC);
 pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);   
 
 
+//layout_pattern(base_switch_layout,"switch_socket_base_cutout2MOD"); 
+//
+//translate([0,-100,12.8])
+//#cube([100,100,0.5]);

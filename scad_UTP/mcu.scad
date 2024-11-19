@@ -147,7 +147,7 @@ module socketed_mcu2(borders=[0,0,0,0]) {
             for (pin = [0:2]) {
                 translate([(pin)*mcu_pin_pitch,iLastRow,-0.01]) 
                     cylinder(h=mcu_base_thickness+0.02,d=wire_diameter*1.5);
-                translate([-(pin)*mcu_pin_pitch,iLastRow,,-0.01]) 
+                translate([-(pin)*mcu_pin_pitch,iLastRow,-0.01]) 
                     cylinder(h=mcu_base_thickness+0.02,d=wire_diameter*1.5);
                 translate([
                         (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,

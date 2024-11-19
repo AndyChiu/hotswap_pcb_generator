@@ -18,6 +18,15 @@ module ec11_socket_base(borders=[1,1,1,1]) {
     translate([h_unit/2,-v_unit/2,ec11_base_add_thickness/2]) {
         cube([ec11_socket_size, ec11_socket_size, ec11_base_add_thickness], center=true);
         }
+    //螺絲孔座
+    for (x = [1,8.5+8.5+1]) {
+        for (y = [-1,-8.5-8.5-1]) {
+            //底部槽
+            translate([x,y,0]) {
+                #cylinder(d=6, h=ec11_base_add_thickness,$fn=20);
+            }
+        }
+    }        
     translate([h_unit/2,-v_unit/2,border_z_offset * 1])
             border(
                 [ec11_socket_size,ec11_socket_size], 
@@ -74,7 +83,7 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
 
                     //底部線槽
                     translate([x,6,-wire_diameter/2-wire_diameter*1.25])
-                        #cube([wire_diameter,3,wire_diameter/2],true);                    
+                        cube([wire_diameter,3,wire_diameter/2],true);                    
                 }
                 
                 //三針一樣,只是多一針在中央,
@@ -97,7 +106,7 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                     
                     //底部線槽
                     translate([x,-6,-wire_diameter/2-wire_diameter*1.25])
-                        #cube([wire_diameter,3,wire_diameter/2],true); 
+                        cube([wire_diameter,3,wire_diameter/2],true); 
                     }
                 //橫線槽        
                 for (y = [-4.5,-2.5,2.5,4.5]) {
@@ -105,22 +114,32 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                         rotate([0,90,0])
                             cylinder(h=ec11_socket_size,d=wire_diameter,center=true,$fn=40);                            
                     translate([0,y,wire_diameter/2+ec11_base_add_thickness-wire_diameter*1.25])
-                    cube([ec11_socket_size,wire_diameter,wire_diameter/2],true);                   
+                        cube([ec11_socket_size,wire_diameter,wire_diameter/2],true);                   
                 }
-
+                //螺絲孔 M2
+                for (x = [-8.5,8.5]) {
+                    for (y = [8.5,-8.5]) {
+                        //底部槽
+                        translate([x,y,-pcb_thickness/2]) {
+                                #cylinder(d=2*1.1, h=pcb_thickness+1,$fn=20);
+                                translate([0,0,-2.5]) cylinder(d=4.1*1.1, h=pcb_thickness,$fn=20);
+                        }
+            
+                    }
+                }
             }
 
-            translate([
-                h_border_width/2 * (borders[3] - borders[2]),
-                v_border_width/2 * (borders[0] - borders[1]),
-                -1
-            ]) {
-                cube([
-                    15+h_border_width*(borders[2]+borders[3])+0.02,
-                    15+v_border_width*(borders[0]+borders[1])+0.02,
-                    2*pcb_thickness
-                ], center=true);
-            }
+//            translate([
+//                h_border_width/2 * (borders[3] - borders[2]),
+//                v_border_width/2 * (borders[0] - borders[1]),
+//                -1
+//            ]) {
+//                cube([
+//                    15+h_border_width*(borders[2]+borders[3])+0.02,
+//                    15+v_border_width*(borders[0]+borders[1])+0.02,
+//                    2*pcb_thickness
+//                ], center=true);
+//            }
         }
 }
 

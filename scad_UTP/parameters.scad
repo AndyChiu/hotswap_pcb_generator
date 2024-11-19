@@ -129,19 +129,19 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
-unit = 18;
+unit = 19;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 18;
+h_unit = 19;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 17;
+v_unit = 19;
 
 //Andy add:
 //unit size for stabilizer
-unit_stb = 19.02;
+unit_stb = 19.05;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit_stb = 19.02;
+h_unit_stb = 19.05;
 // Vertical unit size (17mm for choc keycaps)
-v_unit_stb = 19.02;
+v_unit_stb = 19.05;
 
 unit_choc = 18;
 // Horizontal unit size (18mm for choc keycaps)
@@ -316,7 +316,7 @@ iRSOffSet=1;
 base_pcb_layout_outer_DesignMode = false;
 
 //What color should be displayed when the outer hull is surrounded
-//外圍hull包圍起來時，要產生什麼顏色: "ColorName","None","Group"
+//外圍hull包圍起來時，要產生什麼顏色: "ColorName"(顏色名稱),"None"(不產生顏色),"Group"(群組第一個點的顏色)
 base_pcb_layout_outer_hull_color = "Group";
 
 //Mark out the grooves of the circular self-adhesive rubber pad
@@ -325,15 +325,18 @@ base_pcb_layout_Rubber_Pads_DesignMode = true;
 
 //No cutout the switch socket hole, which can increase the view speed
 //不挖軸坐上的洞，可以增加速檢視速度
-base_pcb_layout_DesignMode = false;
+base_pcb_layout_DesignMode = true;
 
 //Draw an outer frame
-//是否繪製外框
-base_pcb_layout_outer_EdgeFrame = true;
+//是否繪製外框: "Basic"(基本), "RoundedCorners"(圓角), false (不繪製)
+base_pcb_layout_outer_EdgeFrame = "RoundedCorners";
 
 //apply the setting of the Switch angle and height
 //是否套用軸體角度與高度的設定
 base_pcb_layout_ApyAdjSwitchAngleAndHeight = true;
+
+//凸起的軸座樣式 "Basic"(基本), "RoundedCorners"(圓角)
+base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 
 //Show virtual KeySwitch
 //是否顯示虛擬軸體

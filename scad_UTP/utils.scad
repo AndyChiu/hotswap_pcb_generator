@@ -194,16 +194,15 @@ module layout_pattern(layout,pattern_type="") {
             
             } else {
 
-            h=item[2][2][3];
             w=item[2][2][4];
                 
-            rz=0;
+            //rz=0;
             pz=-2;
             
             bx=item[2][2][5];
             by=item[2][2][6];
             bz=2;
-                
+            bod=item[2][2][7];
             rx =
                 srp == "N"
                 ? 0
@@ -223,7 +222,9 @@ module layout_pattern(layout,pattern_type="") {
                     ? 0
                 : srp == "RD"
                     ? -item[2][2][1]
-                : "";
+                : srp == ""
+                    ? 0 
+                 : "" ; 
             ry =
                 srp == "N"
                 ? 0
@@ -243,29 +244,54 @@ module layout_pattern(layout,pattern_type="") {
                     ? -item[2][2][2]
                 : srp == "RD"
                     ? -item[2][2][2]
-                : "";
-
-            px =
+                : srp == ""
+                    ? 0 
+                 : "" ; 
+            rz =
                 srp == "N"
-                ? v_unit
+                ? 0
                 : srp == "LU"
-                    ? bx
+                    ? 0
                 : srp == "L"
-                    ? bx
+                    ? 0
                 : srp == "LD"
-                    ? bx
+                    ? 0
                 : srp == "U"
-                    ? bx
+                    ? 0
                 : srp == "D"
-                    ? bx                  
+                    ? 0                   
                 : srp == "RU"
                     ? 0
                 : srp == "R"
                     ? 0
                 : srp == "RD"
                     ? 0
-                : "";
+                : srp == ""
+                    ? 0 
+                 : "" ; 
 
+            px =
+                srp == "N"
+                ? v_unit
+                : srp == "LU"
+                    ? h_unit
+                : srp == "L"
+                    ?  h_unit
+                : srp == "LD"
+                    ? h_unit
+                : srp == "U"
+                    ? h_unit
+                : srp == "D"
+                    ? h_unit                  
+                : srp == "RU"
+                    ? 0
+                : srp == "R"
+                    ? 0
+                : srp == "RD"
+                    ? 0
+                : srp == ""
+                    ? 0 
+                : "" ;  
             py =
                 srp == "N"
                 ? -h_unit
@@ -285,7 +311,81 @@ module layout_pattern(layout,pattern_type="") {
                     ? -by
                 : srp == "RD"
                     ? 0
-                : "";    
+                : srp == ""
+                    ? 0 
+                : "" ;     
+
+            
+            h =
+                srp == "N"
+                ? item[2][2][3]
+                : srp == "LU"
+                    ? item[2][2][3]
+                : srp == "L"
+                    ? item[2][2][3]
+                : srp == "LD"
+                    ? item[2][2][3]
+                : srp == "U"
+                    ?item[2][2][3]
+                : srp == "D"
+                    ? item[2][2][3]                 
+                : srp == "RU"
+                    ? item[2][2][3]
+                : srp == "R"
+                    ? item[2][2][3]
+                : srp == "RD"
+                    ? item[2][2][3]
+                : srp == ""
+                    ? 0 
+                 : "" ; 
+                 
+                 
+            bodx =
+                bod == "C"
+                ? -(bx-unit)/2
+                : bod == "LU"
+                    ? -(bx-unit)
+                : bod == "L"
+                    ? -(bx-unit)
+                : bod == "LD"
+                    ? -(bx-unit)
+                : bod == "U"
+                    ? -(bx-unit)/2
+                : bod == "D"
+                    ? -(bx-unit)/2
+                : bod == "RU"
+                    ? 0
+                : bod == "R"
+                    ? 0
+                : bod == "RD"
+                    ? 0
+                : bod == ""
+                    ? 0
+                : "" ; 
+
+            body =
+                bod == "C"
+                ? (by-unit)/2
+                : bod == "LU"
+                    ? (by-unit)
+                : bod == "L"
+                    ? (by-unit)/2
+                : bod == "LD"
+                    ? 0
+                : bod == "U"
+                    ? (by-unit)
+                : bod == "D"
+                    ? 0                  
+                : bod == "RU"
+                    ? (by-unit)
+                : bod == "R"
+                    ? (by-unit)/2
+                : bod == "RD"
+                    ? 0
+                : bod == ""
+                    ? 0 
+                : "" ;    
+                
             //左上 LU (+x,+y) (px,-py)
             //左 L    (0,+y) (px,-py)
             //左下 LD (-x,+y) (px,0)
@@ -297,14 +397,16 @@ module layout_pattern(layout,pattern_type="") {
             //右下 RD (-x,-y) (0,0)
 
 
+            echo (item[2][3][0]);
+            echo("srp:",srp);
+            echo("rx,ry,rz:",rx,ry,rz);
+            echo("px,py,pz:",px,py,pz);
+            echo("bx,by,bz:",bx,by,bz);
+            echo("w:",w);
+            echo("h:",h);
+            echo("bodx:",bodx);
+            echo("body:",body);
             
-//            echo("srp:",srp);
-//            echo("rx,ry,rz:",rx,ry,rz);
-//            echo("px,py,pz:",px,py,pz);
-//            echo("bx,by,bz:",bx,by,bz);
-//            echo("w:",w);
-//            echo("h:",h);
-
             switch_offset = (location[1]-1)/2;  // Coordinate offset based on key shape
 
 
@@ -319,21 +421,64 @@ module layout_pattern(layout,pattern_type="") {
                             children();  
                                           }                      
                     } else if (pattern_type=="switch_socket_base_cutout") {
-                        translate([0,-1*by,-1*bz-0.01]) 
-                        cube([bx,by,bz+0.02]);
-                       
+                        translate([0+bodx,-1*by+body,-1*bz-0.01]) 
+                        cubeStyle([bx,by,bz+0.02],base_pcb_layout_RaisedSwitchBaseStyle);
+                        
+                    } else if (pattern_type=="switch_socket_base_cutout2") {
+ 
+     
+                                 //掏空凸起部分的內部，預留 w mm壁厚度
+                            hull(){
+                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+                                translate([w+bodx,-1*by+w+body,-1*bz-2+h]) 
+                                cubeStyle([bx-(w*2),by-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                                translate([w+bodx,-1*by+w+body,-1*bz-2]) 
+                                cubeStyle([bx-(w*2),by-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                            }
+       
+                            
+                    } else if (pattern_type=="switch_socket_base_cutout2MOD") {
+ 
+     
+                          //凸起部分的內部，預留 w mm壁厚度
+                          //體積*0.95 切除底部1.5mm
+                          //用於填充空間
+                          iScale=0.95;
+                          iCutBottom=1.5;
+                          
+                            difference(){
+                            hull(){
+                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+                                translate([w+bodx,-1*by+w+body,-1*bz-2+h]) 
+                                cubeStyle([(bx-(w*2))*iScale,(by-(w*2))*iScale,(bz+0.01)*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                                translate([w+bodx,-1*by+w+body,-1*bz-2]) 
+                                cubeStyle([(bx-(w*2))*iScale,(by-(w*2))*iScale,bz*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
+                            }
+                        
+                                translate([w+bodx-1,-1*by+w+body-1,-1*bz-2-1]) 
+                                cubeStyle([(bx-(w*2)*iScale)+2,(by-(w*2))*iScale+2,bz*iScale+1+iCutBottom],base_pcb_layout_RaisedSwitchBaseStyle);                        
+                        }
+                                                        
+                            
+                            
                     } else {
                         difference() {
                             union() {
 
-                                //建立突起的部分
+                                //建立凸起的部分
                                 hull(){
-                                    rotate_p([rx,ry,rz], [px,py,pz+h]) 
-                                    translate([0,-1*by,-1*bz+h]) 
-                                    cube([bx,by,bz]);
-
-                                    translate([0,-1*by,-1*bz]) 
-                                    cube([bx,by,bz]);
+                                    //去除凸出底部的部分
+                                    difference() {
+                                        rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                                    translate([0+bodx,-1*by+body,-1*bz+h]) 
+                                    cubeStyle([bx,by,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                                        translate([0+bodx-2.5,-1*by+body-2.5,-1*bz-20]) 
+                                    cube([bx+5,by+5,20]);
+                                    }
+                                    translate([0+bodx,-1*by+body,-1*bz]) 
+                                    cubeStyle([bx,by,bz],base_pcb_layout_RaisedSwitchBaseStyle);
                                 }
                                 
                                 //建立choc基座
@@ -343,15 +488,15 @@ module layout_pattern(layout,pattern_type="") {
 
                             }
                             
-                            //掏空突起部分的內部，預留 w mm壁厚度
-                            hull(){
-                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
-                                translate([w,-1*by+w,-1*bz-2+h]) 
-                                cube([bx-(w*2),by-(w*2),bz+0.01]);
-
-                                translate([w,-1*by+w,-1*bz-2]) 
-                                cube([bx-(w*2),by-(w*2),bz]);
-                            }
+                            //掏空凸起部分的內部，預留 w mm壁厚度
+//                            hull(){
+//                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+//                                translate([w,-1*by+w,-1*bz-2+h]) 
+//                                cubeStyle([bx-(w*2),by-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
+//
+//                                translate([w,-1*by+w,-1*bz-2]) 
+//                                cubeStyle([bx-(w*2),by-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
+//                            }
                         }
                         if (base_pcb_layout_ShowKeycapLegend) {
                             ShowKeycapLegend_H_add =
@@ -361,7 +506,7 @@ module layout_pattern(layout,pattern_type="") {
                                     ? VKeySwitch_Size[2]
                                 : 0;
                             rotate_p([rx,ry,rz], [px,py,pz+h]) 
-                                translate([0+h_unit/2-3,-1*by+v_unit/2,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
+                                translate([0+h_unit/2-3,-1*by+v_unit/2+body,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
                                 color("Black") %text(keycapLegend,size=3);
                         }
                                        
@@ -450,4 +595,170 @@ module rotate_p(a, orig)
     rotate(a)
     translate(-orig)
     children();
+}
+
+//Rounded Corners cube
+//弧形邊緣的cube
+module cubeRC(size,rc_size=2,center=false,cube_base=true,cube_top=false) {
+    //size=[width,depth,height]
+    //rc_size = Rounded Corners size
+    
+    width =size[0]-rc_size/2;
+    depth = size[1]-rc_size/2;
+    height =size[2]-rc_size;
+        
+//    width2 = center==true ? -size[0]/2 : 0;
+//    depth2 = center==true ? -size[1]/2 : 0;
+//    height2 = center==true ? -size[2]/2 : 0;  
+
+//    //上層
+//    t1 = center==true ? [-width/2,-depth/2,height/2] : [rc_size/2,rc_size/2,height+rc_size/2];
+//    t2 = center==true ? [width/2,-depth/2,height/2] : [width+rc_size/2,rc_size/2,height+rc_size/2];
+//    t3 = center==true ? [width/2,depth/2,height/2] : [width+rc_size/2,depth+rc_size/2,height+rc_size/2];
+//    t4 = center==true ? [-width/2,depth/2,height/2] : [rc_size/2,depth+rc_size/2,height+rc_size/2];
+//    //下層
+//    b1 = center==true ? [-width/2,-depth/2,-height/2] : [rc_size/2,rc_size/2,rc_size/2];
+//    b2 = center==true ? [width/2,-depth/2,-height/2] : [width+rc_size/2,rc_size/2,rc_size/2];
+//    b3 = center==true ? [width/2,depth/2,-height/2] : [width+rc_size/2,depth+rc_size/2,rc_size/2];
+//    b4 = center==true ? [-width/2,depth/2,-height/2] : [rc_size/2,depth+rc_size/2,rc_size/2];
+//
+//
+//    t21 = center==true ? [-width/2,-depth/2,height/2] : [rc_size/2,rc_size/2,height+rc_size/2+rc_size/4];
+//    t22 = center==true ? [width/2,-depth/2,height/2] : [width+rc_size/2,rc_size/2,height+rc_size/2+rc_size/4];
+//    t23 = center==true ? [width/2,depth/2,height/2] : [width+rc_size/2,depth+rc_size/2,height+rc_size/2+rc_size/4];
+//    t24 = center==true ? [-width/2,depth/2,height/2] : [rc_size/2,depth+rc_size/2,height+rc_size/2+rc_size/4];
+//
+//    b21 = center==true ? [-width/2,-depth/2,-height/2] : [rc_size/2,rc_size/2,rc_size/4];
+//    b22 = center==true ? [width/2,-depth/2,-height/2] : [width+rc_size/2,rc_size/2,rc_size/4];
+//    b23 = center==true ? [width/2,depth/2,-height/2] : [width+rc_size/2,depth+rc_size/2,rc_size/4];
+//    b24 = center==true ? [-width/2,depth/2,-height/2] : [rc_size/2,depth+rc_size/2,rc_size/4];
+
+
+    //上層
+    t1 = center==true ? [-width/2+rc_size/4,-depth/2+rc_size/4,height/2] : [rc_size/2,rc_size/2,height+rc_size/2];
+    t2 = center==true ? [width/2-rc_size/4,-depth/2+rc_size/4,height/2] : [width,rc_size/2,height+rc_size/2];
+    t3 = center==true ? [width/2-rc_size/4,depth/2-rc_size/4,height/2] : [width,depth,height+rc_size/2];
+    t4 = center==true ? [-width/2+rc_size/4,depth/2-rc_size/4,height/2] : [rc_size/2,depth,height+rc_size/2];
+    //下層
+    b1 = center==true ? [-width/2+rc_size/4,-depth/2+rc_size/4,-height/2] : [rc_size/2,rc_size/2,rc_size/2];
+    b2 = center==true ? [width/2-rc_size/4,-depth/2+rc_size/4,-height/2] : [width,rc_size/2,rc_size/2];
+    b3 = center==true ? [width/2-rc_size/4,depth/2-rc_size/4,-height/2] : [width,depth,rc_size/2];
+    b4 = center==true ? [-width/2+rc_size/4,depth/2-rc_size/4,-height/2] : [rc_size/2,depth,rc_size/2];
+
+
+    t21 = center==true ? [-width/2+rc_size/4,-depth/2+rc_size/4,height/2] : [rc_size/2,rc_size/2,height+rc_size/2+rc_size/4];
+    t22 = center==true ? [width/2-rc_size/4,-depth/2+rc_size/4,height/2] : [width,rc_size/2,height+rc_size/2+rc_size/4];
+    t23 = center==true ? [width/2-rc_size/4,depth/2-rc_size/4,height/2] : [width,depth,height+rc_size/2+rc_size/4];
+    t24 = center==true ? [-width/2+rc_size/4,depth/2-rc_size/4,height/2] : [rc_size/2,depth,height+rc_size/2+rc_size/4];
+
+    b21 = center==true ? [-width/2+rc_size/4,-depth/2+rc_size/4,-rc_size/4] : [rc_size/2,rc_size/2,rc_size/4];
+    b22 = center==true ? [width/2-rc_size/4,-depth/2+rc_size/4,-rc_size/4] : [width,rc_size/2,rc_size/4];
+    b23 = center==true ? [width/2-rc_size/4,depth/2-rc_size/4,-rc_size/4] : [width,depth,rc_size/4];
+    b24 = center==true ? [-width/2+rc_size/4,depth/2-rc_size/4,rc_size/4] : [rc_size/2,depth,rc_size/4];
+
+    
+    hull($fa=1, $fs=0.1,$fn=50){
+        
+    translate(t1) sphere(rc_size/2); 
+    translate(t2) sphere(rc_size/2); 
+    translate(t3) sphere(rc_size/2); 
+    translate(t4) sphere(rc_size/2); 
+    //translate([0,0,-2]) cube([18+4,17+4,2],center=true); 
+        
+    translate(b1) sphere(rc_size/2); 
+    translate(b2) sphere(rc_size/2); 
+    translate(b3) sphere(rc_size/2); 
+    translate(b4) sphere(rc_size/2); 
+        
+    if (cube_base==true) {
+        translate(b21) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(b22) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(b23) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(b24) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+    }
+    
+    if (cube_top==true) {
+        translate(t21) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(t22) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(t23) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+        translate(t24) cylinder(h=rc_size/2,r=rc_size/2,center=true); 
+    }    
+    }
+}
+
+module cubeStyle(size,style) {
+    if (style=="RoundedCorners") {
+        cubeRC(size);
+    } else {
+        cube(size);
+        }    
+    }
+
+
+module circleRC(diameter,height,rc_size=1,center=false,vertical_base=true,vertical_top=false,concave=false){
+    //size=[width,depth,height]
+    //rc_size = Rounded Corners size
+    //vertical Corners
+    
+    height2=height-rc_size;
+    
+t1 = center==true ?  [0,0,0]:[diameter/2,diameter/2,height/2];
+
+t2 = center==true ?  [0,0,-rc_size/2]:[diameter/2,diameter/2,0];
+
+t3 = center==true ?  [0,0,0]:[diameter/2,diameter/2,rc_size/2];
+
+    translate(t1)
+    rotate_extrude($fn=100)
+    if (concave==false) {
+        translate([(diameter/2)-rc_size/2,0,0])
+        union(){
+            translate([-diameter/4+rc_size/2,0,0])
+            square([diameter/2,height2],true);
+            
+            translate([-diameter/4+rc_size/4,height2/2,0])
+            square([diameter/2-rc_size/2,rc_size],true);
+            translate([0,height2/2,0])
+            circle(d=rc_size,$fn=100); 
+
+            translate([-diameter/4+rc_size/4,-height2/2,0])
+            square([diameter/2-rc_size/2,rc_size],true);
+            translate([0,-height2/2,0])
+            circle(d=rc_size,$fn=100); 
+
+            
+            if (vertical_base==true) {
+                translate([rc_size/4,-rc_size/4-height2/2,0])
+                square([rc_size/2,rc_size/2],true);
+                }
+            if (vertical_top==true) {
+                translate([rc_size/4,rc_size/4+height2/2,0])
+                square([rc_size/2,rc_size/2],true);
+                }
+        }
+    } else {
+        translate([(diameter/2),0,0])
+        difference(){
+            translate([-diameter/4,0,0])
+            square([diameter/2,height],true);
+
+            translate([0,0,0])
+            square([rc_size,height2],true);
+
+            translate([0,height2/2,0])
+            circle(d=rc_size,$fn=100); 
+            translate([0,-height2/2,0])
+            circle(d=rc_size,$fn=100); 
+            if (vertical_base==true) {
+                translate([-rc_size/4,-rc_size/4-height2/2,0])
+                square([rc_size/2,rc_size/2],true);
+                }
+            if (vertical_top==true) {
+                translate([-rc_size/4,rc_size/4+height2/2,0])
+                square([rc_size/2,rc_size/2],true);
+                }
+        }
+    
+    }
+
 }
