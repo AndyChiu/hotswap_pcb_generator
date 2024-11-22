@@ -21,6 +21,9 @@ pl=12+0.7/sc; //接頭長度
 IDC_W_t=1.1 / sc;
 IDC_L_t=0.9 / sc;
 
+IDC_W=IDC_W_t + ps;
+IDC_L=IDC_L_t + pl;
+
 djH=14 / sc;
 djHt=djH/3;
 djHt2=(djHt-djH/4)+djHt;

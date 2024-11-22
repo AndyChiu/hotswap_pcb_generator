@@ -51,13 +51,13 @@ oft1=1;
 oft2=-1;
 
 //===MCU====================
-mcu_pos_x_Offset=155.1-14-13.5;
-mcu_pos_y_Offset=-62+12;
+mcu_pos_x_Offset=124.6;
+mcu_pos_y_Offset=-50;
 mcu_pos_r_Offset=-14.11;
 
 //===IDC====================
-idc_pos_x_Offset=154-15-6.8;
-idc_pos_y_Offset=-105.5+12-16.5;
-idc_pos_r_Offset=-14.11+90-8;
+idc_pos_x_Offset=154-15-3.35;
+idc_pos_y_Offset=-105.5+12-11.5;
+idc_pos_r_Offset=75.89;
 
 

@@ -1,34 +1,48 @@
-use<..\mcu.scad>
-use<..\IDC\IDC_Holder.scad>
-    
+include <..\mcu.scad>
+include <..\parameters.scad>
+include <..\IDC\IDC_Holder.scad>
+include <..\parameters_mcu_RP2040_Zero.scad>
+
 //3D印表機公差
 //sc=52.5/52.1;
 sc=1;
 
+//==================================
 //板子類型: 幾U、鍵帽尺寸、基座類型、左右手
-
-
+//==================================
 //include <BasePlate_3U_13MM_MType_Left.scad>
 //include <BasePlate_3U_13MM_MType_Right.scad>
 
 //include <BasePlate_3U_16MM_MType_Left.scad>
 //include <BasePlate_3U_16MM_MType_Right.scad>
 
-//include <BasePlate_3U_16MM_LType_Left.scad>
-//include <BasePlate_3U_16MM_LType_Right.scad>
+//===========================
 
 //include <BasePlate_3U_11.3MM_LType_Left.scad>
 //include <BasePlate_3U_11.3MM_LType_Right.scad>
 
-include <BasePlate_3U_18MM_LType_Left.scad>
+//include <BasePlate_3U_16MM_LType_Left.scad>
+//include <BasePlate_3U_16MM_LType_Right.scad>
+
+//include <BasePlate_3U_18MM_LType_Left.scad>
 //include <BasePlate_3U_18MM_LType_Right.scad>
 
 //===========================
 
+include <BasePlate2_3U_18MM_LType_Left.scad>
+//include <BasePlate2_3U_18MM_LType_Right.scad>
+
+//==================================
+//位置資訊
+//==================================
+//include <BasePlate_POS_01.scad>
+include <BasePlate_POS_02.scad>
+
+
 //MCU擺放位置
 MCU_UseIn= "R"; //"L","R","LR",""
 
-//MCU擺放位置
+//IDC擺放位置
 IDC_UseIn= "LR"; //"L","R","LR",""
 
 //3U區 延伸基座牆厚
@@ -242,35 +256,35 @@ module BASE_BOARD()
 
 linear_extrude(height = 2){
 hull($fn=200) {
-    translate([2.0415*unit,(iSW*-3.6315)*unit-iOffsetCA1*iSW,0]){
-       rotate(iSW*-1.23){
+    translate([COL1[0]*unit,(iSW*COL1[1])*unit-iOffsetCA1*iSW,0]){
+       rotate(iSW*COL1[2]){
         3U_BASE_POS();
     }
     }
 
-    translate([3.1575*unit,(iSW*-3.2929)*unit-iOffsetCA2*iSW,0]){
-        rotate(iSW*-4.99){
+    translate([COL2[0]*unit,(iSW*COL2[1])*unit-iOffsetCA2*iSW,0]){
+        rotate(iSW*COL2[2]){
         3U_BASE_POS();
     }}
 
-    translate([4.3192*unit,(iSW*-3.4583)*unit-iOffsetCA3*iSW,0]){
-        rotate(iSW*-11.24){
+    translate([COL3[0]*unit,(iSW*COL3[1])*unit-iOffsetCA3*iSW,0]){
+        rotate(iSW*COL3[2]){
         3U_BASE_POS();
     }}
 
-    translate([5.316*unit,(iSW*-3.8215)*unit-iOffsetCA4*iSW,0]){
-        rotate(iSW*-12.26){
+    translate([COL4[0]*unit,(iSW*COL4[1])*unit-iOffsetCA4*iSW,0]){
+        rotate(iSW*COL4[2]){
         3U_BASE_POS();
     }}
  
-    translate([6.3249*unit,(iSW*-4.2294)*unit-iOffsetCA5*iSW,0]){
-        rotate(iSW*-14.11){
+    translate([COL5[0]*unit,(iSW*COL5[1])*unit-iOffsetCA5*iSW,0]){
+        rotate(iSW*COL5[2]){
         3U_BASE_POS();
         }
     }
    //MCU與IDC放置空間 
-   translate([8*unit,(iSW*-5)*unit,0]){
-        rotate(iSW*-14.11){
+   translate([SPC1[0]*unit,(iSW*SPC1[1])*unit,0]){
+        rotate(iSW*SPC1[2]){
         3U_BASE_POS();
         }
     }
@@ -279,19 +293,17 @@ hull($fn=200) {
     }
     }
 
-
-
     linear_extrude(height = 2){
     hull($fn=200) {
-        translate([5.4121*unit,iSW*-6.1165*unit+th_offset2,0]){
+        translate([TH1[0]*unit,iSW*TH1[1]*unit+th_offset2,0]){
             circle(unit/2+10);
         }
 
-        translate([6.3906*unit,iSW*-6.6073*unit+th_offset2,0]){
+        translate([TH2[0]*unit,iSW*TH2[1]*unit+th_offset2,0]){
             circle(unit/2+10);
         }
 
-        translate([7.25041*unit,iSW*-7.2777*unit+th_offset2,0]){
+        translate([TH3[0]*unit,iSW*TH3[1]*unit+th_offset2,0]){
             circle(unit/2+10);
         }
         
@@ -316,38 +328,38 @@ module Create_BASE_BOARD()
     }
 
     //A (COL1)
-    translate([2.0415*unit,iSW*-3.6315*unit-iOffsetCA1*iSW,0]){
+    translate([COL1[0]*unit,iSW*COL1[1]*unit-iOffsetCA1*iSW,0]){
     //rotate(a=-1.23, v=[2.5415*unit,4.1315*unit,0]){
-        rotate(iSW*-1.23){
+        rotate(iSW*COL1[2]){
             3U_BASE_CUT();
         }
     }
     //S (COL2)
-    translate([3.1575*unit,iSW*-3.2929*unit-iOffsetCA2*iSW,0]){
+    translate([COL2[0]*unit,iSW*COL2[1]*unit-iOffsetCA2*iSW,0]){
     //rotate(a=-4.99, v=[3.6575*unit,3.7929*unit,0]){
-        rotate(iSW*-4.99){
+        rotate(iSW*COL2[2]){
             3U_BASE_CUT();
         }
     }
 
     //D (COL3)
-    translate([4.3192*unit,iSW*-3.4583*unit-iOffsetCA3*iSW,0]){
+    translate([COL3[0]*unit,iSW*COL3[1]*unit-iOffsetCA3*iSW,0]){
     //rotate(a=-11.24, v=[4.8192*unit,3.9583*unit,0]){
-        rotate(iSW*-11.24){
+        rotate(iSW*COL3[2]){
             3U_BASE_CUT();
         }
     }
     //F (COL4)
-    translate([5.316*unit,iSW*-3.8215*unit-iOffsetCA4*iSW,0]){
+    translate([COL4[0]*unit,iSW*COL4[1]*unit-iOffsetCA4*iSW,0]){
     //rotate(a=-12.26, v=[5.816*unit,4.3215*unit,0]){
-        rotate(iSW*-12.26){
+        rotate(iSW*COL4[2]){
             3U_BASE_CUT();
         }
     }
     //G (COL5)
-    translate([6.3249*unit,iSW*-4.2294*unit-iOffsetCA5*iSW,0]){
+    translate([COL5[0]*unit,iSW*COL5[1]*unit-iOffsetCA5*iSW,0]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-        rotate(iSW*-14.11){
+        rotate(iSW*COL5[2]){
             3U_BASE_CUT();
         }
     }
@@ -358,38 +370,38 @@ module Create_BASE_BOARD()
 
 //M/L型底板用的母座
 //A (COL1)
-translate([2.0415*unit,iSW*-3.6315*unit-iOffsetCA1*iSW,0]){
+translate([COL1[0]*unit,iSW*COL1[1]*unit-iOffsetCA1*iSW,0]){
 //rotate(a=-1.23, v=[2.5415*unit,4.1315*unit,0]){
-    rotate(iSW*-1.23+iSW2){
+    rotate(iSW*COL1[2]+iSW2){
     3U_BASES(2,-iSW*12,0.8,0.8,0);
 }
 }
 //S (COL2)
-translate([3.1575*unit,iSW*-3.2929*unit-iOffsetCA2*iSW,0]){
+translate([COL2[0]*unit,iSW*COL2[1]*unit-iOffsetCA2*iSW,0]){
 //rotate(a=-4.99, v=[3.6575*unit,3.7929*unit,0]){
-        rotate(iSW*-4.99+iSW2){
+        rotate(iSW*COL2[2]+iSW2){
     3U_BASES(2.5,-iSW*6,0,0,2);;
 }
 }
 
 //D (COL3)
-translate([4.3192*unit,iSW*-3.4583*unit-iOffsetCA3*iSW,0]){
+translate([COL3[0]*unit,iSW*COL3[1]*unit-iOffsetCA3*iSW,0]){
 //rotate(a=-11.24, v=[4.8192*unit,3.9583*unit,0]){
-rotate(iSW*-11.24+iSW2){
+rotate(iSW*COL3[2]+iSW2){
     3U_BASES(0,-iSW*3);
 }
 }
 //F (COL4)
-translate([5.316*unit,iSW*-3.8215*unit-iOffsetCA4*iSW,0]){
+translate([COL4[0]*unit,iSW*COL4[1]*unit-iOffsetCA4*iSW,0]){
 //rotate(a=-12.26, v=[5.816*unit,4.3215*unit,0]){
-rotate(iSW*-12.26+iSW2){
+rotate(iSW*COL4[2]+iSW2){
     3U_BASES(2.5,iSW*-5,0,0,1);
 }
 }
 //G (COL5)
-translate([6.3249*unit,iSW*-4.2294*unit-iOffsetCA5*iSW,0]){
+translate([COL5[0]*unit,iSW*COL5[1]*unit-iOffsetCA5*iSW,0]){
 //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-rotate(iSW*-14.11+iSW2){
+rotate(iSW*COL5[2]+iSW2){
     3U_BASES(5,iSW*-7,0,1.5,2);
 }
 }
@@ -402,25 +414,25 @@ TH_BASE();
 module TH3(Thickness=4){
     
         //Shift
-    translate([5.4121*unit,iSW*-6.1165*unit+th_offset,Thickness/2]){
+    translate([TH1[0]*unit,iSW*TH1[1]*unit+th_offset,Thickness/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*-21.41+iSW2){
+    rotate(iSW*TH1[2]+iSW2){
         3U_BASE_T2(Thickness);
     }
     }
 
     //Backspace
-    translate([6.3906*unit,iSW*-6.6073*unit+th_offset,Thickness/2]){
+    translate([TH2[0]*unit,iSW*TH2[1]*unit+th_offset,Thickness/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*-32.31+iSW2){
+    rotate(iSW*TH2[2]+iSW2){
         3U_BASE_T2(Thickness);
     }
     }
 
     //Alt
-    translate([7.2504*unit,iSW*-7.2777*unit+th_offset,Thickness/2]){
+    translate([TH3[0]*unit,iSW*TH3[1]*unit+th_offset,Thickness/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*-43.16+iSW2){
+    rotate(iSW*TH3[2]+iSW2){
         3U_BASE_T2(Thickness);
         
         }
@@ -437,9 +449,9 @@ difference(){
 {
     //內側母座
     //高9
-    translate([5.4121*unit-unit/2-1,iSW*-6.1165*unit+iSW*unit/4-iSW*1+th_offset,9/2]){
+    translate([TH1[0]*unit-unit/2-1,iSW*TH1[1]*unit+iSW*unit/4-iSW*1+th_offset-1,9/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*-21.41+iSW2){
+    rotate(iSW*TH1[2]+iSW2){
         cube([4,unit1+4,9],center=true);
     }
     }
@@ -462,9 +474,9 @@ difference(){
 //    }
     
     //外側母座
-    translate([7.2504*unit+unit/2-2,iSW*-7.2777*unit-iSW*unit/2+iSW*2+th_offset,6/2]){
+    translate([TH3[0]*unit+unit/2-1,iSW*TH3[1]*unit-iSW*unit/2+iSW*2+th_offset+1,6/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*-43.16+iSW2){
+    rotate(iSW*TH3[2]+iSW2){
         cube([6,unit1+4,6],center=true);
         
         }
@@ -474,7 +486,7 @@ difference(){
 //母座上建立固定凹槽
 //iSW*10
     //
-    rotate_p([iSW*10,0,0],[(7.2504)*unit,iSW*(-7.2777-0.8)*unit+th_offset,2]){
+    rotate_p([iSW*10,0,0],[(TH3[0])*unit,iSW*(TH3[1]-0.8)*unit+th_offset,2]){
         TH3(8);  
       }  
 
@@ -634,8 +646,8 @@ module tenting_columns(iOffset,$fn=200){
 //mcu_pos_y=-62-iSW2b*-9;
 //mcu_pos_r=iSW*-14.11+iSW2;
 
-mcu_pos_x=mcu_pos_x_Offset;
-mcu_pos_y=mcu_pos_y_Offset;
+mcu_pos_x=mcu_pos_x_Offset;  // + mcu_width*iSW2a;
+mcu_pos_y=mcu_pos_y_Offset;  // - (mcu_length/4)*iSW2a;
 mcu_pos_r=iSW*mcu_pos_r_Offset+iSW2;
 
 module Put_MCU()
@@ -643,17 +655,22 @@ module Put_MCU()
     
     translate([mcu_pos_x,(iSW*mcu_pos_y),2]){
     rotate(mcu_pos_r){
+    translate([-mcu_width*iSW2a,0,0]){
         mcu([-3,-3,-2,-2]);
+    }
     }
     }
 }
 
 module Cut_MCU()
 {
-    
-    translate([(mcu_pos_x-8),(iSW*(mcu_pos_y-29)),-2]){
+//    echo ("mcu_width=",mcu_width);
+//    echo ("mcu_length=",mcu_length);
+    translate([(mcu_pos_x),(iSW*(mcu_pos_y)),-2]){
     rotate(mcu_pos_r){
-        #cube([18,27,5]);
+    translate([(-mcu_width)*iSW2a+0.5,-mcu_length-3,0]){
+        #cube([mcu_width,mcu_length,5]);
+        }
     }
     }
 }
@@ -668,9 +685,12 @@ idc_pos_r=iSW*(idc_pos_r_Offset)-iSW2;
 
 module Put_IDC_Port()
 {
-    translate([idc_pos_x,(iSW*idc_pos_y),1]){
+    
+        translate([idc_pos_x,(iSW*idc_pos_y),1]){
         rotate(idc_pos_r){
-        IDC_Port();
+        translate([-IDC_W*iSW2a,0,0]){
+            IDC_Port();
+            }
         }
     }
     }

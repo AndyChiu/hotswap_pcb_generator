@@ -1,5 +1,5 @@
 //板子類型: 幾U、鍵帽尺寸、基座類型、左右手
-//BasePlate_3U_16MM_MType_Left
+//BasePlate_3U_18MM_LType_Left
 //===========================
 
 //左右手
@@ -8,29 +8,30 @@ LR="L";
 
 //M字與L字用基座
 //差別在有階梯狀構造
-ML="M";
+ML="L";
 //ML="L";
 
 //===========================
 
-////16mm 
-////3U區 長度
+//18mm 
+//3U區 長
 3U_W =
     ML == "L"
-        ? 51*sc
+        ? 57*sc
     : ML == "M"
-        ? 53*sc
+        ? 57*sc
     : assert(false, "LR is invalid");
-    
+
 //3U區 寬
 3U_D=15.5;
 //3U區 高
 3U_H=8.2;
 
+
 //===========================
 //1U 鍵帽大小
-//16mm 
-unit = 16;
+//18mm 
+unit = 18;
 unit1 = 15;
 unit2=unit+4.8;
 unit3=unit/2+0;
@@ -44,18 +45,20 @@ iSW =
     : assert(false, "LR is invalid");
 
 //===拇指位置偏移=============
-////16mm
-th_offset =iSW*-2.2;
+//18mm + L型
+th_offset= iSW*-1.2;
 th_offset2=iSW* 0.7;
 oft1=1;
 oft2=-1;
 
 //===MCU====================
-mcu_pos_x_Offset=125.1;
-mcu_pos_y_Offset=-48;
+mcu_pos_x_Offset=130;
+mcu_pos_y_Offset=-30;
 mcu_pos_r_Offset=-14.11;
 
 //===IDC====================
-idc_pos_x_Offset=134.6;
-idc_pos_y_Offset=-107; 
+idc_pos_x_Offset=144.7;
+idc_pos_y_Offset=-117+30;
 idc_pos_r_Offset=75.89;
+
+

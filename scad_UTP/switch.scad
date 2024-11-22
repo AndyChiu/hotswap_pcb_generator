@@ -140,7 +140,7 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
 //        cube([choc_holder_wall_h_width_l, choc_holder_wall_h_thickness, pcb_thickness+choc_holder_wall_height], center=true);
 
     //choc_holder_wall_v_thickness_add=1.5-(choc_socket_size-14.5);
-    choc_holder_wall_v_thickness_add=0.5;
+    choc_holder_wall_v_thickness_add=1; //厚度增加避免樹酯斷裂
     //choc_holder_wall_v_thickness_add=0;
     choc_holder_wall_v_thickness=choc_socket_size-14.5+choc_holder_wall_v_thickness_add;
     choc_holder_wall_v_width_r=5+7.85;
@@ -155,6 +155,9 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
     choc_holder_hook_margin1=3.5;     //3.5
     choc_holder_hook_margin2=choc_holder_hook_margin1+7;     //10.5
 
+    
+    
+    
     //右牆
     translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_v_thickness/2+choc_holder_wall_v_thickness_add+choc_holder_wall_v_offset,-(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_r/2,(choc_holder_wall_height/2)]) {
          cube([choc_holder_wall_v_thickness,choc_holder_wall_v_width_r,  pcb_thickness+choc_holder_wall_height], center=true);
@@ -191,14 +194,14 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
 
 
         
-     translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+    translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
 
         cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
  
-     translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+    translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
     
-    cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
- 
+        cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
+    
     //左牆
     translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset, -(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_l/2, (choc_holder_wall_height/2)]) {
         cube([choc_holder_wall_v_thickness,choc_holder_wall_v_width_l,  pcb_thickness+choc_holder_wall_height], center=true);
@@ -209,12 +212,12 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
 //        chamfer(choc_holder_wall_v_width_l, choc_holder_wall_support_width, choc_holder_wall_height+2);
 //    }
 
-if (switch_socket_base_holder_support_frame) {
+    if (switch_socket_base_holder_support_frame) {
 
-    translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2+choc_holder_wall_support_width,  -(choc_socket_size+choc_holder_wall_v_thickness)/2,  (choc_holder_wall_height+2)/2]) {
-        right_triangle(choc_holder_wall_support_width,choc_holder_wall_v_thickness,(choc_holder_wall_height+2),0,0,180);
+        translate([(h_unit-choc_socket_size)/2+choc_holder_wall_v_thickness/2-choc_holder_wall_v_thickness_add-choc_holder_wall_v_offset-choc_holder_wall_v_thickness_add-choc_holder_wall_support_width/2+choc_holder_wall_support_width,  -(choc_socket_size+choc_holder_wall_v_thickness)/2,  (choc_holder_wall_height+2)/2]) {
+            right_triangle(choc_holder_wall_support_width,choc_holder_wall_v_thickness,(choc_holder_wall_height+2),0,0,180);
+        }
     }
-}
 //     translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit-choc_socket_size)/2-choc_holder_wall_v_width_l/2-(choc_holder_hook_margin1/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
 
     //左短牆
@@ -233,13 +236,22 @@ if (switch_socket_base_holder_support_frame) {
         
     translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2+2.5+(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
      
-    cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
+        cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
 
-     translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+    translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2-2.5-(choc_holder_hook_length/2),(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
      
-     cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
+        cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length, choc_holder_hook_height ], center=true);
 
- 
+    if (choc_v1_compatible_v2==true){
+        translate([(h_unit-choc_socket_size)/2+(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2-choc_holder_wall_v_thickness_add,-(v_unit)/2,(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+         
+            cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length+3, choc_holder_hook_height ], center=true);
+        
+        translate([choc_socket_size+(h_unit-choc_socket_size)/2-(choc_holder_wall_v_thickness+choc_holder_hook_thickness)/2+choc_holder_wall_v_thickness_add,-(v_unit)/2,(pcb_thickness+choc_holder_hook_height)/2+choc_holder_wall_height-choc_holder_hook_height]) 
+        
+            cube([choc_holder_wall_v_thickness+choc_holder_hook_thickness,choc_holder_hook_length+3, choc_holder_hook_height ], center=true);
+    
+    }
 /////
 
     translate([h_unit/2,-v_unit/2,0]) 
@@ -2790,4 +2802,4 @@ module switch_plate_cutout(thickness=plate_thickness) {
         switch_plate_cutout_footprint();
 }
 
-
+switch_socket();

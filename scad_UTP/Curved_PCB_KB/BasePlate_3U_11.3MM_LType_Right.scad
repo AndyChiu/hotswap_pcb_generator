@@ -31,7 +31,7 @@ ML="L";
 //===========================
 //1U 鍵帽大小
 //11.3mm 
-unit = 18;
+unit = 16;
 unit1 = 15;
 unit2=unit+4.8;
 unit3=unit/2+0;
@@ -52,12 +52,16 @@ oft1=1;
 oft2=-1;
 
 //===MCU====================
-mcu_pos_x_Offset=155.1;
-mcu_pos_y_Offset=-62;
+//mcu_pos_x_Offset=155.1;
+//mcu_pos_y_Offset=-62;
+//mcu_pos_r_Offset=-14.11;
+mcu_pos_x_Offset=155.1-30;
+mcu_pos_y_Offset=-62+14;
 mcu_pos_r_Offset=-14.11;
 
 //===IDC====================
-idc_pos_x_Offset=134.6+19.9; 
-idc_pos_y_Offset=-87.1-13;
+idc_pos_x_Offset=(154-15)-4.4; //134.6
+idc_pos_y_Offset=(-105.5+15)-16.5; //-87.1
 idc_pos_r_Offset=-14.11+90;
+
 
