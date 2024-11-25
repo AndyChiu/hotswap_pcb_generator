@@ -151,6 +151,13 @@ v_unit_choc = 17;
 
 choc_socket_size=15;
 
+unit_ks27 = 18;
+// Horizontal unit size (18mm for choc keycaps)
+h_unit_ks27 = 18;
+// Vertical unit size (17mm for choc keycaps)
+v_unit_ks27 = 17;
+
+ks27_socket_size=15;
 
 // Spacing of grid for MX pins
 grid = 1.27;

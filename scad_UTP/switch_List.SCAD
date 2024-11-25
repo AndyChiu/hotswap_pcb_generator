@@ -1,8 +1,8 @@
 include <switch.scad>
 
-sSW = ["mx","mx_holder","mx_s_holder","mx_s_holder2","choc","choc_holder","chocV2","chocMini","ks27","mx_low","romer_g","chocV2_1u","redragon_low"];
+sSW = ["mx","mx_holder","mx_s_holder","mx_s_holder2","choc","choc_holder","chocV2","chocMini","ks27","ks27_holder","mx_low","romer_g","chocV2_1u","redragon_low"];
 
-//sSW = ["choc_holder"];
+//sSW = ["ks27_holder"];
 
 //一般
 //"mx","choc","chocV2","chocMini","ks27","mx_low","romer_g","redragon_low"
