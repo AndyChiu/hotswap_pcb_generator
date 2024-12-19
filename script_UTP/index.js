@@ -17,18 +17,29 @@ var keyboard = kle.Serial.parse(kle_json);
 //key.labels[4]
 //,"&quot" + key.labels[4] + "&quot"
 //"//" + key.labels[4] + " " + 
+
 var formatted_keys = keyboard.keys.map(
     key => {
         let side_borderW = ((key.width-1)/2);
         let side_borderH = ((key.height-1)/2);
-       	return  ["//" + key.labels[4] + "aaaaa",
+
+		if (key.labels[4] === undefined) {
+			key_label="";
+		} else {
+			key_label=key.labels[4];
+		}
+
+	       	return  ["//" + key_label + "aaaaa",
             [
                 [
                 	key.x, 
                 	side_borderH ? key.y + side_borderH : key.y,
                 
                 ],
-                key.width,
+                [
+                	key.width,
+                	key.height
+                ],
                 [-key.rotation_angle, key.rotation_x, key.rotation_y,
                 ]
             ],
@@ -38,7 +49,7 @@ var formatted_keys = keyboard.keys.map(
                 side_borderW ? "1+" + side_borderW.toString() + "*unit*mm" : 1,
                 side_borderW ? "1+" + side_borderW.toString() + "*unit*mm" : 1,
             ],
-            ["[false,switch_type,[&quotN&quot,0,0,0,1,h_unit,v_unit],&quot" + key.labels[4]] + "&quot]"
+            ["[false,switch_type,[&quotN&quot,0,0,0,1,h_unit,v_unit,&quotC&quot],&quot" + key_label] + "&quot]"
         ];
     }
 )
@@ -57,7 +68,7 @@ file_content +=
     [
         [                                       // Location Data
             [x_location, y_location],
-            key_size,
+            [key_size_width, key_size_height],
             [rotation, rotation_x, rotation_y],
         ],
         [                                       // Borders
@@ -80,7 +91,7 @@ file_content +=
                    
      [switch angle and height data] = srp,rx,ry,h,w
      
-     srp(switch rotation position): LU,L,LD,U,N,D,RU,R,RD
+     srp(switch rotation position 軸翻轉位置): LU,L,LD,U,N,D,RU,R,RD
                                     LU=Left-Up, RD=Right-Down,N=none,..etc.
      rx(X-axis angle): default 0
      ry(Y-axis angle): default 0
@@ -89,6 +100,8 @@ file_content +=
      bx((X-axis Base size): default h_unit
      by((y-axis Base size): default v_unit
 
+     bod(Base Offset direction 基底偏移方向): C,U,D,L,R,LU,LD,RU,RD
+                                 C=Center, LU=Left-Up, RD=Right-Down,..etc.
 */
 `
 file_content += formatted_keys.reduce(
@@ -242,23 +255,26 @@ base_pcb_layout_Indented_Text=[
 /*
     The dimensions of the virtual key switch and keycaps are used to check whether they interfere with each other key.
     虛擬軸體與鍵帽的尺寸，用來檢查是否會相互干擾
-   
+
+    =============================
     Switch size 軸體尺寸 [x,y,z]
-	
+	=============================
 	Choc 14.9x14.9x5.5:
 		VKeySwitch_Size=[14.9,14.9,5.5];
 	MX 14x14x5.5:
 		VKeySwitch_Size=[14.9,14.9,5.5];
-
+	==============================
 	Keycaps size 鍵帽尺寸 [x,y,z]
-	
-	Choc 16.4x15.5x5.2:
+	==============================
+	Choc V1 (Fabio)
 		VKeycap_Size=[16.4,15.5,5.2];
-	Choc 16.7x16.7x5.2:
-		VKeycap_Size=[16.7,16.7,5.2];
+		
+	Choc V1 (Kailh)
+		VKeycap_Size=[17.7,16.7,5.2];
 
 	MX 18x18x8:
 		VKeycap_Size=[18,18,8];
+		
 */
 
 //Switch size 軸體尺寸

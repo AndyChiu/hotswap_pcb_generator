@@ -122,19 +122,7 @@ module switch_socket_base_choc(borders=[1,1,1,1]) {
     choc_holder_wall_h_width_l=4.5;
     choc_holder_wall_height=2.2;  //2.2
 
-    //檢測用
-    if (base_pcb_layout_ShowVKeySwitch) {
-        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
-        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[2])/2])
-            cube(VKeySwitch_Size,center=true);   
-    }
-    
-    if (base_pcb_layout_ShowVKeycap) {
-        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
-        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeycap_Size[2])/2+VKeySwitch_Size[2]])
-            color(VKeycap_Color,VKeycap_Alpha) cube(VKeycap_Size,center=true);
-    }
-    
+
 //    //上牆 
 //    translate([choc_socket_size+(h_unit-choc_socket_size)/2-choc_holder_wall_h_width_r/2,-(v_unit-choc_socket_size)/2-choc_holder_wall_h_thickness/2+choc_holder_wall_h_thickness_add,(choc_holder_wall_height/2)]) 
 //        cube([choc_holder_wall_h_width_r, choc_holder_wall_h_thickness, pcb_thickness+choc_holder_wall_height], center=true);
@@ -2006,7 +1994,7 @@ module ks27_socket_cutout_led(borders=[1,1,1,1], rotate_column=false) {
                 // Bottom switch pin
                 translate([4.4,4.2,(pcb_thickness+1)/2])
                     rotate([180+diode_pin_angle,0,0])
-                        cylinder(h=pcb_thickness+1,r=0.7);
+                        cylinder(h=pcb_thickness+1,r=0.8);
                 // Diode cathode cutout
                 translate([-5,3.8,0]) 
                     cylinder(h=pcb_thickness+1,r=.8,center=true);

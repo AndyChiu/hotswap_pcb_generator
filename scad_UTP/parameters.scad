@@ -13,6 +13,7 @@ pcb_thickness = 4;  // [4:0.1:10]
 /* Switch Parameters */
 // Switch type
 // [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g, redragon_low]
+// [choc_holder, chocV2_1u, mx_holder, mx_s_holder, mx_s_holder2, ks27_holder]
 switch_type = "choc";
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
@@ -347,11 +348,11 @@ base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 
 //Show virtual KeySwitch
 //是否顯示虛擬軸體
-base_pcb_layout_ShowVKeySwitch = false;
+base_pcb_layout_ShowVKeySwitch = true;
 
 //Show virtual Keycaps
 //是否顯示虛擬鍵帽
-base_pcb_layout_ShowVKeycap = false;
+base_pcb_layout_ShowVKeycap = true;
 
 //Show keycap Legend text
 //是否顯示軸座對應的按鍵文字

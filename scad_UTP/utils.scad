@@ -131,8 +131,8 @@ function invert_layout(layout) = [
         )
         [
             [
-                [-location[0][0]-location[1], location[0][1]],
-                location[1],
+                [-location[0][0]-location[1][0], location[0][1]],
+                [location[1][1],location[1][0]],
                 [-location[2][0], -location[2][1], location[2][2]],
             ],
             invert_borders(borders),
@@ -158,7 +158,7 @@ module layout_pattern(layout,pattern_type="") {
             keycapLegend=item[2][3];
             if (srp==undef || !base_pcb_layout_ApyAdjSwitchAngleAndHeight) {
 
-                switch_offset = (location[1]-1)/2;  // Coordinate offset based on key shape
+                switch_offset = (location[1][0]-1)/2;  // Coordinate offset based on key shape
                 if (pattern_type=="mcu_cutout") {
                     
                     translate([location[2][1]*h_unit+mcu_socket_width/2+1,-location[2][2]*v_unit-mcu_socket_length-2,-pcb_thickness/2-0.01]) {
@@ -407,7 +407,7 @@ module layout_pattern(layout,pattern_type="") {
             echo("bodx:",bodx);
             echo("body:",body);
             
-            switch_offset = (location[1]-1)/2;  // Coordinate offset based on key shape
+            switch_offset = (location[1][0]-1)/2;  // Coordinate offset based on key shape
 
 
             translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
@@ -509,6 +509,25 @@ module layout_pattern(layout,pattern_type="") {
                                 translate([0+h_unit/2-3,-1*by+v_unit/2+body,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
                                 color("Black") %text(keycapLegend,size=3);
                         }
+                        
+                        
+    //檢測用
+    if (base_pcb_layout_ShowVKeySwitch) {
+        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
+        rotate_p([rx,ry,rz], [px,py,pz+h]) 
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[2])/2+h])
+            cube([VKeySwitch_Size[0],VKeySwitch_Size[1],VKeySwitch_Size[2]],center=true);   
+    }
+    
+    if (base_pcb_layout_ShowVKeycap) {
+        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
+        rotate_p([rx,ry,rz], [px,py,pz+h]) 
+        %translate([(h_unit)/2,-v_unit/2,(pcb_thickness+VKeycap_Size[2])/2+VKeySwitch_Size[2]+h])
+            color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*location[1][0],VKeycap_Size[1]*location[1][1],VKeycap_Size[2]],center=true);
+    }
+                            
+                        
+                        
                                        
                         }
                     }
