@@ -344,21 +344,21 @@ module layout_pattern(layout,pattern_type="") {
                 bod == "C"
                 ? -(bx-unit)/2
                 : bod == "LU"
-                    ? -(bx-unit)
+                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
                 : bod == "L"
-                    ? -(bx-unit)
+                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
                 : bod == "LD"
-                    ? -(bx-unit)
+                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
                 : bod == "U"
                     ? -(bx-unit)/2
                 : bod == "D"
                     ? -(bx-unit)/2
                 : bod == "RU"
-                    ? 0
+                    ? -(unit/2*(location[1][0]-1))
                 : bod == "R"
-                    ? 0
+                    ? -(unit/2*(location[1][0]-1))
                 : bod == "RD"
-                    ? 0
+                    ? -(unit/2*(location[1][0]-1))
                 : bod == ""
                     ? 0
                 : "" ; 
@@ -367,21 +367,21 @@ module layout_pattern(layout,pattern_type="") {
                 bod == "C"
                 ? (by-unit)/2
                 : bod == "LU"
-                    ? (by-unit)
+                    ? (by-unit)-(unit/2*(location[1][1]-1))
                 : bod == "L"
                     ? (by-unit)/2
                 : bod == "LD"
-                    ? 0
+                    ? (unit/2*(location[1][1]-1))
                 : bod == "U"
-                    ? (by-unit)
+                    ? (by-unit)-(unit/2*(location[1][1]-1))
                 : bod == "D"
-                    ? 0                  
+                    ? (unit/2*(location[1][1]-1))
                 : bod == "RU"
-                    ? (by-unit)
+                    ? (by-unit)-(unit/2*(location[1][1]-1))
                 : bod == "R"
                     ? (by-unit)/2
                 : bod == "RD"
-                    ? 0
+                    ? (unit/2*(location[1][1]-1))
                 : bod == ""
                     ? 0 
                 : "" ;    
