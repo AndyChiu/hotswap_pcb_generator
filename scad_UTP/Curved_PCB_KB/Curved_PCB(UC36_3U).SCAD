@@ -1,5 +1,6 @@
 include <..\switch.scad>
 
+
 // 程式啟動放在最下面
 
 module OneCol5_1(h_unit_pos) { 
@@ -324,7 +325,7 @@ module OneCol5_5(h_unit_pos, counter_type) {
         translate([h_unit*h_unit_pos,(v_unit*-2)-2,8.9598+0.1316]){
         rotate([-30,0,0]) { 
             translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
-        switch_socket(borders=[2.831,2,0,0],use_switch_type="choc");
+        switch_socket(borders=[2.831,2,0,0],use_switch_type="choc_holder");
         }
             }
     }    
@@ -335,7 +336,7 @@ module OneCol5_5(h_unit_pos, counter_type) {
        translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)-1-2.5-0.00045,2.1943+0.1316+0.1316*2.5+0.0002]){
         rotate([-15,0,0]) { 
             translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
-        switch_socket(borders=[2.831+iBorder_brg,0,0,0],use_switch_type="choc");
+        switch_socket(borders=[2.831+iBorder_brg,0,0,0],use_switch_type="choc_holder");
                 
         }
             }
@@ -345,7 +346,7 @@ module OneCol5_5(h_unit_pos, counter_type) {
     translate([h_unit*h_unit_pos,v_unit*0,0]){
         rotate([0,0,0]) { 
             translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
-        switch_socket(borders=[2.831+iBorder_brg,2.831+iBorder_brg,0,0],use_switch_type="choc");
+        switch_socket(borders=[2.831+iBorder_brg,2.831+iBorder_brg,0,0],use_switch_type="choc_holder");
         }
             }
     }
@@ -353,7 +354,7 @@ module OneCol5_5(h_unit_pos, counter_type) {
         translate([h_unit*h_unit_pos,v_unit*1+(15/90*pcb_thickness)+1+2.5+0.00045,2.1943+0.1316+0.1316*2.5+0.0002]){
         rotate([15,0,0]) { 
             translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
-        switch_socket(borders=[2.831,2.831+iBorder_brg,0,0],use_switch_type="choc");
+        switch_socket(borders=[2.831,2.831+iBorder_brg,0,0],use_switch_type="choc_holder");
         }
             }
     }
@@ -439,6 +440,165 @@ translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)-1-2.5-0.00045,0]){
 
 }
 
+
+module OneCol5_5_Thumber10(LR="L",h_unit_pos, counter_type) {
+
+//變形給拇指用
+//        if (counter_type>4) {
+//        translate([h_unit*h_unit_pos,(v_unit*-2)-2,8.9598+0.1316]){
+//        rotate([-30,0,0]) { 
+//            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+//        switch_socket(borders=[2.831,2,0,0],use_switch_type="choc");
+//        }
+//            }
+//    }    
+//}
+
+
+iSW =
+    LR == "L"
+        ? 1
+    : LR == "R"
+        ? -1
+    : assert(false, "LR is invalid");
+
+    iBorder_brg=2.685;
+    
+//switch+keycaps
+    switch_hight=8;
+    keycaps_hight=3;
+    keycaps_h=16.3;
+    keycaps_v=16.3;
+//    keycaps_h=18.5;
+//    keycaps_v=18.5;
+    
+//    if (counter_type>3) {
+       translate([h_unit*h_unit_pos-1.9,
+                  v_unit*-1-(15/90*pcb_thickness)-1-2.5-0.00045-1.6,
+                  2.1943+0.1316+0.1316*2.5+0.0002+0.35]){
+        rotate([-15,0,0]) { 
+        rotate([0,0,-90-10]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,0,2.831+iBorder_brg,0],use_switch_type="choc_holder");
+             }   
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+
+        }
+        }
+    }
+    }  
+//}
+
+    translate([h_unit*h_unit_pos,v_unit*0,0]){
+        rotate([0,0,0]) { 
+        rotate([0,0,-90]) {         
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,0,2.831+iBorder_brg,2.831+iBorder_brg],use_switch_type="choc_holder");
+        }
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }        
+        }
+            }
+    }
+
+        translate([h_unit*h_unit_pos-1.9,
+                   v_unit*1+(15/90*pcb_thickness)+1+2.5+0.00045+1.6,
+                   2.1943+0.1316+0.1316*2.5+0.0002+0.35]){
+        rotate([15,0,0]) { 
+        rotate([0,0,-90+10]) {           
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,0,2.831,2.831+iBorder_brg],use_switch_type="choc_holder");
+        }
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }        
+        
+        
+        }
+            }
+    }
+
+
+
+        if (counter_type>4) {
+        translate([h_unit*h_unit_pos,v_unit*2+2
+    ,8.9455+0.1316]){
+        rotate([30,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,2.831,0,0],use_switch_type="choc");
+        }
+            }
+    }    
+
+}
+
+        if (counter_type==3) {
+
+
+        //'(4.65)*3-1
+        //-(5-1-1)/2+1
+            translate([(h_unit*h_unit_pos-3.4),(v_unit*1.5+(15/90*pcb_thickness)+0.61+2.50+2)*iSW,5]){
+            rotate([0,0,10*iSW]) { 
+           cube([15,2,2],center=true);
+        }
+        }
+
+           translate([(h_unit*h_unit_pos-3.2-0.1),
+                      (-v_unit*1.5-(15/90*pcb_thickness)-0.61-2.50-2+0.3)*iSW  ,5.8]){
+            rotate([-12*iSW,0,-10*iSW]) { 
+           cube([15,2,2],center=true);
+        }
+        }
+
+       hull(){
+            translate([-h_unit/2+1.5,v_unit/2+iBorder_brg-0.3,1.05]){
+            rotate([5,0,5]) { 
+            //#cylinder(2,1,center=true);
+            cube([2,1,2],center=true);
+           
+        }
+        }        
+
+            translate([h_unit/2-1.95,v_unit/2+iBorder_brg+1,1.4],$fn=30){
+            rotate([13,0,5]) { 
+            //#cylinder(2,2.5,2,center=true);
+           cube([2.5,4,1.9],center=true);
+        }
+        } 
+}
+
+       hull(){
+            translate([-h_unit/2+1.5,-v_unit/2-iBorder_brg+0.3,1.05]){
+            rotate([-5,0,5]) { 
+            //#cylinder(2,1,center=true);
+            cube([2,1,2],center=true);
+           
+        }
+        }        
+
+            translate([h_unit/2-1.95,-v_unit/2-iBorder_brg-1.2,1.4],$fn=30){
+            rotate([-13,0,-4]) { 
+            //#cylinder(2,2.5,2,center=true);
+           cube([2.5,4,1.9],center=true);
+        }
+        } 
+        }
+
+//        translate([h_unit*h_unit_pos,v_unit*-1.5-(15/90*pcb_thickness)-0.61-2.5-0.0025,(4.65+0.3127)/2]){
+//           #cube([15,2,4.65+0.3127],center=true);                      
+//    }    
+
+
+
+
+            
+        }
+
+}
 
 
 module OneCol5_6(h_unit_pos, counter_type) {
@@ -556,6 +716,269 @@ module OneCol5_6(h_unit_pos, counter_type) {
 
 }
 
+module OneCol5_5_Thumber15(h_unit_pos, counter_type) {
+
+//變形給拇指用
+//        if (counter_type>4) {
+//        translate([h_unit*h_unit_pos,(v_unit*-2)-2,8.9598+0.1316]){
+//        rotate([-30,0,0]) { 
+//            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+//        switch_socket(borders=[2.831,2,0,0],use_switch_type="choc");
+//        }
+//            }
+//    }    
+//}
+
+    iBorder_brg=2.685;
+    
+//switch+keycaps
+    switch_hight=8;
+    keycaps_hight=3;
+    keycaps_h=16.3;
+    keycaps_v=16.3;
+
+    
+//    if (counter_type>3) {
+       translate([h_unit*h_unit_pos-2.8,
+                  v_unit*-1-(15/90*pcb_thickness)-1-2.5-0.00045-2,
+                  2.1943+0.1316+0.1316*2.5+0.0002+0.4]){
+        rotate([-15,0,0]) { 
+        rotate([0,0,-90-15]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        #switch_socket(borders=[0,0,2.831+iBorder_brg,0],use_switch_type="choc_holder");
+             }   
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }
+
+    
+        }
+            }
+    }  
+//}
+
+    translate([h_unit*h_unit_pos,v_unit*0,0]){
+        rotate([0,0,0]) { 
+        rotate([0,0,-90]) {         
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,0,2.831+iBorder_brg,2.831+iBorder_brg],use_switch_type="choc_holder");
+        }
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }        
+        }
+            }
+    }
+
+        translate([h_unit*h_unit_pos-2.8,
+                   v_unit*1+(15/90*pcb_thickness)+1+2.5+0.00045+2,
+                   2.1943+0.1316+0.1316*2.5+0.0002+0.4]){
+        rotate([15,0,0]) { 
+        rotate([0,0,-90+15]) {           
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,0,2.831,2.831+iBorder_brg],use_switch_type="choc_holder");
+        }
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }        
+        
+        
+        }
+            }
+    }
+
+
+
+        if (counter_type>4) {
+        translate([h_unit*h_unit_pos,v_unit*2+2
+    ,8.9455+0.1316]){
+        rotate([30,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,2.831,0,0],use_switch_type="choc");
+        }
+            }
+    }    
+
+}
+
+        if (counter_type==3) {
+
+
+        
+            translate([h_unit*h_unit_pos-5,v_unit*1.5+(15/90*pcb_thickness)+0.61+2.50+2,-(5-1-1)/2+1]){
+            rotate([0,0,15]) { 
+           cube([15,2,(4.65)*3-1],center=true);
+        }
+        }
+
+           translate([h_unit*h_unit_pos-5,-v_unit*1.5-(15/90*pcb_thickness)-0.61-2.50-2,5]){
+            rotate([-12,0,-15]) { 
+           cube([15,2,4],center=true);
+        }
+        }
+
+       hull(){
+            translate([-h_unit/2+1.5,v_unit/2+iBorder_brg-0.3,1.05]){
+            rotate([7.5,0,0]) { 
+            //#cylinder(2,1,center=true);
+            cube([2,1,2],center=true);
+           
+        }
+        }        
+
+            translate([h_unit/2-2,v_unit/2+iBorder_brg+1.5,1.5],$fn=30){
+            rotate([13,0,6]) { 
+            //#cylinder(2,2.5,2,center=true);
+           cube([2.5,5,2],center=true);
+        }
+        } 
+}
+       hull(){
+            translate([-h_unit/2+1.5,-v_unit/2-iBorder_brg+0.3,1.05]){
+            rotate([-7.5,0,0]) { 
+            //#cylinder(2,1,center=true);
+            cube([2,1,2],center=true);
+           
+        }
+        }        
+
+            translate([h_unit/2-2,-v_unit/2-iBorder_brg-1.5,1.5],$fn=30){
+            rotate([-13,0,-6]) { 
+            //#cylinder(2,2.5,2,center=true);
+           cube([2.5,5,2],center=true);
+        }
+        } 
+        }
+        //            translate([h_unit*h_unit_pos,v_unit*-1.5-(15/90*pcb_thickness)-0.61-2.5-0.0025,(4.65+0.3127)/2]){
+//           #cube([15,2,4.65+0.3127],center=true);                      
+//    }    
+
+
+
+
+            
+        }
+
+}
+
+
+module OneCol5_6(h_unit_pos, counter_type) {
+        if (counter_type>4) {
+        translate([h_unit*h_unit_pos,(v_unit*-2)-2,8.9598+0.1316]){
+        rotate([-30,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[2.831,2,0,0],use_switch_type="choc");
+        }
+            }
+    }    
+}
+//    if (counter_type>3) {
+       translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)-1,2.1943+0.1316]){
+        rotate([-15,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[2.831+0.141,0,0,0],use_switch_type="choc");
+                
+        }
+            }
+    }  
+//}
+
+    translate([h_unit*h_unit_pos,v_unit*0,0]){
+        rotate([0,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[2.831+0.141,2.831+0.141,0,0],use_switch_type="choc");
+        }
+            }
+    }
+
+        translate([h_unit*h_unit_pos,v_unit*1+(15/90*pcb_thickness)+1,2.1943+0.1316]){
+        rotate([15,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,2.831+0.141,0,0],use_switch_type="choc");
+        }
+            }
+    }
+
+//switch+keycaps
+    switch_hight=8;
+    keycaps_hight=4.5;
+    keycaps_h=13;
+    keycaps_v=13;
+    
+       translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)-1,2.1943+0.1316]){
+        rotate([-15,0,0]) { 
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }
+            }
+    }  
+    translate([h_unit*h_unit_pos,v_unit*0,0]){
+        rotate([0,0,0]) { 
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }
+            }
+    }
+       translate([h_unit*h_unit_pos,v_unit*1+(15/90*pcb_thickness)+1,2.1943+0.1316]){
+        rotate([15,0,0]) { 
+            translate([-keycaps_h/2,-keycaps_v/2,(switch_hight+keycaps_hight)/2-pcb_thickness/2]) {
+        %cube([keycaps_h,keycaps_v,switch_hight+keycaps_hight],center=false);
+                
+        }
+            }
+    }   
+   
+    
+    
+        if (counter_type>4) {
+        translate([h_unit*h_unit_pos,v_unit*2+2
+    ,8.9455+0.1316]){
+        rotate([30,0,0]) { 
+            translate([-h_unit/2,v_unit/2,pcb_thickness/2]) {
+        switch_socket(borders=[0,2.831,0,0],use_switch_type="choc");
+        }
+            }
+    }    
+
+}
+
+        if (counter_type==3) {
+            
+            translate([h_unit*h_unit_pos,v_unit*1.5+(15/90*pcb_thickness)-0.757,-(5-1-1)/2-0.7]){
+           cube([15,2,(4.65)*3-1],center=true);
+                }
+                
+            difference() {
+
+            translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)+1-2.1-0.00045,0]){
+                    rotate([-15,0,0]) { 
+                        translate([0,-v_unit/2-0.5,pcb_thickness*1+1.1]) {
+                    #cube([15,1,1],center=true);
+                            
+                    }
+                        }
+                }   
+
+            translate([h_unit*h_unit_pos,v_unit*-1-(15/90*pcb_thickness)+1-2.1-0.00045,0]){
+                    rotate([-15,0,0]) { 
+                        translate([3.12,-v_unit/2-0.5,pcb_thickness*1+1.1]) {
+                    #cube([1.1,1,1],center=true);
+                            
+                    }
+                        }
+                }  
+
+            }   
+            
+            
+        }
+
+}
 
 module OneCol5_7(h_unit_pos, counter_type) {
         if (counter_type>4) {
@@ -2082,7 +2505,7 @@ translate ([h_unit*4.05,v_unit*-0.5,10]){
 //仰角 (Keycaps 11.4mm)
 //OneCol5_12(0,3);
 //平角
-OneCol5_13(0,3);
+//OneCol5_13(0,3);
 
 //====TEST=====
 
@@ -2103,3 +2526,7 @@ OneCol5_13(0,3);
 //OneCol_RT2();
 //左側
 //OneCol_LT2();
+
+//L 拇指
+//OneCol5_5_Thumber15(0,3);
+OneCol5_5_Thumber10("R",0,3);

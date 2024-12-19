@@ -25,6 +25,8 @@ sc=1;
 //include <BasePlate_3U_16MM_LType_Right.scad>
 
 //include <BasePlate_3U_18MM_LType_Left.scad>
+
+
 //include <BasePlate_3U_18MM_LType_Right.scad>
 
 //===========================
@@ -53,16 +55,13 @@ IDC_UseIn= "LR"; //"L","R","LR",""
 3U_FTW2=3U_FT2+1.5;
 
 
-//3U區 底板切除長度
-3U_CW=45;
-
 //左右鏡射參數
-//iSW =
-//    LR == "L"
-//        ? 1
-//    : LR == "R"
-//        ? -1
-//    : assert(false, "LR is invalid");
+iSW =
+    LR == "L"
+        ? 1
+    : LR == "R"
+        ? -1
+    : assert(false, "LR is invalid");
     
 iSW2 =
     LR == "L"
@@ -98,7 +97,7 @@ iSW5 =
     : assert(false, "ML is invalid");
 iSW6 =
     ML == "L"
-        ? 10
+        ? unit
     : ML == "M"
         ? 0
     : assert(false, "ML is invalid");
@@ -106,13 +105,18 @@ iSW6 =
  echo ("iSW6=",iSW6);
 
 //基本厚度
-BaseT=0.8;
+BaseT=1;
 
 //3U區 底座
 3UB_W=3U_W+BaseT*2;
 3UB_D=3U_D+BaseT*2;
 3UB_H=3;
 3UB_H2=1.5;
+
+//3U區 底板切除長度
+3U_CW=45;
+3U_CD=3UB_D-1;
+
 
 //高度偏移
 //A 小指
@@ -141,11 +145,16 @@ module rotate_p(a, orig) {
 }
 
 
-module 3U_BASES(v_angle=0,h_angle=0,sh=0,sh2=0,iOffsetZ=0)
+module 3U_BASES(v_angle=0,h_angle=0,sh1=0,sh2=0,sd1=0,sd2=0,sw1=0,sw2=0,iOffsetZ=0)
 {
     //v_angle 垂直角度
     //h_angle 水平角度
-    //sh 支撐高度微調
+    //sh1 支撐高度微調
+    //sh2 支撐高度微調
+    //sd1 支撐長度微調
+    //sd2 支撐長度微調
+    //sw1 支撐寬度微調
+    //sw2 支撐寬度微調
     //iOffsetZ 支撐架水平高度調整
 iSW3 =
     h_angle > 0
@@ -164,15 +173,15 @@ iSW3 =
             translate([0,0,3UB_H/2]){
             cube([3UB_D,3UB_W,3UB_H],center=true);
             }
-            //支撐框架加高
+            //支撐框架加高/長
             //height = d * tan(angle);
             height = (3U_W-3U_FT) * tan(5);
             translate([0,(3U_W-3U_FT2)/2,(height+sh2)/2+iOffsetZ/2]){
-            cube([3UB_D,3U_FTW2,height+sh2+iOffsetZ],center=true);
+            cube([3UB_D+sd2,3U_FTW2+sw2,height+sh2+iOffsetZ],center=true);
             }
 
-            translate([0,-1*(3U_W-3U_FT)/2-iSW5,(height+sh)/2+iOffsetZ/2]){
-            cube([3UB_D,3U_FTW,height+sh+iOffsetZ],center=true);
+            translate([0,-1*(3U_W-3U_FT)/2-iSW5,(height+sh1)/2+iOffsetZ/2]){
+            cube([3UB_D+sd1,3U_FTW+sw1,height+sh1+iOffsetZ],center=true);
             }
 
             //支撐框架
@@ -193,30 +202,34 @@ iSW3 =
         rotate_p([v_angle,h_angle,0],[iSW3*3U_D/2,-1*(3U_W-3U_FT)/2,3UB_H*2/2+iOffsetZ])
         union() {
 
-        translate([0,-1*(3U_W-3U_FT-iSW6)/2,3U_H/2+iOffsetZ]){
-        cube([3U_D,3U_FT+iSW6,3U_H],center=true);
+        translate([0,-1*(3U_W-3U_FT-iSW6-3)/2,3U_H2/2+iOffsetZ]){
+        #cube([3U_CD,3U_FT+iSW6,3U_H2],center=true);
+        }
+        
+        translate([0,-1*(3U_W-3U_FT-iSW6)/2+1.5,3U_H2/2+iOffsetZ]){
+        cube([3U_CD,3U_FT+iSW6,3U_H2],center=true);
+        }
+        
+        translate([0,-1*(3U_W-3U_FT-iSW6)/2-iSW5,3U_H2/2+2+iOffsetZ]){
+        cube([3U_D,3U_FT+iSW6,3U_H2],center=true);
         }
 
-        translate([0,-1*(3U_W-3U_FT-iSW6)/2-iSW5,3U_H/2+2+iOffsetZ]){
-        cube([3U_D,3U_FT+iSW6,3U_H],center=true);
+        translate([3U_D/2-5,-1*(3U_W-3U_FT-iSW6+3)/2-iSW5,3U_H2/2+2+iOffsetZ]){
+        cube([2,3U_FT+iSW6,3U_H2],center=true);
         }
 
-        translate([3U_D/2-5,-1*(3U_W-3U_FT-iSW6+3)/2-iSW5,3U_H/2+2+iOffsetZ]){
-        cube([2,3U_FT+iSW6,3U_H],center=true);
-        }
-
-        translate([0,(3U_W-3U_FT2-1)/2,3U_H/2+iOffsetZ]){
-        cube([3U_D,3U_FT2+1,3U_H],center=true);
+        translate([0,(3U_W-3U_FT2-1-sw2/2)/2,3U_H/2+iOffsetZ]){
+        #cube([3U_D,3U_FT2+1+sw2/2,3U_H],center=true);
         }
 
         }
 
         //底板中央挖洞
         translate([0,0,3U_H/2]){
-        cube([3U_D,3U_CW,3U_H],center=true);
+        cube([3U_CD,3U_CW,3U_H],center=true);
         }
         translate([0,-1.5,3U_H/2]){
-        cube([3U_D-4,3U_CW+1,3U_H],center=true);
+        cube([3U_CD-4,3U_CW+1,3U_H],center=true);
         }
         //削平底部
         translate([0,0,-3UB_H/2]){
@@ -231,6 +244,10 @@ module 3U_BASE_T2(Thickness)
     cube([unit2,unit1+1,Thickness],center=true);
 }
 
+module 3U_BASE_T2U(widthExt,depthExt,height)
+{
+    cube([unit2+widthExt,unit1+depthExt,height],center=true);
+}
 
 //生成底板時,每個COL的上下兩端圓版
 module 3U_BASE_POS()
@@ -296,15 +313,15 @@ hull($fn=200) {
     linear_extrude(height = 2){
     hull($fn=200) {
         translate([TH1[0]*unit,iSW*TH1[1]*unit+th_offset2,0]){
-            circle(unit/2+10);
+            circle(unit/2+15);
         }
 
         translate([TH2[0]*unit,iSW*TH2[1]*unit+th_offset2,0]){
-            circle(unit/2+10);
+            circle(unit/2+14);
         }
 
         translate([TH3[0]*unit,iSW*TH3[1]*unit+th_offset2,0]){
-            circle(unit/2+10);
+            circle(unit/2+13);
         }
         
     }
@@ -365,7 +382,7 @@ module Create_BASE_BOARD()
     }
     
     //TH 拇指區
-    TH3();
+    #TH3KB();
 }
 
 //M/L型底板用的母座
@@ -373,14 +390,25 @@ module Create_BASE_BOARD()
 translate([COL1[0]*unit,iSW*COL1[1]*unit-iOffsetCA1*iSW,0]){
 //rotate(a=-1.23, v=[2.5415*unit,4.1315*unit,0]){
     rotate(iSW*COL1[2]+iSW2){
-    3U_BASES(2,-iSW*12,0.8,0.8,0);
+    3U_BASES(2,-iSW*10,0,0,1,1,1,1,0);
+    
+//3U_BASES(v_angle=0,h_angle=0,sh1=0,sh2=0,sd1=0,sd2=0,sw1=0,sw2=0,iOffsetZ=0)
+    //v_angle 垂直角度
+    //h_angle 水平角度
+    //sh1 支撐高度微調
+    //sh2 支撐高度微調
+    //sd1 支撐長度微調
+    //sd2 支撐長度微調
+    //sw1 支撐寬度微調
+    //sw2 支撐寬度微調
+    //iOffsetZ 支撐架水平高度調整
 }
 }
 //S (COL2)
 translate([COL2[0]*unit,iSW*COL2[1]*unit-iOffsetCA2*iSW,0]){
 //rotate(a=-4.99, v=[3.6575*unit,3.7929*unit,0]){
         rotate(iSW*COL2[2]+iSW2){
-    3U_BASES(2.5,-iSW*6,0,0,2);;
+    3U_BASES(2.5,-iSW*6,0,0,1,1,1,1,0);
 }
 }
 
@@ -395,14 +423,14 @@ rotate(iSW*COL3[2]+iSW2){
 translate([COL4[0]*unit,iSW*COL4[1]*unit-iOffsetCA4*iSW,0]){
 //rotate(a=-12.26, v=[5.816*unit,4.3215*unit,0]){
 rotate(iSW*COL4[2]+iSW2){
-    3U_BASES(2.5,iSW*-5,0,0,1);
+    3U_BASES(2.5,iSW*-5,0,0,1,1,1,1,1);
 }
 }
 //G (COL5)
 translate([COL5[0]*unit,iSW*COL5[1]*unit-iOffsetCA5*iSW,0]){
 //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
 rotate(iSW*COL5[2]+iSW2){
-    3U_BASES(5,iSW*-7,0,1.5,2);
+    3U_BASES(3.5,iSW*-15,0.5,2.5,2.7,2.7,1,1,2.5);
 }
 }
 //TH 拇指區
@@ -411,7 +439,37 @@ TH_BASE();
 }
 
 //3鍵拇指區母座凹槽
-module TH3(Thickness=4){
+module TH3K(Thickness=4){
+    
+        //Shift
+    translate([TH1[0]*unit,iSW*TH1[1]*unit+th_offset,Thickness/2]){
+    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+    rotate(iSW*TH1[2]+iSW2){
+        3U_BASE_T2(Thickness);
+        translate([0,0,8]) 3U_BASE_T2U(10,10,15);
+    }
+    }
+
+    //Backspace
+    translate([TH2[0]*unit,iSW*TH2[1]*unit+th_offset,Thickness/2]){
+    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+    rotate(iSW*TH2[2]+iSW2){
+        3U_BASE_T2(Thickness);
+        translate([0,0,5]) 3U_BASE_T2U(0,0,15);
+    }
+    }
+
+    //Alt
+    translate([TH3[0]*unit,iSW*TH3[1]*unit+th_offset,Thickness/2]){
+    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+    rotate(iSW*TH3[2]+iSW2){
+        3U_BASE_T2(Thickness);
+        translate([0,0,5]) 3U_BASE_T2U(0,0,15);
+        }
+    }
+}
+//3鍵拇指區母座底板用孔洞
+module TH3KB(Thickness=2){
     
         //Shift
     translate([TH1[0]*unit,iSW*TH1[1]*unit+th_offset,Thickness/2]){
@@ -434,11 +492,9 @@ module TH3(Thickness=4){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
     rotate(iSW*TH3[2]+iSW2){
         3U_BASE_T2(Thickness);
-        
         }
     }
 }
-
 
 //拇指區基座
 module TH_BASE()
@@ -449,24 +505,32 @@ difference(){
 {
     //內側母座
     //高9
-    translate([TH1[0]*unit-unit/2-1,iSW*TH1[1]*unit+iSW*unit/4-iSW*1+th_offset-1,9/2]){
-    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-    rotate(iSW*TH1[2]+iSW2){
-        cube([4,unit1+4,9],center=true);
-    }
-    }
+//    translate([TH1[0]*unit-unit/2-1,iSW*TH1[1]*unit+iSW*unit/4-iSW*1+th_offset-1,9/2]){
+//    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+//    rotate(iSW*TH1[2]+iSW2){
+//        cube([4,unit1+4,9],center=true);
+//    }
+//    }
 
     //高14
-//    translate([5.4121*unit-unit/2-1,iSW*-6.1165*unit+iSW*unit/4-iSW*1+th_offset,14/2]){
-//    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
-//    rotate(iSW*-21.41+iSW2){
-//        cube([4,unit1+4,14],center=true);
-//    }
-//    }
-//    
+    translate([TH1[0]*unit-unit/2-1,iSW*TH1[1]*unit+iSW*unit/4-iSW*1+th_offset-iSW*2,14/2]){
+    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+    rotate(iSW*-21.41+iSW2){
+        cube([8,unit1+6,14],center=true);
+    }
+    }
     
-    //高24
-//    translate([5.4121*unit-unit/2+1,iSW*-6.1165*unit+iSW*unit/4-iSW*1-iSW*th_offset-iSW*0.5,24/2]){
+
+//    //高20
+//    translate([TH1[0]*unit-unit/2,iSW*TH1[1]*unit+iSW*unit/4-iSW*1-iSW*th_offset-iSW*0.5-iSW*3,20/2]){
+//    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
+//    rotate(iSW*-16.41+iSW2){
+//        cube([8,unit1+6,20],center=true);
+//    }
+//    }
+    
+//    //高24
+//    translate([TH1[0]*unit-unit/2+1,iSW*TH1[1]*unit+iSW*unit/4-iSW*1-iSW*th_offset-iSW*0.5,24/2]){
 //    //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
 //    rotate(iSW*-21.41+iSW2){
 //        cube([8,unit1+4,24],center=true);
@@ -474,10 +538,10 @@ difference(){
 //    }
     
     //外側母座
-    translate([TH3[0]*unit+unit/2-1,iSW*TH3[1]*unit-iSW*unit/2+iSW*2+th_offset+1,6/2]){
+    translate([TH3[0]*unit+unit/2,iSW*TH3[1]*unit-iSW*unit/2+iSW*2+th_offset-1,6/2]){
     //rotate(a=-14.11, v=[6.8249*unit,4.7294*unit,0]){
     rotate(iSW*TH3[2]+iSW2){
-        cube([6,unit1+4,6],center=true);
+        cube([6,unit1+6,6],center=true);
         
         }
     }
@@ -485,16 +549,20 @@ difference(){
     
 //母座上建立固定凹槽
 //iSW*10
-    //
-    rotate_p([iSW*10,0,0],[(TH3[0])*unit,iSW*(TH3[1]-0.8)*unit+th_offset,2]){
-        TH3(8);  
-      }  
+//    rotate_p([iSW*10,0,0],[(TH3[0])*unit,iSW*(TH3[1]-0.8)*unit+th_offset,2]){
+//        #TH3K(8);  
+//      }  
 
 //高14用
 //iSW*15
-//    //
-//    rotate_p([iSW*15,0,0],[(7.2504)*unit,iSW*(-7.2777-0.8)*unit+th_offset,2]){
-//        #TH3(8);  
+    rotate_p([iSW*15,0,0],[(TH3[0])*unit,iSW*(TH3[1]-0.8)*unit+th_offset,2]){
+        TH3K(8);  
+      } 
+
+//iSW*20
+    //
+//    rotate_p([iSW*20,0,0],[(TH3[0])*unit,iSW*(TH3[1]-0.8)*unit+th_offset,2]){
+//        TH3K(15);  
 //      } 
       
 //Backspace
@@ -502,7 +570,7 @@ difference(){
 //24用
 // translate([0,0,2])
 //    rotate_p([iSW*0,25,iSW*2],[(7.2504)*unit+unit/2,iSW*(-7.2777)*unit+th_offset-unit/2,10/2]){
-//                #TH3(10);  
+//                #TH3K(10);  
 //      }  
 
   
@@ -811,3 +879,5 @@ module Do_Create_Tenting_Base() {
 //=======執行==============
 Do_Create_BASE_BOARD();
 //Do_Create_Tenting_Base();
+
+//TH3KB(2);

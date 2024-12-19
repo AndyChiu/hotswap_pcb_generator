@@ -25,8 +25,8 @@ ML="L";
 //3U區 寬
 3U_D=15.5;
 //3U區 高
-3U_H=8.2;
-
+3U_H=8.2+20;
+3U_H2=15;
 
 //===========================
 //1U 鍵帽大小
@@ -52,12 +52,12 @@ oft1=1;
 oft2=-1;
 
 //===MCU====================
-mcu_pos_x_Offset=130;
+mcu_pos_x_Offset=130+0.8*unit;
 mcu_pos_y_Offset=-30;
 mcu_pos_r_Offset=-14.11;
 
 //===IDC====================
-idc_pos_x_Offset=144.7;
+idc_pos_x_Offset=144.7+0.5*unit;
 idc_pos_y_Offset=-117+30;
 idc_pos_r_Offset=75.89;
 
