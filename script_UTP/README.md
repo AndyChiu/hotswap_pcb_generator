@@ -4,11 +4,20 @@
 需要安裝node.js v14以上版本
 
 ### 安裝方式 Install Dependencies
+
+Windows:
 ```
 install.bat
 ```
 PS: 如有出現 npm 程式有更新，可以依照說明，使用 npm audit fix 來更新 npm
 
+非Windows系統，請於命令列執行:
+'''
+npm install
+cd node_modules\@ijprest
+npm install
+cd ..\..\
+'''
 
 ### 執行腳本 Run script
 
