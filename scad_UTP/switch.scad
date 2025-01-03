@@ -28,11 +28,10 @@ module switch_socket(borders=[1,1,1,1], rotate_column=false,use_switch_type=swit
             
         } else if (use_switch_type=="mx_holder") {
             switch_socket_base_mx(borders);  
-<<<<<<< Updated upstream
 
         } else if (use_switch_type=="ks27_holder") {
             switch_socket_base_ks27(borders);  
-                       
+
         } else if (use_switch_type=="mx" && switch_socket_base_holder==true) {
             switch_socket_base_mx(borders);
    
@@ -412,11 +411,6 @@ if (switch_socket_base_holder_support_frame) {
     }
 }
 
-
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
 module switch_socket_base_mx(borders=[1,1,1,1]) {
     //MX軸的定位板為方形14mm的空間
     //因此模擬溝槽的部分，應該是夾起來要14mm
