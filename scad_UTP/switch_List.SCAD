@@ -2,6 +2,7 @@ include <switch.scad>
 
 //sSW = ["mx","mx_holder","mx_s_holder","mx_s_holder2","choc","choc_holder","chocV2","chocMini","ks27","ks27_holder","mx_low","romer_g","chocV2_1u","redragon_low"];
 
+<<<<<<< Updated upstream
 sSW = ["ks27_holder","choc"];
 
 //一般
