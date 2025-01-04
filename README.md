@@ -43,12 +43,16 @@
 ##### Other
 | Gateron KS27 | Romer G | Redragon low profile |
 | -------- | -------- | -------- | 
-| ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/redragon_low.png)|
+| ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/switch_redragon_low.png)|
 
 ##### 軸座含固定架
-| Cherry MX-style | Kailh Choc V1 | Gateron KS27|
+| Cherry MX-style1 | Cherry MX-style2 |
 | -------- | -------- | -------- |
-| ![switch_mx_holder](img_UTP/switch_mx_holder.png)|![switch_choc_holder](img_UTP/switch_choc_holder.png)|![switch_ks27_holder](img_UTP/switch_ks27_holder.png)|
+| ![switch_mx_holder](img_UTP/switch_mx_s_holders.png)| ![switch_mx_holder](img_UTP/switch_mx_s_holders2.png)|
+
+| Kailh Choc V1 | Gateron KS27|
+| -------- | -------- | 
+|![switch_choc_holder](img_UTP/switch_choc_holder.png)|![switch_ks27_holder](img_UTP/switch_ks27_holder.png)|
 
 ##### Dactyl類型使用的1U PCB
 | Kailh Choc V2  |
@@ -74,7 +78,7 @@
 
 |EC11|EVQWGD001|
 | -------- |-------- |
-|![EC11](img_UTP/EC11.png)|![EVQWGD001](img_UTP/EVQWGD001.png)|
+|![EC11](img_UTP/ec_EC11.png)|![EVQWGD001](img_UTP/ec_EVQWGD001.png)|
 
 #### 穩定器(Stabilizer)
 

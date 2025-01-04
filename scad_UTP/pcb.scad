@@ -68,12 +68,14 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
                 layout_pattern(switch_layout) {
                     
                     if ($extra_data[1]=="chocMini") {
+
                         switch_socket_base_chocMini($borders);
     
                     } else if ($extra_data[1]=="choc" && switch_socket_base_holder==true) {
                         switch_socket_base_choc($borders);
                         
                     } else if ($extra_data[1]=="choc_holder") {
+
                         switch_socket_base_choc($borders);  
                         
                     } else if ($extra_data[1]=="mx_s_holder") {
@@ -84,7 +86,8 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
                         
                         switch_socket_base_mx_stabilizer2($borders);      
                         
-                    } else if ($extra_data[1]=="mx" && switch_socket_base_holder==true) {
+                    } else if (($extra_data[1]=="mx" && switch_socket_base_holder==true) Or ($extra_data[1]=="mx_holder" )) {
+
                         switch_socket_base_mx($borders);
     
                     } else if ($extra_data[1]=="mx_holder") {
