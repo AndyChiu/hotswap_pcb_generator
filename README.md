@@ -47,8 +47,8 @@
 
 ##### 軸座含固定架
 | Cherry MX-style1 | Cherry MX-style2 |
-| -------- | -------- | -------- |
-| ![switch_mx_holder](img_UTP/switch_mx_s_holders.png)| ![switch_mx_holder](img_UTP/switch_mx_s_holders2.png)|
+| -------- | -------- |
+| ![switch_mx_holder](img_UTP/switch_mx_s_holder.png)| ![switch_mx_holder](img_UTP/switch_mx_s_holder2.png)|
 
 | Kailh Choc V1 | Gateron KS27|
 | -------- | -------- | 
