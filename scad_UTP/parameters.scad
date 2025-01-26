@@ -304,7 +304,7 @@ v_mm = 1/v_border_width;
 
 //Switch socket base
 //軸座上的軸體扣夾
-switch_socket_base_holder = true;
+switch_socket_base_holder = false;
 //扣夾是否支撐
 switch_socket_base_holder_support_frame = false;
 
@@ -348,11 +348,11 @@ base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 
 //Show virtual KeySwitch
 //是否顯示虛擬軸體
-base_pcb_layout_ShowVKeySwitch = true;
+base_pcb_layout_ShowVKeySwitch = false;
 
 //Show virtual Keycaps
 //是否顯示虛擬鍵帽
-base_pcb_layout_ShowVKeycap = true;
+base_pcb_layout_ShowVKeycap = false;
 
 //Show keycap Legend text
 //是否顯示軸座對應的按鍵文字

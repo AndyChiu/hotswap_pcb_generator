@@ -393,9 +393,6 @@ if (switch_socket_base_holder_support_frame) {
      
      cube([ks27_holder_wall_v_thickness+ks27_holder_hook_thickness,ks27_holder_hook_length, ks27_holder_hook_height ], center=true);
 
- 
-/////
-
     translate([h_unit/2,-v_unit/2,0]) 
     //    difference() {
     union() {

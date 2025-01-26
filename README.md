@@ -2,10 +2,9 @@
 
 [原作者GitHub: 3D-Printable Hotswap Keyboard PCB Generator](https://github.com/50an6xy06r6n/hotswap_pcb_generator)
 
-此專案為利用3D印表機，列印鍵盤底板、定位板、外殼..等部份來建構鍵盤，由於原作者使用22AWG電源線當主要線路，而我手邊有許多的廢棄網路線，所以就改用網路線內芯進行調整。
+此專案為利用3D印表機，列印鍵盤底板、定位板、外殼..等部份來建構鍵盤，由於原作者使用22AWG電源線當主要線路，而我手邊有許多的廢棄網路線，所以就改用網路線內芯線來替代接線，並依照網路線內芯線的尺寸，修改了 switch.scad 的走線方式，因為線材較細，Row與Colum的線路可以走同一面，而不用怕交錯的部份太厚，所以把線路都改到正面走線。
 
-依照網路線內芯線的特性，修改了不少 switch.scad 的部份，主要是線材細，可以放入二極體，另外也添加了不少種類的軸體，以及MCU等額外鍵盤用零件。
-
+另外也添加了不少種類的軸體，以及MCU等額外鍵盤用零件。
 
 ### 額外特性
 - 支援多種軸體：Cherry MX-style、MX Low profile、Kailh Choc V1、Choc V2、Choc Mini，Gateron KS27、Romer G、Redragon low profile。
@@ -15,17 +14,17 @@
 - Choc V2 矮軸可以使用MX規格的衛星軸（穩定器)。
 - 支援4pin微動開關(microswitch)。
 - PCB板可針對外框進行設計，讓PCB板直接當作鍵盤使用。
-- Choc V1軸與MX軸有從PCB板上開啟固定架的選項可用，用於固定軸體，代替定位板的作用。
+- Choc V1軸、MX軸與KS-27軸有固定架(holder)的選項可用，用於固定軸體，代替定位板的作用。
 
 ### 曲面鍵盤設計
 - 方式1: [UC36系列](https://github.com/AndyChiu/UC36)中，曲面鍵盤的相關程式與檔案，可由此[查閱](scad_UTP/Curved_PCB_KB)。
-- 方式2: PCB板直接可以設定軸體的角度與高度，達到曲面鍵盤的效果。
+- 方式2: PCB板直接可以設定各別軸體的角度與高度，達到曲面鍵盤的效果。
 
 ### 限制
-因目前著重在Kailh Choc矮軸的使用開發，因矮軸上PCB板後高度較低，較不易被撥動掉落，所以定位板、底板、外殼、墊高都沒有跟著調整，主要是PCB主板印出來，直接裝上軸體使用，所以除了pcb.scad外，其他部份使用上可能會有點問題。
+因著重在Kailh Choc等矮軸的使用與開發，矮軸上PCB板後高度較低，鍵帽通常也設計的較矮，因此較不易被撥動掉落，直接用 pcb.scad 產生 PCB 板即可使用，所以對於定位板、底板、外殼、墊高等程式檔都沒有更新，因此其他部份使用上可能會有點問題。
 
 ### 資料夾/檔案命名
-由於對GitHub作業還不是很熟悉，且自己的改動太多，所以不好直接更動原作者的檔案，因此目前先把自己處理的檔案與資料夾，後綴都加上UTP，相關程式也有調整。
+由於對GitHub作業還不是很熟悉，且自己的改太多東西，所以不好直接更動原作者的檔案，因此目前先把自己處理的檔案與資料夾，都加上_UTP後綴字串，相關程式也有調整。
 
 ### 元件圖片
 
@@ -44,12 +43,16 @@
 ##### Other
 | Gateron KS27 | Romer G | Redragon low profile |
 | -------- | -------- | -------- | 
-| ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/redragon_low.png)|
+| ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/switch_redragon_low.png)|
 
 ##### 軸座含固定架
-| Cherry MX-style | Kailh Choc V1 |
+| Cherry MX-style1 | Cherry MX-style2 |
 | -------- | -------- |
-| ![switch_mx_holder](img_UTP/switch_mx_holder.png)|![switch_choc_holder](img_UTP/switch_choc_holder.png)|
+| ![switch_mx_holder](img_UTP/switch_mx_s_holder.png)| ![switch_mx_holder](img_UTP/switch_mx_s_holder2.png)|
+
+| Kailh Choc V1 | Gateron KS27|
+| -------- | -------- | 
+|![switch_choc_holder](img_UTP/switch_choc_holder.png)|![switch_ks27_holder](img_UTP/switch_ks27_holder.png)|
 
 ##### Dactyl類型使用的1U PCB
 | Kailh Choc V2  |
@@ -75,7 +78,7 @@
 
 |EC11|EVQWGD001|
 | -------- |-------- |
-|![EC11](img_UTP/EC11.png)|![EVQWGD001](img_UTP/EVQWGD001.png)|
+|![EC11](img_UTP/ec_EC11.png)|![EVQWGD001](img_UTP/ec_EVQWGD001.png)|
 
 #### 穩定器(Stabilizer)
 
