@@ -86,7 +86,9 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
                         
                         switch_socket_base_mx_stabilizer2($borders);      
                         
-                    } else if (($extra_data[1]=="mx" && switch_socket_base_holder==true) Or ($extra_data[1]=="mx_holder" )) {
+                    } else if (
+                    ($extra_data[1]=="mx" && switch_socket_base_holder==true) || 
+                    ($extra_data[1]=="mx_holder" )) {
 
                         switch_socket_base_mx($borders);
     
@@ -363,3 +365,9 @@ pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);
 //
 //translate([0,-100,12.8])
 //#cube([100,100,0.5]);
+
+//EC11 Cover TEST
+//use <ec11_cover.scad>
+//%translate([102,-67.5,-4])
+//rotate([0,0,45])
+//ec11_upper_covert();
