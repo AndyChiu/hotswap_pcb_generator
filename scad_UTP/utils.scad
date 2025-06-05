@@ -187,6 +187,22 @@ module layout_pattern(layout,pattern_type="") {
                                                 translate([0+h_unit/2-3,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
  color("Black") %text(keycapLegend,size=3);
                             }
+                            
+                            
+    //檢測用
+    if (base_pcb_layout_ShowVKeySwitch && pattern_type=="switch_socket_base_cutout") {
+        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
+        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[2])/2])
+            cube([VKeySwitch_Size[0],VKeySwitch_Size[1],VKeySwitch_Size[2]],center=true);   
+    }
+    
+    if (base_pcb_layout_ShowVKeycap && pattern_type=="switch_socket_base_cutout") {
+        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
+        %translate([(h_unit)/2,-v_unit/2,(pcb_thickness+VKeycap_Size[2])/2+VKeySwitch_Size[2]])
+            color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*location[1][0],VKeycap_Size[1]*location[1][1],VKeycap_Size[2]],center=true);
+    }                            
+                            
+                            
                             }
                         }
                     }
@@ -339,7 +355,6 @@ module layout_pattern(layout,pattern_type="") {
                     ? 0 
                  : "" ; 
                  
-                 
             bodx =
                 bod == "C"
                 ? -(bx-unit)/2
@@ -385,6 +400,9 @@ module layout_pattern(layout,pattern_type="") {
                 : bod == ""
                     ? 0 
                 : "" ;    
+
+            bodxC=-(h_unit-unit)/2;
+            bodyC=(v_unit-unit)/2;
                 
             //左上 LU (+x,+y) (px,-py)
             //左 L    (0,+y) (px,-py)
@@ -427,7 +445,20 @@ module layout_pattern(layout,pattern_type="") {
                     } else if (pattern_type=="switch_socket_base_cutout2") {
  
      
-                                 //掏空凸起部分的內部，預留 w mm壁厚度
+                        //掏空凸起部分的內部，預留 w mm壁厚度
+                        //如果突起部分大小>unit,是否內部空腔要擴大
+                        //不擴大,則用 h_unit 以及 v_unit 大小來掏空
+                        if (base_pcb_layout_NoIncreaseInInternalCavity) {
+                            hull(){
+                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+                                translate([w+bodxC,-1*v_unit+w+bodyC,-1*bz-2+h]) 
+                                cubeStyle([h_unit-(w*2),v_unit-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                                translate([w+bodxC,-1*v_unit+w+bodyC,-1*bz-2]) 
+                                cubeStyle([h_unit-(w*2),v_unit-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                            }
+               
+                        } else {
                             hull(){
                                 rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
                                 translate([w+bodx,-1*by+w+body,-1*bz-2+h]) 
@@ -436,7 +467,7 @@ module layout_pattern(layout,pattern_type="") {
                                 translate([w+bodx,-1*by+w+body,-1*bz-2]) 
                                 cubeStyle([bx-(w*2),by-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
                             }
-       
+                        }
                             
                     } else if (pattern_type=="switch_socket_base_cutout2MOD") {
  
