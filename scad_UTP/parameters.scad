@@ -130,11 +130,11 @@ $fn=12;
 
 /* Advanced Parameters (related to switch size) */
 // Switch spacing distance (19.05mm for MX keycaps,18mm for choc, 16mm for choc minimum spacing distance.)
-unit = 19;
+unit = 18;
 // Horizontal unit size (18mm for choc keycaps)
-h_unit = 19;
+h_unit = 18;
 // Vertical unit size (17mm for choc keycaps)
-v_unit = 19;
+v_unit = 17;
 
 //Andy add:
 //unit size for stabilizer
@@ -304,7 +304,7 @@ v_mm = 1/v_border_width;
 
 //Switch socket base
 //軸座上的軸體扣夾
-switch_socket_base_holder = false;
+switch_socket_base_holder = true;
 //扣夾是否支撐
 switch_socket_base_holder_support_frame = false;
 
@@ -325,7 +325,7 @@ base_pcb_layout_outer_DesignMode = false;
 
 //What color should be displayed when the outer hull is surrounded
 //外圍hull包圍起來時，要產生什麼顏色: "ColorName"(顏色名稱),"None"(不產生顏色),"Group"(群組第一個點的顏色)
-base_pcb_layout_outer_hull_color = "Group";
+base_pcb_layout_outer_hull_color = "LightYellow";
 
 //Mark out the grooves of the circular self-adhesive rubber pad
 //將圓形自黏膠墊凹槽標註出來
@@ -343,16 +343,21 @@ base_pcb_layout_outer_EdgeFrame = "RoundedCorners";
 //是否套用軸體角度與高度的設定
 base_pcb_layout_ApyAdjSwitchAngleAndHeight = true;
 
+//Raised Switch Base Style
 //凸起的軸座樣式 "Basic"(基本), "RoundedCorners"(圓角)
 base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 
+//No increase in internal cavity
+//不擴大突起軸座的內部空腔,值: true , false
+base_pcb_layout_NoIncreaseInInternalCavity=false;
+
 //Show virtual KeySwitch
 //是否顯示虛擬軸體
-base_pcb_layout_ShowVKeySwitch = false;
+base_pcb_layout_ShowVKeySwitch = true;
 
 //Show virtual Keycaps
 //是否顯示虛擬鍵帽
-base_pcb_layout_ShowVKeycap = false;
+base_pcb_layout_ShowVKeycap = true;
 
 //Show keycap Legend text
 //是否顯示軸座對應的按鍵文字
