@@ -288,6 +288,29 @@ module pcb_layout_Rubber_Pads(group) {
       }
 }
 
+module pcb_layout_Cable_Hole(group) {
+    //挖PCB板的凸起軸座的互通孔道，可用於將線路由底部穿孔的方式處理
+    //group: 描繪位置群
+     for (point = group) {
+
+        translate([point[0][0]*h_unit_ratio,
+                                    point[0][1]*v_unit_ratio,
+                                    point[0][2]])
+        rotate(point[1])
+        color(point[2]) #cylinder(h=point[3][0],r=point[3][1],center=true,$fn=30);
+
+        
+        if (base_pcb_layout_Rubber_Pads_DesignMode) {
+            translate([point[0][0]*h_unit_ratio,
+                                        point[0][1]*v_unit_ratio,
+                                        -3])
+            rotate([0,180,180])
+            color("Black") %text(point[4],size=3);
+        }
+
+    }
+}
+
 module pcb_layout_IDC_Hole(group) {
     //挖PCB板，讓IDC接口有洞可以出入，座的深度可以更深
     //group: 描繪位置
@@ -336,9 +359,6 @@ module pcb_layout_Indented_Text(group) {
     }
 }
 
-
-
-
 //TEST
 difference(){
     
@@ -352,6 +372,11 @@ difference(){
     
     ////Indented_Text TEST
     pcb_layout_Indented_Text(base_pcb_layout_Indented_Text); 
+    
+    //內部挖孔
+    if (base_pcb_layout_Use_Cable_Hole){
+    pcb_layout_Cable_Hole(base_pcb_layout_Cable_Hole);
+    }
 }
 
 //IDC TEST
