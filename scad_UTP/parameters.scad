@@ -351,6 +351,10 @@ base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 //不擴大突起軸座的內部空腔,值: true , false
 base_pcb_layout_NoIncreaseInInternalCavity=false;
 
+//
+//PCB板開線路孔洞 ,值: true , false
+base_pcb_layout_Use_Cable_Hole= true;
+
 //Show virtual KeySwitch
 //是否顯示虛擬軸體
 base_pcb_layout_ShowVKeySwitch = true;
