@@ -10,6 +10,7 @@ use <stabilizer.scad>
 use <microswitch.scad>
 use <via.scad>
 use <IDC\IDC_Holder.scad>
+use <oled.scad>
 
 module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout, pcb_outer_layout) {
     
@@ -85,6 +86,10 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
                     } else if ($extra_data[1]=="mx_s_holder2") {
                         
                         switch_socket_base_mx_stabilizer2($borders);      
+
+                    } else if ($extra_data[1]=="ks27_holder" || $extra_data[1]=="ks33v3_holder") {
+
+                        switch_socket_base_ks27($borders);  
                         
                     } else if (
                     ($extra_data[1]=="mx" && switch_socket_base_holder==true) || 
@@ -197,7 +202,7 @@ module pcb_layout_outer(groups, LE_height=2, trans_z=-2,resize_x=0,resize_y=0,mo
                                 point[0][2]]) color(point[2]) resize([point[1]*2+resize_x, point[1]*2+resize_y],0) circle(point[1],$fn=50);
                      translate([point[0][0]*h_unit_ratio,
                                 point[0][1]*v_unit_ratio,
-                                point[0][2]+5]) rotate([0,0,0]) color("Black") %text(point[3],size=3);                
+                                point[0][2]-5]) rotate([180,0,0]) color("Black") %text(point[3],size=3);                
             }
         }
     } else if (base_pcb_layout_outer_DesignMode=="DontShow" && modeType=="") {
@@ -322,7 +327,7 @@ module pcb_layout_IDC_Hole(group) {
 }
 
 module pcb_layout_IDC(group) {
-    //放置IDC接
+    //放置IDC接口
     //group: 描繪位置
     for (point = group) {
         translate([point[0][0]*h_unit_ratio,
@@ -330,6 +335,33 @@ module pcb_layout_IDC(group) {
                                 point[0][2]]) rotate(point[1]) color(point[2]) IDC_Port();
     }
 }
+module pcb_layout_OLED_Hole(group) {
+    //放置OLED螢幕模組
+    //group: 描繪位置
+    for (point = group) {
+        translate([point[0][0]*h_unit_ratio,
+                                point[0][1]*v_unit_ratio,
+                                point[0][2]]) OLED_Socket_Hole();
+    }
+}
+module pcb_layout_OLED(group) {
+    //放置OLED螢幕模組
+    //group: 描繪位置
+    for (point = group) {
+        if (point[2]=="")
+        {
+        translate([point[0][0]*h_unit_ratio,
+                                point[0][1]*v_unit_ratio,
+                                point[0][2]]) OLED_Socket(point[1]);
+                                } else {
+        translate([point[0][0]*h_unit_ratio,
+                                point[0][1]*v_unit_ratio,
+                                point[0][2]]) color(point[2]) OLED_Socket(point[1]);
+                                }
+                                
+    }
+}
+
 
 module pcb_layout_Raised_Text(group) {
     //板上繪製凸起文字
@@ -369,18 +401,24 @@ difference(){
 
     //IDC座與接口挖空
     pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);   
+
+    //OLED Display Screen Module
+    pcb_layout_OLED_Hole(base_pcb_layout_OLED);   
     
     ////Indented_Text TEST
     pcb_layout_Indented_Text(base_pcb_layout_Indented_Text); 
     
     //內部挖孔
-    if (base_pcb_layout_Use_Cable_Hole){
+    if (base_pcb_layout_Use_Cable_Hole && base_pcb_layout_ApyAdjSwitchAngleAndHeight){
     pcb_layout_Cable_Hole(base_pcb_layout_Cable_Hole);
     }
 }
 
-//IDC TEST
+//IDC Interface
 pcb_layout_IDC(base_pcb_layout_IDC);   
+
+//OLED Display Screen Module
+pcb_layout_OLED(base_pcb_layout_OLED);   
 
 ////Raised_Text TEST
 pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);   
@@ -396,3 +434,9 @@ pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);
 //%translate([102,-67.5,-4])
 //rotate([0,0,45])
 //ec11_upper_covert();
+
+
+//
+//color("blue")
+//translate([17.5,-25, -pcb_thickness/2+10])
+//cube([28,28,1]);

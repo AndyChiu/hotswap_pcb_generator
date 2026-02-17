@@ -7,14 +7,15 @@
 另外也添加了不少種類的軸體，以及MCU等額外鍵盤用零件。
 
 ### 額外特性
-- 支援多種軸體：Cherry MX-style、MX Low profile、Kailh Choc V1、Choc V2、Choc Mini，Gateron KS27、Romer G、Redragon low profile。
-- 單PCB可以放上多種不同軸體，layout.scad可以進行調整。
-- 支援多種MCU：ProMicro、ProMicro C、Elite C、Pico RP2040、RP2040 Zero。
-- 支援編碼器：EC11、EVQWGD001。
-- Choc V2 矮軸可以使用MX規格的衛星軸（穩定器)。
-- 支援4pin微動開關(microswitch)。
-- PCB板可針對外框進行設計，讓PCB板直接當作鍵盤使用。
-- Choc V1軸、MX軸與KS-27軸有固定架(holder)的選項可用，用於固定軸體，代替定位板的作用。
+- 支援多種軸體：Cherry MX-style、MX Low profile、Kailh Choc V1、Choc V2、Choc Mini、Gateron KS27、Gateron KS33 V3、Romer G、Redragon low profile、ALPS
+- 單PCB可以放上多種不同軸體，layout.scad可以進行調整
+- 支援多種MCU：ProMicro、ProMicro C、Elite C、Pico RP2040、RP2040 Zero
+- 支援編碼器：EC11、EVQWGD001
+- Choc V2 矮軸可以使用MX規格的衛星軸(穩定器)
+- 支援4pin微動開關(microswitch)
+- OLED座(0.96" 27.3x27.8mm)
+- PCB板可針對外框進行設計，讓PCB板直接當作鍵盤使用
+- Choc V1軸、MX軸、KS-27/KS-33與ALPS軸有固定架(holder)的選項可用，用於固定軸體，代替定位板的作用
 
 ### 曲面鍵盤設計
 - 方式1: [UC36系列](https://github.com/AndyChiu/UC36)中，曲面鍵盤的相關程式與檔案，可由此[查閱](scad_UTP/Curved_PCB_KB)。
@@ -40,19 +41,30 @@
 | -------- | -------- | -------- | 
 | ![choc](img_UTP/switch_choc.png)|![chocV2](img_UTP/switch_chocV2.png)|![chocMini](img_UTP/switch_chocMini.png)|
 
+##### Kailh Choc
+| Gateron KS27 | Gateron KS33 V3 |
+| -------- | -------- |
+| ![ks27](img_UTP/switch_ks27.png)|![ks27](img_UTP/switch_ks33v3.png)|
+
 ##### Other
-| Gateron KS27 | Romer G | Redragon low profile |
+| Romer G | Redragon low profile | ALPS |
 | -------- | -------- | -------- | 
-| ![ks27](img_UTP/switch_ks27.png)|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/switch_redragon_low.png)|
+|![Romer G](img_UTP/switch_romer_g.png)|![redragon_low](img_UTP/switch_redragon_low.png)|![redragon_low](img_UTP/switch_alps.png) |
 
 ##### 軸座含固定架
 | Cherry MX-style1 | Cherry MX-style2 |
 | -------- | -------- |
 | ![switch_mx_holder](img_UTP/switch_mx_s_holder.png)| ![switch_mx_holder](img_UTP/switch_mx_s_holder2.png)|
 
-| Kailh Choc V1 | Gateron KS27|
+| Kailh Choc V1 | Gateron KS27| Gateron KS33v3 |
+| -------- | -------- |  -------- | 
+|![switch_choc_holder](img_UTP/switch_choc_holder.png)|![switch_ks27_holder](img_UTP/switch_ks27_holder.png)|![switch_ks33v3_holder](img_UTP/switch_ks33v3_holder.png)|
+
+| Redragon low profile | ALPS|
 | -------- | -------- | 
-|![switch_choc_holder](img_UTP/switch_choc_holder.png)|![switch_ks27_holder](img_UTP/switch_ks27_holder.png)|
+|![redragon_low_holder](img_UTP/switch_redragon_low_holder.png)|![switch_alps_holder](img_UTP/switch_alps_holder.png)|
+
+
 
 ##### Dactyl類型使用的1U PCB
 | Kailh Choc V2  |
@@ -92,9 +104,9 @@
 |![trrs_pj320a.png](img_UTP/trrs_pj320a.png)|![trrs_pj320a.png](img_UTP/trrs_pj324m.png)|
 
 #### 其他
-|Micro Switch|
-| -------- |
-|![microswitch.png](img_UTP/microswitch.png)|
+|Micro Switch|OLED 0.96" 27.3x27.8mm|
+| -------- | -------- |
+|![microswitch.png](img_UTP/microswitch.png)|![OLED_0.96_27.3x27.8.png](img_UTP/OLED_0.96_27.3x27.8.png)|
 
 
 ### 設計
@@ -111,17 +123,26 @@
 
 原作者的[組裝指南(Build Guide)](https://github.com/50an6xy06r6n/hotswap_pcb_generator/blob/main/guide/build_guide.md)
 
-### 照片集
+### PCB板宣染圖
 PCB板設計時，可以直接設計成曲面
 ![PCB KB Curve Design1](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/88231095-c524-4259-bd4f-2d6100bf90d0)
 ![PCB KB Curve Design2](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/6479dd1b-d6f8-4ab8-b8cf-6f1a796fc83b)
+
+F5宣染時，可以顯示設定的軸體與鍵帽，用來檢查各軸間是否有干擾的情況產生
+![PCB - Scotto T9](img_UTP/pcb_ScottoT9_Clone_1.png)
+![PCB - Scotto T9](img_UTP/pcb_ScottoT9_Clone_2.png)
+
+
+### 照片集
 
 印出的PCB曲面鍵盤
 ![GMvE2cgXMAA4j0y](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/f525d89a-75df-4152-8a4d-fab229edecbf)
 
 上軸體與鍵帽後
 ![GMvKBvrWIAEK0nz](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/d59ee837-e23f-4b93-b5f4-c3c55fd7a036)
+
 ![GMvKBzpXUAAMyPL](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/f2f767ab-b060-4370-8da1-856eb54d79c8)
+
 ![GMvKB7nXAAAX0QT](https://github.com/AndyChiu/hotswap_pcb_generator/assets/1038943/fbc1e343-561e-4b8e-8903-3e6760b4104f)
 
 

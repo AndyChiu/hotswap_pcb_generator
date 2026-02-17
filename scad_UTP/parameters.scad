@@ -12,9 +12,9 @@ pcb_thickness = 4;  // [4:0.1:10]
 
 /* Switch Parameters */
 // Switch type
-// [mx, choc, chocV2, chocMini, ks27, mx_low, romer_g, redragon_low]
-// [choc_holder, chocV2_1u, mx_holder, mx_s_holder, mx_s_holder2, ks27_holder]
-switch_type = "choc";
+// [mx, choc, chocV2, chocMini, ks27, ks33v3, mx_low, romer_g, redragon_low, alps]
+// [choc_holder, chocV2_1u, mx_holder, mx_s_holder, mx_s_holder2, ks27_holder, ks33v3_holder, redragon_low_holder, alps_holder]
+switch_type = "ks27_holder";
 // Switch orientation (based on LED location)
 switch_orientation = "north";  // [north, south]
 // Whether to use experimental diode leg contact
@@ -29,6 +29,9 @@ diode_less = false;
 choc_v1_compatible_v2  = true;
 choc_v2_compatible_v1  = false;
 both_deep_channels = true;
+choc_row_hole = false;
+choc_col_hole = false;
+
 
 /* Stabilizer Parameters */
 stabilizer_type = "pcb";  // [pcb, plate]
@@ -139,26 +142,32 @@ v_unit = 17;
 //Andy add:
 //unit size for stabilizer
 unit_stb = 19.05;
-// Horizontal unit size (18mm for choc keycaps)
 h_unit_stb = 19.05;
-// Vertical unit size (17mm for choc keycaps)
 v_unit_stb = 19.05;
 
 unit_choc = 18;
-// Horizontal unit size (18mm for choc keycaps)
 h_unit_choc = 18;
-// Vertical unit size (17mm for choc keycaps)
 v_unit_choc = 17;
 
 choc_socket_size=15;
 
 unit_ks27 = 18;
-// Horizontal unit size (18mm for choc keycaps)
 h_unit_ks27 = 18;
-// Vertical unit size (17mm for choc keycaps)
 v_unit_ks27 = 17;
 
+unit_redragon_low = 18;
+h_unit_redragon_low = 18;
+v_unit_redragon_low = 17;
+
 ks27_socket_size=15;
+
+alps_socket_size=17;
+alps_socket_size_w=16.4;
+alps_socket_size_d=13.6-0.6;
+
+redragon_low_socket_size=15;
+redragon_low_socket_size_w=14.5;
+redragon_low_socket_size_d=13.8;
 
 // Spacing of grid for MX pins
 grid = 1.27;
@@ -178,11 +187,17 @@ socket_size =
         ? 14
     : switch_type == "mx_s_holder2"
         ? 14
-    : switch_type == "choc_holer"
+    : switch_type == "choc_holder"
         ? 15
     : switch_type == "chocV2_1u"
         ? 15
     : switch_type == "ks27"
+        ? 15
+    : switch_type == "ks27_holder"
+        ? 15
+    : switch_type == "ks33v3"
+        ? 15
+    : switch_type == "ks33v3_holder"
         ? 15
     : switch_type == "mx_low"
         ? 15
@@ -190,6 +205,10 @@ socket_size =
         ? 15
     : switch_type == "romer_g"
         ? 14
+    : switch_type == "alps"
+        ? 15
+    : switch_type == "alps_holder"
+        ? 15
     : assert(false, "switch_type is invalid");
 // Depth of the socket holes
 socket_depth = 3.5;
@@ -209,11 +228,17 @@ plate_thickness =
         ? 1.5
     : switch_type == "mx_s_holder2"
         ? 1.5
-    : switch_type == "choc_holer"
+    : switch_type == "choc_holder"
         ? 1.3
     : switch_type == "chocV2_1u"
         ? 1.3
     : switch_type == "ks27"
+        ? 1.3
+    : switch_type == "ks27_holder"
+        ? 1.3
+    : switch_type == "ks33v3"
+        ? 1.3
+    : switch_type == "ks33v3_holder"
         ? 1.3
     : switch_type == "mx_low"
         ? 1.3        
@@ -238,11 +263,17 @@ plate_cutout_size =
         ? 14
     : switch_type == "mx_s_holder2"
         ? 14
-    : switch_type == "choc_holer"
+    : switch_type == "choc_holder"
         ? 13.8
     : switch_type == "chocV2_1u"
         ? 13.8
     : switch_type == "ks27"
+        ? 13.8
+    : switch_type == "ks27_holder"
+        ? 13.8
+    : switch_type == "ks33v3"
+        ? 13.8
+    : switch_type == "ks33v3_holder"
         ? 13.8
     : switch_type == "mx_low"
         ? 13.8        
@@ -267,11 +298,17 @@ pcb_plate_spacing =
         ? 5
     : switch_type == "mx_s_holder2"
         ? 5
-    : switch_type == "choc_holer"
+    : switch_type == "choc_holder"
         ? 2.2
     : switch_type == "chocV2_1u"
         ? 2.2
     : switch_type == "ks27"
+        ? 2.2
+    : switch_type == "ks27_holder"
+        ? 2.2
+    : switch_type == "ks33v3"
+        ? 2.2
+    : switch_type == "ks33v3_holder"
         ? 2.2
     : switch_type == "mx_low"
         ? 2.2
@@ -304,7 +341,7 @@ v_mm = 1/v_border_width;
 
 //Switch socket base
 //軸座上的軸體扣夾
-switch_socket_base_holder = true;
+switch_socket_base_holder = false;
 //扣夾是否支撐
 switch_socket_base_holder_support_frame = false;
 
@@ -322,10 +359,11 @@ iRSOffSet=1;
 //Mark out PCB layout design points set, no hull the objects.
 //將外圍設定的點標註出來,不產hull畫面: true, false, "DontShow"
 base_pcb_layout_outer_DesignMode = false;
+DesignMode_deep=0;
 
 //What color should be displayed when the outer hull is surrounded
 //外圍hull包圍起來時，要產生什麼顏色: "ColorName"(顏色名稱),"None"(不產生顏色),"Group"(群組第一個點的顏色)
-base_pcb_layout_outer_hull_color = "LightYellow";
+base_pcb_layout_outer_hull_color = "Khaki";
 
 //Mark out the grooves of the circular self-adhesive rubber pad
 //將圓形自黏膠墊凹槽標註出來
@@ -349,9 +387,9 @@ base_pcb_layout_RaisedSwitchBaseStyle= "RoundedCorners";
 
 //No increase in internal cavity
 //不擴大突起軸座的內部空腔,值: true , false
-base_pcb_layout_NoIncreaseInInternalCavity=false;
+base_pcb_layout_NoIncreaseInInternalCavity=true;
 
-//
+//PCB board circuit hole
 //PCB板開線路孔洞 ,值: true , false
 base_pcb_layout_Use_Cable_Hole= true;
 
@@ -370,3 +408,21 @@ base_pcb_layout_ShowKeycapLegend = true;
 //keycap Legend text location height
 //按鍵文字放置高度
 base_pcb_layout_ShowKeycapLegend_H = 0;
+
+//Keycap List
+//鍵帽清單
+//kc_xxx=[str_file_path,[translate],[rotate]]
+include <parameters_keycaps.scad>
+
+//Key Switch Size List
+//軸體清單
+include <parameters_switchs.scad>
+
+
+/* OLED Parameters */
+include <parameters_OLED_0.96_27.3x27.8.scad>
+//include <parameters_OLED_0.91_38x12.scad>
+
+//預覽時秀出OLED
+base_pcb_layout_Preview_Show_OLED = true;
+
