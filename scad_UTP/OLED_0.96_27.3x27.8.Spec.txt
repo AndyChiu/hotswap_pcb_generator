@@ -1,0 +1,71 @@
+/*
+
+Type: 0.96" Inch OLED Display Screen Module I2C IIC 128x64 SS - D - 1306 3.3V-5V Blue/blue Yellow/White
+https://es.aliexpress.com/item/1005006700885056.html
+
+    預留孔徑:
+    螺絲直接鎖塑膠:
+    預留孔徑：Ø 1.6 ～ 1.7 mm
+    螺絲：M2 × 6 或 8 mm
+    外柱直徑：Ø 4.5 ～ 5 mm
+
+    熱熔銅螺母
+    螺母外徑：通常 Ø 3.2 ～ 3.5 mm
+    預留孔徑：Ø 3.0 mm
+    孔深：≥ 3 mm
+
+*/
+
+[
+    //OLED PCB
+    [
+        //OLED PCB Size [width,depth,height]
+        //OLED_Size=
+        [27.3, 27.8, 2.8],
+
+        //OLED Pins
+        //OLED_Pins=
+        4,
+        
+        //OLED_Pin_Plastic_H=
+        //OLED_Pin_Plastic_W=
+        [2.6, 2.6],
+
+        //OLED PCB Hole Distancia [x,y]
+        //OLED PCB 四個鎖孔間距
+        //OLED_Hole_Distancia=
+        [23.5,23.5],
+
+        //OLED PCB Hole Size 
+        //OLED PCB板鎖孔尺寸
+        //OLED_Hole_Size=
+        2.1,
+        
+    ],
+
+    //OLED PCB 位置偏移(與PIN位置)
+    //OLED_Translate_Offset=
+    [0, -0.7, 0],
+    
+    //Standoffs/Holder  墊高柱/支撐架
+    [
+        //OLED Standoff Offset [x,y]
+        //OLED 支架整體偏移值 [x,y]
+        //OLED_Standoff_Offset=
+        [0,1.4],
+        
+        //base_pcb_layout_OLED_Standoff
+        //LU,LD,RU,RD,
+        //U,D,L,R
+        //C
+        [true, true, true, true, 
+         false, false, false, false,
+         false
+         ],
+    
+        //base_pcb_layout_OLED_Holder
+        //U,D
+        [false, false],
+    ]
+
+]

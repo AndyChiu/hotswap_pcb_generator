@@ -23,7 +23,7 @@ module ec11_socket_base(borders=[1,1,1,1]) {
         for (y = [-1,-8.5-8.5-1]) {
             //底部槽
             translate([x,y,0]) {
-                #cylinder(d=6, h=ec11_base_add_thickness,$fn=20);
+                cylinder(d=6, h=ec11_base_add_thickness,$fn=50);
             }
         }
     }        
@@ -35,7 +35,15 @@ module ec11_socket_base(borders=[1,1,1,1]) {
                 h_border_width+3, 
                 v_border_width+3
             );
-
+    if ($preview==true && base_pcb_layout_Preview_Show_EC11_Knob==true) {
+        translate([h_unit/2,-v_unit/2,11.5])
+        %hull()
+        {//Bottle Cap
+        translate([0,0,8.8])
+        cylinder(h=0.01,d=26,center=true,$fn=21);
+        cylinder(h=0.01,d=29.6,center=true,$fn=21);
+        }
+    }
 }
 
 module ec11_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
@@ -51,6 +59,7 @@ module ec11_socket_cutout(borders=[1,1,1,1], rotate_column=false) {
 //    } else {
 //        assert(false, "switch_type is invalid");
 //    }
+
 }
 
 module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
@@ -121,7 +130,7 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
                     for (y = [8.5,-8.5]) {
                         //底部槽
                         translate([x,y,-pcb_thickness/2]) {
-                                #cylinder(d=2*1.1, h=pcb_thickness+1,$fn=20);
+                                cylinder(d=2*1.1, h=pcb_thickness+1,$fn=20);
                                 translate([0,0,-2.5]) cylinder(d=4.1*1.1, h=pcb_thickness,$fn=20);
                         }
             

@@ -1,0 +1,57 @@
+//0.96 inch IIC Serial 4pin White/Blue/Yellow Blue/Yellow OLED Display Module 128X64 12864 LCD Screen Board for arduino oled
+//https://es.aliexpress.com/item/1005006262908701.html
+
+[
+    //OLED PCB
+    [
+        //OLED PCB Size [width,depth,height]
+        //OLED_Size=
+        [26, 25.9, 2.8],
+
+        //OLED Pins
+        //OLED_Pins=
+        4,
+        
+        //OLED_Pin_Plastic_H=
+        //OLED_Pin_Plastic_W=
+        [2.6, 2.6],
+
+        //OLED PCB Hole Distancia [x,y]
+        //OLED PCB 四個鎖孔間距
+        //OLED_Hole_Distancia=
+        [22.5,22.5],
+
+        //OLED PCB Hole Size 
+        //OLED PCB板鎖孔尺寸
+        //OLED_Hole_Size=
+        2.1,
+        
+    ],
+
+    //OLED PCB 位置偏移(與PIN位置)
+    //OLED_Translate_Offset=
+    [0, -0.2, 0],
+    
+    //Standoffs/Holder  墊高柱/支撐架
+    [
+        //OLED Standoff Offset [x,y]
+        //OLED 支架整體偏移值 [x,y]
+        //OLED_Standoff_Offset=
+        [0,1.4],
+        
+        //base_pcb_layout_OLED_Standoff
+        //LU,LD,RU,RD,
+        //U,D,L,R
+        //C
+        [true, true, true, true, 
+         false, false, false, false,
+         false
+         ],
+    
+        //base_pcb_layout_OLED_Holder
+        //U,D
+        [false, false],
+    ]
+
+]
+

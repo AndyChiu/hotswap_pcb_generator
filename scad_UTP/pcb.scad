@@ -3,7 +3,11 @@ include <utils.scad>
 
 use <switch.scad>
 use <mcu.scad>
-use <ec11.scad>
+
+//use <ec11.scad>  //Normal
+//use <ec11s.scad> //SMD
+use <ec11s_diode.scad> //SMD with diode
+
 use <evqwgd001.scad>
 use <trrs.scad>
 use <stabilizer.scad>
@@ -12,11 +16,11 @@ use <via.scad>
 use <IDC\IDC_Holder.scad>
 use <oled.scad>
 
-module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout, pcb_outer_layout) {
+module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout, pcb_outer_layout,oled_layout) {
     
     difference() {
         
-        pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout);
+        pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout);
         
         if (base_pcb_layout_DesignMode==false || $preview==false) {
             
@@ -24,34 +28,81 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_
                 switch_socket_cutout($borders, $extra_data[0], $extra_data[1]);
             }
             
-            layout_pattern(standoff_layout) {
+            layout_pattern(standoff_layout,"standoff_cutout") {
                 pcb_standoff($extra_data);
             }
-                   
-            if (switch_type == "ks27") {
-                layout_pattern(stab_layout) {
-                    stabilizer_PCB_cutout_ChocV2($extra_data);
+            
+            if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                layout_pattern(stab_layout,"stab_socket_cutout") {
+                    stabilizer_PCB_cutout_ChocV2($extra_data[1]);
                 }
             } else if (switch_type == "Choc" && choc_v2 == true) {
-                layout_pattern(stab_layout) {
-                    stabilizer_pcb_cutout_ChocV2($extra_data);
+                layout_pattern(stab_layout,"stab_socket_cutout") {
+                    stabilizer_pcb_cutout_ChocV2($extra_data[1]);
                 }
             } else {
-                layout_pattern(stab_layout) {
-                    stabilizer_pcb_cutout($extra_data);
+                layout_pattern(stab_layout,"stab_socket_cutout") {
+                    stabilizer_pcb_cutout($extra_data[1]);
                 }
-            }  
-            layout_pattern(standoff_layout) {
+            }
+
+            
+            stab_layout2 = [ for (item = switch_layout) if (len(item[2]) == 6 && item[0][1][0]>item[0][1][1]) item ];
+
+            if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                layout_pattern(stab_layout2,"stab_socket_cutout") {
+                    stabilizer_PCB_cutout_ChocV2($extra_data[5]);
+                }
+            } else if (switch_type == "Choc" && choc_v2 == true) {
+                layout_pattern(stab_layout2,"stab_socket_cutout") {
+                    stabilizer_pcb_cutout_ChocV2($extra_data[5]);
+                }
+            } else {
+                layout_pattern(stab_layout2,"stab_socket_cutout") {
+                    stabilizer_pcb_cutout($extra_data[5]);
+                }
+            }
+            
+            //Vertical
+            stab_layout3 = [ for (item = switch_layout) if (len(item[2]) == 6 && item[0][1][0]<item[0][1][1]) item ];
+
+//            rotate([0,0,-90])
+//            translate([0,0,0])
+//            {            
+                if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                    layout_pattern(stab_layout3,"stab_socket_cutout") {
+                        stabilizer_PCB_cutout_ChocV2($extra_data[5],true);
+                    }
+                } else if (switch_type == "Choc" && choc_v2 == true) {
+                    layout_pattern(stab_layout3,"stab_socket_cutout") {
+                        stabilizer_pcb_cutout_ChocV2($extra_data[5],true);
+                    }
+                } else {
+                    layout_pattern(stab_layout3,"stab_socket_cutout") {
+                        stabilizer_pcb_cutout($extra_data[5],true);
+                    }
+                }
+//            }
+
+            layout_pattern(ec11_layout) {
+                ec11_socket_cutout($borders);
+            }
+
+            layout_pattern(oled_layout,"oled_cutout") {
+                oled_socket_cutout($borders,$extra_data);
+            }
+            
+            layout_pattern(standoff_layout,"standoff") {
                 pcb_standoff_hole($extra_data);
             }
-            layout_pattern(via_layout) {
+            layout_pattern(via_layout,"via") {
                 via($extra_data);
             }
         }
     }
 }
 
-module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout) {
+module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout) {
     difference() {
     
             union() {
@@ -68,20 +119,27 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
                 
                 layout_pattern(switch_layout) {
                     
+                    if (base_pcb_layout_ApyAdjSwitchAngleAndHeight) {
+                    } else { }
+                    
+                    SSB_Borders = (base_pcb_layout_ApyAdjSwitchAngleAndHeight==true &&
+                                   base_pcb_layout_IfAdjSwitchAngleAndHeight_NoBorders==true) 
+                                ?  [0,0,0,0] : $borders;
+                    
                     if ($extra_data[1]=="chocMini") {
 
-                        switch_socket_base_chocMini($borders);
+                        switch_socket_base_chocMini(SSB_Borders);
     
                     } else if ($extra_data[1]=="choc" && switch_socket_base_holder==true) {
-                        switch_socket_base_choc($borders);
+                        switch_socket_base_choc(SSB_Borders);
                         
                     } else if ($extra_data[1]=="choc_holder") {
 
-                        switch_socket_base_choc($borders);  
+                        switch_socket_base_choc(SSB_Borders);  
                         
                     } else if ($extra_data[1]=="mx_s_holder") {
                         
-                        switch_socket_base_mx_stabilizer($borders);      
+                        switch_socket_base_mx_stabilizer($borders);
     
                     } else if ($extra_data[1]=="mx_s_holder2") {
                         
@@ -89,20 +147,20 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
 
                     } else if ($extra_data[1]=="ks27_holder" || $extra_data[1]=="ks33v3_holder") {
 
-                        switch_socket_base_ks27($borders);  
+                        switch_socket_base_ks27(SSB_Borders);  
                         
                     } else if (
                     ($extra_data[1]=="mx" && switch_socket_base_holder==true) || 
                     ($extra_data[1]=="mx_holder" )) {
 
-                        switch_socket_base_mx($borders);
+                        switch_socket_base_mx(SSB_Borders);
     
                     } else if ($extra_data[1]=="mx_holder") {
                         
-                        switch_socket_base_mx($borders);
+                        switch_socket_base_mx(SSB_Borders);
                             
                     } else {
-                        switch_socket_base($borders);
+                        switch_socket_base(SSB_Borders);
                     }
                 }
     
@@ -121,40 +179,110 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
             layout_pattern(trrs_layout) {
                 trrs($borders);
             }
-            if (switch_type == "ks27") {
-                layout_pattern(stab_layout) {
-                    stabilizer_pcb_base_ChocV2($borders, $extra_data);
+            
+            if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                layout_pattern(stab_layout,"stab_socket_base") {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data[1]);
                 }
             } else if (switch_type == "Choc" && choc_v2 == true) {
-                layout_pattern(stab_layout) {
-                    stabilizer_pcb_base_ChocV2($borders, $extra_data);
+                layout_pattern(stab_layout,"stab_socket_base") {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data[1]);
                 }
     //        } else if (switch_type == "mx" && switch_socket_base_holder == true) {
     //            layout_pattern(stab_layout) {
     //                stabilizer_pcb($borders, $extra_data);
     //            }
             } else if (switch_type == "mx_s_holder2") {
-                layout_pattern(stab_layout) {
-                    stabilizer_pcb_base2($borders, $extra_data);
+                layout_pattern(stab_layout,"stab_socket_base") {
+                    stabilizer_pcb_base2($borders, $extra_data[1]);
                 }
             } else {
-                layout_pattern(stab_layout) {
+                layout_pattern(stab_layout,"stab_socket_base") {
                     stabilizer_pcb_base($borders
-                    , $extra_data);
-                }   
-            }  
+                    , $extra_data[1]);
+                }
+            }
+
+            
+            stab_layout2 = [ for (item = switch_layout) if (len(item[2]) == 6 && item[0][1][0]>item[0][1][1]) item ];
+
+            if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                layout_pattern(stab_layout2,"stab_socket_base") {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data[5]);
+                }
+            } else if (switch_type == "Choc" && choc_v2 == true) {
+                layout_pattern(stab_layout2,"stab_socket_base") {
+                    stabilizer_pcb_base_ChocV2($borders, $extra_data[5]);
+                }
+    //        } else if (switch_type == "mx" && switch_socket_base_holder == true) {
+    //            layout_pattern(switch_layout) {
+    //                stabilizer_pcb($borders, $extra_data);
+    //            }
+            } else if (switch_type == "mx_s_holder2") {
+                layout_pattern(stab_layout2,"stab_socket_base") {
+                    stabilizer_pcb_base2($borders, $extra_data[5]);
+                }
+            } else {
+                layout_pattern(stab_layout2,"stab_socket_base") {
+                    stabilizer_pcb_base($borders
+                    , $extra_data[5]);
+                }
+            }
+            
+            //Vertical
+            stab_layout3 = [ for (item = switch_layout) if (len(item[2]) == 6 && item[0][1][0]<item[0][1][1]) item ];
+            
+//            rotate([0,0,-90])
+//            translate([stab_layout3[0][0]*unit,stab_layout3[0][1]*unit,0])
+//            {            
+                if (switch_type == "ks27" || switch_type == "ks27_holder") {
+                    layout_pattern(stab_layout3,"stab_socket_base") {
+                        stabilizer_pcb_base_ChocV2($borders, $extra_data[5],true);
+                    }
+                } else if (switch_type == "Choc" && choc_v2 == true) {
+                    layout_pattern(stab_layout3,"stab_socket_base") {
+                        stabilizer_pcb_base_ChocV2($borders, $extra_data[5],true);
+                    }
+        //        } else if (switch_type == "mx" && switch_socket_base_holder == true) {
+        //            layout_pattern(switch_layout) {
+        //                stabilizer_pcb($borders, $extra_data);
+        //            }
+                } else if (switch_type == "mx_s_holder2") {
+                    layout_pattern(stab_layout3,"stab_socket_base") {
+                        stabilizer_pcb_base2($borders, $extra_data[5],true);
+                    }
+                } else {
+                    layout_pattern(stab_layout3,"stab_socket_base") {
+                        stabilizer_pcb_base($borders
+                        , $extra_data[5],true);
+                    }
+                }
+                
+//            }
+
+            layout_pattern(ec11_layout) {
+                ec11_socket_base($borders);
+            }
+            
             layout_pattern(standoff_layout) {
                 pcb_standoff($extra_data);
             }
-        }
+            
+            layout_pattern(oled_layout,pattern_type="oled") {
+                oled_socket_base($borders,$extra_data);
+            }
+    
+    
+    }
         
 //        layout_pattern(mcu_layout) {
 //            mcu_socket_base($borders);
 //        }
         
-        layout_pattern(ec11_layout) {
-            ec11_socket_base($borders);
-        }
+//        layout_pattern(ec11_layout) {
+//            ec11_socket_base($borders);
+//        }
+    
     
         layout_pattern(base_switch_layout,"switch_socket_base_cutout2");    
 
@@ -163,9 +291,9 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
     layout_pattern(mcu_layout) {
         mcu($borders);
     }
-    layout_pattern(ec11_layout) {
-        ec11_socket($borders);
-    }    
+//    layout_pattern(ec11_layout) {
+//        ec11_socket($borders);
+//    }    
 
     //建立外框
     if (base_pcb_layout_outer_EdgeFrame=="RoundedCorners") {
@@ -335,32 +463,33 @@ module pcb_layout_IDC(group) {
                                 point[0][2]]) rotate(point[1]) color(point[2]) IDC_Port();
     }
 }
-module pcb_layout_OLED_Hole(group) {
-    //放置OLED螢幕模組
-    //group: 描繪位置
-    for (point = group) {
-        translate([point[0][0]*h_unit_ratio,
-                                point[0][1]*v_unit_ratio,
-                                point[0][2]]) OLED_Socket_Hole();
-    }
-}
-module pcb_layout_OLED(group) {
-    //放置OLED螢幕模組
-    //group: 描繪位置
-    for (point = group) {
-        if (point[2]=="")
-        {
-        translate([point[0][0]*h_unit_ratio,
-                                point[0][1]*v_unit_ratio,
-                                point[0][2]]) OLED_Socket(point[1]);
-                                } else {
-        translate([point[0][0]*h_unit_ratio,
-                                point[0][1]*v_unit_ratio,
-                                point[0][2]]) color(point[2]) OLED_Socket(point[1]);
-                                }
-                                
-    }
-}
+
+//module pcb_layout_OLED_Hole(group) {
+//    //放置OLED螢幕模組
+//    //group: 描繪位置
+//    for (point = group) {
+//        translate([point[0][0]*h_unit_ratio,
+//                                point[0][1]*v_unit_ratio,
+//                                point[0][2]]) OLED_Socket_Hole();
+//    }
+//}
+//module pcb_layout_OLED(group) {
+//    //放置OLED螢幕模組
+//    //group: 描繪位置
+//    for (point = group) {
+//        if (point[2]=="")
+//        {
+//        translate([point[0][0]*h_unit_ratio,
+//                                point[0][1]*v_unit_ratio,
+//                                point[0][2]]) OLED_Socket(point[1]);
+//                                } else {
+//        translate([point[0][0]*h_unit_ratio,
+//                                point[0][1]*v_unit_ratio,
+//                                point[0][2]]) color(point[2]) OLED_Socket(point[1]);
+//                                }
+//                                
+//    }
+//}
 
 
 module pcb_layout_Raised_Text(group) {
@@ -394,16 +523,13 @@ module pcb_layout_Indented_Text(group) {
 //TEST
 difference(){
     
-    pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final,base_pcb_layout_outer);
+    pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final,base_pcb_layout_outer, base_OLED_layout);
 
     //圓形矽膠墊挖洞
     pcb_layout_Rubber_Pads(base_pcb_layout_Rubber_Pads);   
 
     //IDC座與接口挖空
     pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);   
-
-    //OLED Display Screen Module
-    pcb_layout_OLED_Hole(base_pcb_layout_OLED);   
     
     ////Indented_Text TEST
     pcb_layout_Indented_Text(base_pcb_layout_Indented_Text); 
@@ -416,9 +542,6 @@ difference(){
 
 //IDC Interface
 pcb_layout_IDC(base_pcb_layout_IDC);   
-
-//OLED Display Screen Module
-pcb_layout_OLED(base_pcb_layout_OLED);   
 
 ////Raised_Text TEST
 pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);   
@@ -435,6 +558,8 @@ pcb_layout_Raised_Text(base_pcb_layout_Raised_Text);
 //rotate([0,0,45])
 //ec11_upper_covert();
 
+//translate([111,-70,10])
+//cylinder(h=8,d=26,center=true,$fn=27);
 
 //
 //color("blue")

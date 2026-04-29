@@ -1,10 +1,43 @@
+if (process.argv.length <= 2) {
+    console.log(`
+使用說明 (Usage):
+    node index.js <KLE JSON File name> [Specify Label ID]
+
+範例:
+    node index.js layout_xxx.json
+    node index.js layout_ooo.json 0
+    `);
+
+    process.exit(0);
+}
+
+//----------------------------------------------
+
 const kle = require("@ijprest/kle-serial");
 const fs = require("fs")
 const util = require("util")
+const path = require('path');
 
+const readline = require('readline');
+
+const rl = readline.createInterface({
+    input: process.stdin,
+    output: process.stdout
+});
+
+const roundTo = (n, d) => Math.round((n + Number.EPSILON) * 10**d) / 10**d;
 
 var kle_filename = process.argv[2] ?? "layout.json";
-var output_filename = process.argv[3] ?? "../scad_UTP/layout.scad";
+var use_label_id = process.argv[3] ?? "";
+
+const mainName = path.basename(kle_filename, path.extname(kle_filename));
+
+var output_filename = process.argv[4] ?? "../scad_UTP/layout_" + mainName + ".scad";
+
+
+var layouts_filename =       "../scad_UTP/layouts.scad";
+var paramDefault_filename =  "../scad_UTP/parameter_default.scad";
+var params_filename =        "../scad_UTP/parameters.scad";
 
 try {
     var kle_json = fs.readFileSync(kle_filename, "UTF-8");
@@ -20,36 +53,129 @@ var keyboard = kle.Serial.parse(kle_json);
 
 var formatted_keys = keyboard.keys.map(
     key => {
-        let side_borderW = ((key.width-1)/2);
-        let side_borderH = ((key.height-1)/2);
+        
+        let key_width =  roundTo(key.width,2);
+        let key_height = roundTo(key.height,2);
+        let key_width2 =  roundTo(key.width2,2);
+        let key_height2 = roundTo(key.height2,2);
+        
+        let key_stepped = roundTo(key.stepped,2);
+        let key_nub = roundTo(key.nub,2);
+        
+        let key_x =  roundTo(key.x,4);
+        let key_y =  roundTo(key.y,4);
+        let key_rotation_angle =  roundTo(key.rotation_angle,4);
+        let key_rotation_x =  roundTo(key.rotation_x,4);
+        let key_rotation_y =  roundTo(key.rotation_y,4);
 
-		if (key.labels[4] === undefined) {
-			key_label="";
+        //let side_borderW = roundTo(((key_width-1)/2),4);
+        //let side_borderH = roundTo(((key_height-1)/2),4);
+
+        let side_borderU = roundTo(((key_height-1)/2),4);
+        let side_borderD = roundTo(((key_height-1)/2),4);
+        let side_borderL = roundTo(((key_width-1)/2),4);
+        let side_borderR = roundTo(((key_width-1)/2),4);
+		
+		let key_cap="";
+		let kc_stab="";
+		
+		if (key_width == 1.25 && key_width2 == 1.25 && key_height == 1) {
+			key_cap="kc_LP_1_25U";
+		} else if (key_width == 1.25 && key_width2 == 1.75 && key_height == 1 && key_stepped== true) {
+			key_cap="kc_LP_CapsLock";
+			side_borderR=side_borderR+0.5;
+		} else if (key_width == 1.25 && key_width2 == 1.75 && key_height == 1) {
+			key_cap="kc_LP_1_75UCL";
+			side_borderR=side_borderR+0.5;
+		} else if (key_width == 1.5 && key_width2 == 2.25 && key_height == 2 && key_height2 == 1) {
+			key_cap="kc_LP_BigAssEnter";
+			kc_stab="stab_2u"
+			side_borderL=side_borderL+0.75;
+		} else if (key_width == 1.25 && key_width2 == 1.5 && key_height == 2 && key_height2 == 1) {
+			key_cap="kc_LP_ISO105Enter";
+			kc_stab="stab_2u"
+			side_borderL=side_borderL+0.75;
+		} else if (key_width == 1.5 && key_height == 1) {
+			key_cap="kc_LP_1_5U";
+		} else if (key_width == 1 && key_height == 1.5) {
+			key_cap="kc_LP_1_5UL";
+		} else if (key_width == 1.75 && key_height == 1) {
+			key_cap="kc_LP_1_75U";
+		} else if (key_width == 2 && key_height == 1) {
+			key_cap="kc_LP_2U";
+			kc_stab="stab_2u"
+		} else if (key_width == 1 && key_height == 2) {
+			key_cap="kc_LP_2UL";
+			kc_stab="stab_2u"
+		} else if (key_width == 2.25 && key_height == 1) {
+			key_cap="kc_LP_2_25U";
+			kc_stab="stab_2_25u"
+		} else if (key_width == 2.5 && key_height == 1) {
+			key_cap="kc_LP_2_5U";
+			kc_stab="stab_2_5u"
+		} else if (key_width == 2.75 && key_height == 1) {
+			key_cap="kc_LP_2_75U";
+			kc_stab="stab_2_75u"
+		} else if (key_width == 3 && key_height == 1) {
+			key_cap="kc_LP_3U";
+			kc_stab="stab_3u"
+		} else if (key_width == 6 && key_height == 1) {
+			key_cap="kc_LP_6U";
+			kc_stab="stab_6u"
+		} else if (key_width == 6.25 && key_height == 1) {
+			key_cap="kc_LP_6_25U";
+			kc_stab="stab_6_25u"
+		} else if (key_width == 7 && key_height == 1) {
+			key_cap="kc_LP_7U";
+			kc_stab="stab_7u"
+		} else if (key_width == 1 && key_height == 1 && key_nub==true) {
+			key_cap="kc_LP_1UHB";
 		} else {
-			key_label=key.labels[4];
+			key_cap="kc_LP_1U";
 		}
+		
+		if (kc_stab!=="") { kc_stab= "," + kc_stab }
+
+		let key_label="";
+		let key_label2="";
+
+		if (use_label_id=="") {
+			
+			for (let i = 0; i < 12; i++) {
+			    let val = key.labels[i];
+			    if (val) {
+			        key_label=key_label + ' ' + val;
+			    }
+			}
+		} else {
+			if (key.labels[use_label_id] != undefined) {
+				key_label=key.labels[use_label_id];
+			}
+		}
+		
+		key_label2 = key_label.replace(/["]/g, "''"); 
 
 	       	return  ["//" + key_label + "aaaaa",
             [
                 [
-                	key.x, 
-                	side_borderH ? key.y + side_borderH : key.y,
+                	key_x, 
+                	side_borderU ? key_y + side_borderU : key_y,
                 
                 ],
                 [
-                	key.width,
-                	key.height
+                	key_width,
+                	key_height
                 ],
-                [-key.rotation_angle, key.rotation_x, key.rotation_y,
+                [-key_rotation_angle, key_rotation_x, key_rotation_y,
                 ]
             ],
             [
-                side_borderH ? "1+" + side_borderH.toString() + "*unit*mm" : 1,
-                side_borderH ? "1+" + side_borderH.toString() + "*unit*mm" : 1,
-                side_borderW ? "1+" + side_borderW.toString() + "*unit*mm" : 1,
-                side_borderW ? "1+" + side_borderW.toString() + "*unit*mm" : 1,
+                side_borderU ? "1+" + side_borderU.toString() + "*unit*mm" : 1,
+                side_borderD ? "1+" + side_borderD.toString() + "*unit*mm" : 1,
+                side_borderL ? "1+" + side_borderL.toString() + "*unit*mm" : 1,
+                side_borderR ? "1+" + side_borderR.toString() + "*unit*mm" : 1,
             ],
-            ["[false,switch_type,[&quotN&quot,0,0,0,1,h_unit,v_unit,&quotC&quot],&quot" + key_label] + "&quot,kc_M05C1616]"
+            ["[false,switch_type,[&quotN&quot,0,0,0,1,2,2,&quotC&quot,0,0],&quot" + key_label2 ] + "&quot," + key_cap + kc_stab + "]"
         ];
     }
 )
@@ -90,7 +216,7 @@ file_content +=
                         keycap type
                    ]
                    
-     [switch angle and height data] = srp,rx,ry,h,w
+     [switch angle and height data] = srp,rx,ry,h,w,bx,by,bod,offset_x,offset_y
      
      srp(switch rotation position 軸翻轉位置): LU,L,LD,U,N,D,RU,R,RD
                                     LU=Left-Up, RD=Right-Down,N=none,..etc.
@@ -98,12 +224,14 @@ file_content +=
      ry(Y-axis angle): default 0
      h(Increase height): default 0
      w{wall thickness}: default 1
-     bx((X-axis Base size): default h_unit
-     by((y-axis Base size): default v_unit
+     bx((X-axis Base size): default 2
+     by((y-axis Base size): default 2
 
      bod(Base Offset direction 基底偏移方向): C,U,D,L,R,LU,LD,RU,RD
                                  C=Center, LU=Left-Up, RD=Right-Down,..etc.
-                                 
+     offset_x(3D-shaped): default 0
+     offset_y(3D-shaped): default 0
+     
      keycap type: Please refer to parameters_keycaps.scad
 */
 `
@@ -161,9 +289,9 @@ layout_type = "column";  // [column, row]
 
 
 /* 
-   ====================================================   
+   ======================================================
    == PCB keyboardization design /PCB 鍵盤化設計 ========
-   ====================================================   
+   ======================================================
 */   
 
 /* Unit size setting / 軸體大小設定
@@ -273,7 +401,7 @@ base_pcb_layout_Indented_Text=[
 
 //Switch size 軸體尺寸
 //ref: parameters_switchs.scad
-VKeySwitch_Size=ks_choc;
+VKeySwitch_Size=[KeySwitch[0],KeySwitch[1]];
 
 //Keycaps size 鍵帽尺寸
 //ref: parameters_keycaps.scad
@@ -285,65 +413,202 @@ VKeycap_Alpha =0.8;
 
 //OLED 相關設定
 
-base_pcb_layout_OLED=[
-/* OLED Display Screen Module location 
-    [[translate],[rotate],[cube],"Color"],
-    =[[ x, y, z ],[r_x, r_y, r_x],"Show Color"],
+oled_config = [
+/*
+    OLED mount configuration settings
+    OLED座組態設定
+    可以設定多組用於多螢幕情境
 */
+ [ // config 0
 
+    //OLED base height
+    //基座整體高度
+    //oled_base_height=
+    10-pcb_thickness,
+    
+    //OLED Standoff 支撐柱
+    //支架高度
+    //oled_Standoff_height=
+    10-pcb_thickness+2.7,
+    
+    //OLED Standoff Size (SS) [width1,depth1,height1,width2,depth2]
+    //OLED支柱尺寸1(SS方形設定) [第一層長,第一層寬,第一層高度,第二層長,第二層寬]
+    //OLED_Standoff_Size_SS=
+    [4,4,4,10,10],
+    
+    //OLED Standoff Size (CS) [width1,width2,height,width3]
+    //OLED支柱尺寸2(CS圓柱形設定) [第一層頂部直徑,第一層底部直徑,第一層高度,第二層底部直徑]
+    //OLED_Standoff_Size_CS=
+    [4,5,3,10],
+
+    //OLED Standoff Base Offset [x,y,z]
+    //OLED 支架底部偏移值 [x,y,z]
+    //支架如果因傾斜角度拉大而高度變高，z值也要跟著調整
+    //OLED_Standoff_Base_Offset_
+    // (LU, RU,
+    // ,LD, RD)=
+    [-6,6,15], [ 6,6,15],
+    [ 0,0,10], [ 0,0,10],
+
+    //Pilot_Hole_Size
+    //螺絲孔尺寸
+    //OLED_Pilot_Hole_Size=[Diameter,Depth]=
+    [1.7, 3],
+    
+    //OLED Standoff type
+    //支撐類型 "none","CS","SS"
+    //base_pcb_layout_OLED_Standoff_Type=
+    "CS",
+ ],
 
 ];
 
-oled_base_height = 15-pcb_thickness;
-oled_Standoff_height = oled_base_height+2.7;
+// OLED Position(s)
+//extra_data = [OLED Type,[OLED_Cfg],[RX,RY,RZ],"Color"]
+base_OLED_layout = [
 
-//OLED 支架
-
-//OLED Standoff Size (SS) [width1,depth1,height1,width2,depth2]
-//OLED支柱尺寸1(SS方形設定) [第一層長,第一層寬,第一層高度,第二層長,第二層寬]
-OLED_Standoff_Size_SS=[4,4,4,10,10];
-
-//OLED Standoff Size (CS) [width1,width2,height,width3]
-//OLED支柱尺寸2(CS圓柱形設定) [第一層頂部直徑,第一層底部直徑,第一層高度,第二層底部直徑]
-OLED_Standoff_Size_CS=[4,5,3,10];
-
-//OLED Standoff Base Offset [x,y,z]
-//OLED 支架底部偏移值 [x,y,z]
-//支架如果因傾斜角度拉大而高度變高
-//z值也要跟著調整
-OLED_Standoff_Base_Offset_LU=[-6,6,15];
-OLED_Standoff_Base_Offset_LD=[ 0,0,10];
-OLED_Standoff_Base_Offset_RU=[ 6,6,15];
-OLED_Standoff_Base_Offset_RD=[ 0,0,10];
-
-//螺絲直接鎖塑膠
-//預留孔徑：Ø 1.6 ～ 1.7 mm
-//螺絲：M2 × 6 或 8 mm
-//外柱直徑：Ø 4.5 ～ 5 mm
-
-//熱熔銅螺母
-//螺母外徑：通常 Ø 3.2 ～ 3.5 mm
-//預留孔徑：Ø 3.0 mm
-//孔深：≥ 3 mm
-
-//預留孔徑
-OLED_Pilot_Hole_Diameter=1.7;
-OLED_Pilot_Hole_Depth=3;
-OLED_Pilot_Hole_Size=[OLED_Pilot_Hole_Diameter,OLED_Pilot_Hole_Depth];
-
-//OLED Standoff type
-//支撐類型 "none","CS","SS"
-base_pcb_layout_OLED_Standoff_Type = "CS"; //["none","CS","SS"]
-
-base_pcb_layout_OLED_Standoff_LU = true;
-base_pcb_layout_OLED_Standoff_LD = true;
-base_pcb_layout_OLED_Standoff_RU = true;
-base_pcb_layout_OLED_Standoff_RD = true;
+];
 
 `;
 
 try {
-    const data = fs.writeFileSync(output_filename, file_content);
+    const data = saveFile(output_filename, file_content);
+
 } catch (err) {
     console.error(err);
 }
+
+async function saveFile(targetName, content) {
+    // 1. 檢查檔案是否存在
+    const ext = path.extname(targetName);
+    const base = path.basename(targetName, ext);
+    const folderPath = path.dirname(targetName);
+    const NewName = `${base}${ext}`;
+
+    if (fs.existsSync(targetName)) {
+        console.log("\n警示：檔案 '${targetName}' 已經存在。\nWarning: File '${targetName}' already exists.");
+        
+        const answer = await askQuestion("\n請選擇處理方式：(1) 重新命名舊檔案並儲存新檔 (2) 直接覆蓋 [1/2]: \nPlease select an option: (1) Rename existing file and save new one, (2) Overwrite existing file [1/2]:");
+
+        if (answer === '1') {
+            // 2. 取得舊檔案的最後修改時間
+            const stats = fs.statSync(targetName);
+            const mtime = stats.mtime;
+
+            // 格式化時間：例如 20260415_161030
+            const timestamp = mtime.getFullYear() +
+                String(mtime.getMonth() + 1).padStart(2, '0') +
+                String(mtime.getDate()).padStart(2, '0') + "_" +
+                String(mtime.getHours()).padStart(2, '0') +
+                String(mtime.getMinutes()).padStart(2, '0') +
+                String(mtime.getSeconds()).padStart(2, '0');
+
+            // 3. 組合新舊名稱
+            const oldFileNewName = `${base}_${timestamp}${ext}`;
+            const oldFileFullPath = path.join(folderPath, oldFileNewName);
+
+			dataToAppend = '//include <' + oldFileNewName + '>\n'; 
+			
+            // 4. 執行更名
+            fs.renameSync(targetName, oldFileFullPath);
+            console.log("\n已將舊檔案更名為: ${oldFileNewName}\nOld file renamed to: ${oldFileNewName}");
+	    } else if (answer === '2') {
+            console.log("\n模式：覆蓋現有檔案。\nMode: Overwrite existing file.");
+            dataToAppend='';
+		} else {
+    		console.log("\n非1或2，取消處理!\nInvalid input (not 1 or 2). Operation cancelled!");
+    		process.exit(0)
+        }
+    } else {
+        dataToAppend = '//include <' + NewName + '>\n'; 
+    }
+
+    // 5. 寫入新檔案
+    fs.writeFileSync(targetName, content, 'utf8');
+    console.log(`\n成功儲存檔案：${targetName}\nSuccessfully saved file: ${targetName}`);
+    
+    if (dataToAppend != '') {
+ 		// 6. 將檔名增加到清單檔案內
+		// 我們只存「檔名」而不是「完整路徑」，這樣清單比較簡潔
+
+	    try {
+	        // 確保清單檔所在的目錄存在
+	        const logDir = path.dirname(layouts_filename);
+	        if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
+
+	        // 追加寫入
+	        fs.appendFileSync(layouts_filename, dataToAppend, 'utf8');
+	        console.log("\n已新增 layout：${layouts_filename}至清單\nAdded layout '${layouts_filename}' to the list.");
+	        console.log("\n請編輯 layouts.scad 檔案，將需使用的layout列出使用。\nPlease edit layouts.scad and select the layout you want to use."); 
+	    } catch (error) {
+	        console.error("\n寫入清單失敗:\nFailed to write to the list:", error);
+	    }
+	    
+
+		const answer2 = await askQuestion("\n是否建立新的參數檔案？[Y/N] \nCreate a new parameter file? [Y/N]");
+
+        if (answer2.toUpperCase() === "Y") {
+
+            const paramNew_filename = "parameter_" + mainName + ".scad";
+			
+			try {
+			    fs.copyFileSync(paramDefault_filename, "../scad_UTP/" + paramNew_filename, fs.constants.COPYFILE_EXCL);
+				dataToAppend2 = '//include <' + paramNew_filename + '>\n'; 
+			} catch (err) {
+			    if (err.code === 'EEXIST') {
+			        console.error("\n錯誤：目標檔案: " + paramNew_filename + " 已存在，不執行拷貝。\nError: Target file '${paramNew_filename}' already exists. Skipping copy.");
+			    }
+			    dataToAppend2 = "";
+			}
+
+		} else {
+    		console.log("\n不建立新參數檔\nSkipping creation of new parameter file");
+    		process.exit(0)
+        }
+
+	    if (dataToAppend2 != '') {
+
+
+		    try {
+		        // 追加寫入
+		        fs.appendFileSync(params_filename, dataToAppend2, 'utf8');
+		        console.log("\n已新增參數檔案：${params_filename}到 params 清單。\nAdded parameter file: '${layouts_filename}' to the list.");
+		        console.log("\n請編輯參數清單檔案(parameters.scad)，並選擇所需的參數檔案。\nPlease edit parameters.scad and select the params file you want to use."); 
+		    } catch (error) {
+		        console.error("\n寫入清單失敗:\nFailed to write to the list:", error);
+		    }
+		}
+
+    }
+
+    rl.close();
+}
+
+// 輔助函式：讓 readline 支援 Promise (可以使用 await)
+function askQuestion(query) {
+    return new Promise(resolve => rl.question(query, resolve));
+}
+
+
+/**
+ * 將檔名存入清單的函式
+ * @param {string} newFileName - 剛產生的檔案名稱
+ */
+function recordFileName(newFileName) {
+    try {
+        // 確保清單檔案所在的資料夾存在
+        const dir = path.dirname(layouts_filename);
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+
+        // 使用 appendFileSync 將檔名追加到檔案末尾
+        // \n 確保下一個檔名會從新的一行開始
+        fs.appendFileSync(layouts_filename, newFileName + '\n', 'utf8');
+        
+        console.log("\n[成功] 檔名 '${newFileName}' 已記錄至清單。\n[Success] Recorded '${newFileName}' to the list");
+    } catch (err) {
+        console.error("\n紀錄清單時發生錯誤：\Error recording list:", err);
+    }
+}
+

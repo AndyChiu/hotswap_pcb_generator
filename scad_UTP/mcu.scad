@@ -14,7 +14,10 @@ module mcu(borders=[0,0,0,0]) {
             } else if (mcu_type == "socketed") {
                 socketed_mcu(invert_borders(borders,layout_type == "row"));
             } else if (mcu_type == "socketed2") {
-                socketed_mcu2(invert_borders(borders,layout_type == "row"));            } else {
+                socketed_mcu2(invert_borders(borders,layout_type == "row"));            
+            } else if (mcu_type == "socketed3") {
+                socketed_mcu3(invert_borders(borders,layout_type == "row"));            
+            } else {
                 assert(false, "mcu_type is invalid");
             }
     }
@@ -209,6 +212,118 @@ module socketed_mcu2(borders=[0,0,0,0]) {
         }
     }
     }
+}
+
+
+module socketed_mcu3(borders=[0,0,0,0]) {
+    mcu_base_thickness3=8;
+    difference() {
+        union() {
+            // Base
+            translate([-(mcu_socket_width+1)/2,-2-0.5,0]) 
+                cubeRC([(mcu_socket_width+1),(mcu_socket_length+0.5),mcu_base_thickness3]);
+            // Border
+            translate([0,mcu_socket_length/2-4.2,pcb_thickness/2-1])
+                border(
+                    [mcu_h_unit_size*h_unit,mcu_v_unit_size*v_unit+1], 
+                    borders, 
+                    pcb_thickness-2
+                );
+            }
+        
+        //Center cube cut
+        if (mcu_name=="Elite_C" || mcu_name=="RP2040_Zero") {
+                //Port
+                translate([-(mcu_center_cube_cut_width)/2,(mcu_wire_channels_length/2)-2, pcb_thickness-1]) 
+                cube([mcu_center_cube_cut_width,mcu_center_cube_cut_length+0.01,mcu_base_thickness3]);
+                //MCU Board
+                translate([-(mcu_width+0.4+0.2)/2,-0.2-0.2,pcb_thickness-2]) 
+                cube([mcu_width+0.4+0.2,mcu_length+0.4+0.2,mcu_base_thickness3]);
+            
+            if (mcu_name=="RP2040_Zero") {
+                //Center Deep
+                translate([-(11)/2,2,pcb_thickness-3]) 
+                    cube([11,mcu_length-3,mcu_base_thickness3]);
+            }
+            } else {
+                translate([-(mcu_center_cube_cut_width)/2,-2,mcu_base_thickness3-pcb_thickness]) 
+                cube([mcu_center_cube_cut_width,mcu_socket_length,mcu_base_thickness3]);
+                };
+            
+        // Wire Channels L&R
+        for (row = [-1,1]) {
+            for (pin = [0:mcu_pin_count/2-1]) {
+                //inside
+                translate([row*(mcu_width)/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
+                    cylinder(h=mcu_base_thickness3+1,d=wire_diameter*1.5);
+                //outside
+                translate([row*(mcu_width/2+2.5),mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
+                    cylinder(h=mcu_base_thickness3+1,d=wire_diameter*1.5);
+                //top
+                translate([
+                    row*((mcu_width+mcu_wire_channels_length)/2-2),
+                    mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,
+                    mcu_base_thickness3-wire_diameter/2
+                ]) rotate([0,row*90,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                //bottom
+                translate([
+                    row*((mcu_width+mcu_wire_channels_length)/2-3.5-0.2),
+                    mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,
+                    wire_diameter/2
+                ]) rotate([0,row*90,0])
+                cube([wire_diameter,wire_diameter,2.5],true);                
+            }
+        }
+        
+        // Wire Channels B
+        if (mcu_name=="Elite_C" || mcu_name=="RP2040_Zero") {
+            iLastRow =(0+0.5)*mcu_pin_pitch-1.5;
+    //        echo ("Last Row:",iLastRow);
+    
+            for (pin = [0:2]) {
+                //inside L
+                translate([(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                //inside R
+                translate([-(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                //outside L
+                translate([(pin)*mcu_pin_pitch,iLastRow-2.5,-wire_diameter/3]) 
+                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                //outside R
+                translate([-(pin)*mcu_pin_pitch,iLastRow-2.5,-wire_diameter/3]) 
+                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                //top L
+                translate([
+                        (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
+                        mcu_base_thickness3-wire_diameter/2
+                    ]) rotate([90,-180,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                //top R
+                translate([
+                        -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
+                        mcu_base_thickness3-wire_diameter/2
+                    ]) rotate([90,0,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                //botton L
+                translate([
+                        (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2.7,
+                        wire_diameter/2
+                    ]) rotate([90,-180,0])
+                cube([wire_diameter,wire_diameter,2.5],true);
+                //botton R
+                translate([
+                        -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2.7,
+                        wire_diameter/2
+                    ]) rotate([90,0,0])
+                cube([wire_diameter,wire_diameter,2.5],true);
+
+            }
+        }
+    }
+
+
 }
 
 module bare_mcu(borders=[0,0,0,0]) {    
@@ -428,6 +543,6 @@ module socketed_mcu_base(borders=[0,0,0,0]) {
 
 
 }
-
-//mcu([0,0,0,0]);
+//
+mcu([0,0,0,0]);
 

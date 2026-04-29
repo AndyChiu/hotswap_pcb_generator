@@ -1,5 +1,5 @@
 mcu_name = "RP2040_Zero";
-mcu_width = 18;
+mcu_width = 18-0.3;
 mcu_length = 23.5;    // Normal:33, 33.5, Clone Type-C: 35,36
 mcu_height = 4.25;  // Distance to top of PCB
 mcu_row_spacing = 15.24;
@@ -27,6 +27,6 @@ mcu_hold_the_mcu = true;
 mcu_RetentionTabs = true;
 mcu_RetentionTabs_length = mcu_width-mcu_connector_width;
 mcu_RetentionTabs_width = 2;
-mcu_RetentionTabs_x = (mcu_width+mcu_connector_width)/4;
+mcu_RetentionTabs_x = mcu_socket_width/2-mcu_RetentionTabs_length/2;
 mcu_RetentionTabs_y1 = 0; //Offset RetentionTabs y1
 mcu_RetentionTabs_y2 = 0; //Offset RetentionTabs y1

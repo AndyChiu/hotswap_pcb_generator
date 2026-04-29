@@ -16,10 +16,10 @@ sSW1 = ["mx","choc","chocV2","chocMini","ks27","ks33v3","mx_low","romer_g","redr
 
 sSW2 = ["choc_holder","mx_holder","mx_s_holder","mx_s_holder2","ks27_holder","ks33v3_holder","redragon_low_holder","alps_holder"];
 
-sSW3 = ["alps_holder"];
+sSW3 = ["ks27_holder"];
 
 
-sSW = sSW2;
+sSW = sSW3;
 
 
 for(i=[0:1:len(sSW)-1]){
@@ -27,7 +27,7 @@ for(i=[0:1:len(sSW)-1]){
     translate([unit*i*2,0,0])
     switch_socket(borders=[1,1,1,1],use_switch_type=sSW[i]);
     
-//    if ($preview)
+    if ($preview)
     {
     if (i % 2 == 0){
         translate([(10-len(sSW[i])/2*2.3)+unit*i*2,-25,0])

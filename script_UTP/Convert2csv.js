@@ -33,13 +33,16 @@ var formatted_keys = keyboard.keys.map(
                 "&quot" + key.labels[8] + "&quot",
                 "&quot" + key.labels[9] + "&quot",
                 "&quot" + key.labels[10] + "&quot",
-                "&quot" + key.labels[11] + "&quot"
+                "&quot" + key.labels[11] + "&quot",
+            	key.decal,key.ghost,key.stepped,key.nub,
+            	key.profile,
+            	key.sm,key.sb,key.st
             ]
         ];
     }
 )
 
-var file_content = "key_x, key_y, key_width, key_height, key_x2, key_y2, key_width2, key_height2, key_rotation_angle, key_rotation_x, key_rotation_y, key_labels_0, key_labels_1, key_labels_2, key_labels_3, key_labels_4, key_labels_5, key_labels_6, key_labels_7, key_labels_8, key_labels_9, key_labels_10, key_labels_11\n"
+var file_content = "key_x, key_y, key_width, key_height, key_x2, key_y2, key_width2, key_height2, key_rotation_angle, key_rotation_x, key_rotation_y, key_labels_0, key_labels_1, key_labels_2, key_labels_3, key_labels_4, key_labels_5, key_labels_6, key_labels_7, key_labels_8, key_labels_9, key_labels_10, key_labels_11, key_decal, key_ghost, key_stepped, key_nub, key_profile, key_sm, key_sb, key_st\n"
 	
 file_content += formatted_keys.reduce(
    (total, key) => total + key + ",\n",""

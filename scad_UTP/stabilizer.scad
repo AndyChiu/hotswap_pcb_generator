@@ -5,18 +5,23 @@ include <stabilizer_spacing.scad>
 use <switch.scad>
 
 
-module stabilizer_layout(spacing=kc_2u) {
+module stabilizer_layout(spacing=stab_2u,vertical=false) {
     switch_offset = len(spacing) == 4
         ? spacing[3]
         : 0;
     center_x = spacing[0]*unit_stb/2 + switch_offset;
-    translate([unit_stb/2-center_x,0,0]) {
+    center_pos = vertical==false
+        ? [unit_stb/2-center_x,0,0]
+        : [-unit_stb-center_x/2,0,0];
+        
+    translate(center_pos) {
         translate([center_x-spacing[1],0,0]) children();
         translate([center_x+spacing[2],0,0]) mirror([1,0,0]) children();
     }
 }
 
-module stabilizer_pcb(borders=[1,2,0,0],spacing=kc_2u) {
+
+module stabilizer_pcb(borders=[1,2,0,0],spacing=stab_2u,vertical=false) {
     margin = (spacing[0]-1)/2;
     difference() {
         union() {
@@ -30,7 +35,7 @@ module stabilizer_pcb(borders=[1,2,0,0],spacing=kc_2u) {
 }
 
 
-module stabilizer_pcb2(borders=[1,2,2,2],spacing=kc_2u) {
+module stabilizer_pcb2(borders=[1,2,2,2],spacing=stab_2u,vertical=false) {
     margin = (spacing[0]-1)/2;
     
     difference() {
@@ -49,21 +54,20 @@ module stabilizer_pcb2(borders=[1,2,2,2],spacing=kc_2u) {
     }
 }
 
-
-module stabilizer_pcb_ChocV2(borders=[1,2,0,0],spacing=kc_2u) {
+module stabilizer_pcb_ChocV2(borders=[1,2,0,0],spacing=stab_2u,vertical=false ) {
     margin = (spacing[0]-1)/2;
+
     difference() {
         union() {
-            stabilizer_pcb_base_ChocV2(borders, spacing);
+            stabilizer_pcb_base_ChocV2(borders, spacing,vertical);
             switch_socket_base([1,1,1+margin*unit_stb*mm,1+margin*unit_stb*mm]);
         }
         switch_socket_cutout([1,1,1+margin*unit_stb*mm,1+margin*unit_stb*mm]);
-        stabilizer_PCB_cutout_ChocV2(spacing);
+        stabilizer_PCB_cutout_ChocV2(spacing,vertical);
     }
 }
 
-    
-module stabilizer_plate(spacing=kc_2u, thickness=plate_thickness) {
+module stabilizer_plate(spacing=stab_2u, thickness=plate_thickness) {
     linear_extrude(thickness, center=true)
     difference() {
         stabilizer_plate_footprint([1,1,1,1], spacing);
@@ -73,27 +77,35 @@ module stabilizer_plate(spacing=kc_2u, thickness=plate_thickness) {
 }
 
 
-module stabilizer_pcb_base(borders=[1,2,0,0], spacing=kc_2u) {
+module stabilizer_pcb_base(borders=[1,2,0,0], spacing=stab_2u,vertical=false) {
     module single_base() {
         translate([0,-v_unit_stb/2,0])
             border(
-                [7.5,1*unit_stb],
-                [borders[0]-1,max(borders[1]-1,1),0,0],
+                [7.5+3, 1*unit_stb],
+                [borders2[0]-1,max(borders2[1]-1,1),0,0],
                 pcb_thickness,
                 h_border_width,
                 v_border_width
             );
     }
-    stabilizer_layout(spacing)
+    stab_rotate = vertical==false
+        ? [0,0,0]
+        : [0,0,90];
+    borders2 = vertical==false
+        ? borders
+        : [borders[2],borders[3],borders[0],borders[1]];
+        
+    rotate(stab_rotate)
+    stabilizer_layout(spacing,vertical)    
         single_base();
 }
 
-module stabilizer_pcb_base2(borders=[1,2,0,0], spacing=kc_2u) {
+module stabilizer_pcb_base2(borders=[1,2,0,0], spacing=stab_2u,vertical=false) {
     module single_base() {
         translate([0,-5,0])
             border(
                 [7.5,11],
-                [borders[0]-1,max(borders[1]-1,1),0,0],
+                [borders2[0]-1,max(borders2[1]-1,1),0,0],
                 pcb_thickness,
                 h_border_width,
                 v_border_width
@@ -102,23 +114,31 @@ module stabilizer_pcb_base2(borders=[1,2,0,0], spacing=kc_2u) {
         translate([0,-v_unit_stb+1.5,0])
             border(
                 [7.5,5],
-                [borders[0]-1,max(borders[1]-1,1),0,0],
+                [borders2[0]-1,max(borders2[1]-1,1),0,0],
                 pcb_thickness,
                 h_border_width,
                 v_border_width
             );
 
     }
-    stabilizer_layout(spacing)
+        stab_rotate = vertical==false
+            ? [0,0,0]
+            : [0,0,90];
+        borders2 = vertical==false
+            ? borders
+            : [borders[2],borders[3],borders[0],borders[1]];
+            
+        rotate(stab_rotate)
+        stabilizer_layout(spacing,vertical)
         single_base();
 }
 
-module stabilizer_pcb_base_ChocV2(borders=[1,2,0,0], spacing=kc_2u) {
+module stabilizer_pcb_base_ChocV2(borders=[1,2,0,0], spacing=stab_2u,vertical=false) {
     module single_base() {
         translate([0,-v_unit_stb/2,0])
             border(
                 [10,1*unit_stb],
-                [borders[0]-1,max(borders[1]-1,1),0,0],
+                [borders2[0]-1,max(borders2[1]-1,1),0,0],
                 pcb_thickness,
                 h_border_width,
                 v_border_width
@@ -126,11 +146,19 @@ module stabilizer_pcb_base_ChocV2(borders=[1,2,0,0], spacing=kc_2u) {
 //        translate([4.5,-v_unit_stb-2.05,0])
 //            #cube([15,4.2,pcb_thickness/2]);
     }
-    stabilizer_layout(spacing)
+        stab_rotate = vertical==false
+            ? [0,0,0]
+            : [0,0,90];
+        borders2 = vertical==false
+            ? borders
+            : [borders[2],borders[3],borders[0],borders[1]];
+            
+        rotate(stab_rotate)
+        stabilizer_layout(spacing,vertical)
         single_base();
 }
 
-module stabilizer_pcb_cutout(spacing=kc_2u) {
+module stabilizer_pcb_cutout(spacing=stab_2u) {
     module pcb_mount_cutout() {
         translate([0,-v_unit_stb/2,-pcb_thickness/2]) {
             translate([0,6.985,0]) {
@@ -152,7 +180,12 @@ module stabilizer_pcb_cutout(spacing=kc_2u) {
     }
     module plate_mount_cutout() {
     }
-    stabilizer_layout(spacing) {
+    stab_rotate = vertical==false
+        ? [0,0,0]
+        : [0,0,90];
+        
+    rotate(stab_rotate)
+    stabilizer_layout(spacing,vertical) {    
         if (stabilizer_type == "pcb") {
             pcb_mount_cutout();
         } else if (stabilizer_type == "plate") {
@@ -164,7 +197,7 @@ module stabilizer_pcb_cutout(spacing=kc_2u) {
 }
 
 
-module stabilizer_plate_footprint(borders=[1,1,1,1], spacing=kc_2u) {
+module stabilizer_plate_footprint(borders=[1,1,1,1], spacing=stab_2u) {
     translate([unit_stb/2,-v_unit_stb/2,0])
     border_footprint(
         [spacing[0]*h_unit_stb,v_unit_stb],
@@ -172,14 +205,14 @@ module stabilizer_plate_footprint(borders=[1,1,1,1], spacing=kc_2u) {
     );
 }
 
-module stabilizer_plate_cutout_footprint(spacing=kc_2u) {
+module stabilizer_plate_cutout_footprint(spacing=stab_2u) {
     module pcb_mount_cutout() {
         // Same profile works for both
         plate_mount_cutout();
     }
     module plate_mount_cutout() {
         total_width = spacing[1] + spacing[2];
-        wire_cutout_width = spacing == kc_2u
+        wire_cutout_width = spacing == stab_2u
             ? unit_stb/2
             : unit_stb/4;
         translate([0,-v_unit_stb/2,0]) {
@@ -189,7 +222,12 @@ module stabilizer_plate_cutout_footprint(spacing=kc_2u) {
             translate([0,-wire_cutout_width/2,0]) square([total_width, wire_cutout_width]);
         }
     }
-    stabilizer_layout(spacing) {
+    stab_rotate = vertical==false
+        ? [0,0,0]
+        : [0,0,90];
+        
+    rotate(stab_rotate)
+    stabilizer_layout(spacing,vertical) {    
         if (stabilizer_type == "pcb") {
             pcb_mount_cutout();
         } else if (stabilizer_type == "plate") {
@@ -200,14 +238,14 @@ module stabilizer_plate_cutout_footprint(spacing=kc_2u) {
     }
 }
 
-module stabilizer_PCB_cutout_ChocV2(spacing=kc_2u) {
+module stabilizer_PCB_cutout_ChocV2(spacing=stab_2u,vertical=false) {
     module pcb_mount_cutout() {
         // Same profile works for both
         plate_mount_cutout();
     }
     module plate_mount_cutout() {
         total_width = spacing[1] + spacing[2];
-        wire_cutout_width = spacing == kc_2u
+        wire_cutout_width = spacing == stab_2u
             ? unit_stb/2
             : unit_stb/4;
         translate([0,-v_unit_stb/2,0]) {
@@ -219,7 +257,12 @@ module stabilizer_PCB_cutout_ChocV2(spacing=kc_2u) {
             translate([3,-10.05,-6]) cube([v_unit_stb, 5.794,5]);
         }
     }
-    stabilizer_layout(spacing) {
+    stab_rotate = vertical==false
+        ? [0,0,0]
+        : [0,0,90];
+        
+    rotate(stab_rotate)
+    stabilizer_layout(spacing,vertical) {
         if (stabilizer_type == "pcb") {
             pcb_mount_cutout();
         } else if (stabilizer_type == "plate") {
@@ -230,18 +273,19 @@ module stabilizer_PCB_cutout_ChocV2(spacing=kc_2u) {
     }
 }
 
-
-module stabilizer_plate_base(borders=[1,1,1,1], spacing=kc_2u, thickness=plate_thickness) {
+module stabilizer_plate_base(borders=[1,1,1,1], spacing=stab_2u, thickness=plate_thickness) {
     linear_extrude(thickness, center=true)
         stabilizer_plate_footprint(borders, spacing);
 }
 
-module stabilizer_plate_cutout(spacing=kc_2u, thickness=plate_thickness) {
+module stabilizer_plate_cutout(spacing=stab_2u, thickness=plate_thickness) {
     linear_extrude(thickness+1, center=true)
         stabilizer_plate_cutout_footprint(spacing);
 }
 
-//stabilizer_pcb([1,2,0,0],kc_2u);
-stabilizer_pcb2([1,2,0,0],kc_2u);
-//stabilizer_plate([1,2,0,0],kc_2u);
-//stabilizer_pcb_ChocV2([1,2,0,0],kc_2u);
+//stabilizer_pcb([1,2,0,0],stab_2u);
+//stabilizer_pcb2([1,2,0,0],stab_2u);
+//stabilizer_plate([1,2,0,0],stab_2u);
+
+//stabilizer_pcb_ChocV2([1,2,0,0],stab_2u);
+stabilizer_pcb_ChocV2([1,2,0,0],stab_2u,true);

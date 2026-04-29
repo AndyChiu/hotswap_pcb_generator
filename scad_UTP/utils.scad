@@ -1,6 +1,6 @@
 include <parameters.scad>
 include <default_layout.scad>
-include <layout.scad>
+include <layouts.scad>
 include <stabilizer_spacing.scad>
 
 
@@ -22,7 +22,7 @@ trrs_layout_final = invert_layout_flag
     : set_defaults(base_trrs_layout);
 stab_layout_final = invert_layout_flag
     ? invert_layout(set_defaults(base_stab_layout))
-    : set_defaults(base_stab_layout, kc_2u);
+    : set_defaults(base_stab_layout, stab_2u);
 standoff_layout_final = invert_layout_flag
     ? invert_layout(set_defaults(base_standoff_layout, standoff_config_default))
     : set_defaults(base_standoff_layout, standoff_config_default);
@@ -154,12 +154,18 @@ module layout_pattern(layout,pattern_type="") {
 //            echo("location:",item[0]);
 //     (extra_data = rotate_column, switch_type,srp="N",rx=0,ry=0,h=0,w=1)
             
+            key_size_width  = location[1][0];
+            key_size_height = location[1][1];
+
             srp=item[2][2][0];
             keycapLegend=item[2][3];
             keycapStyle=item[2][4];
-            if (srp==undef || !base_pcb_layout_ApyAdjSwitchAngleAndHeight) {
+            StabStyle=item[2][5];
+            
+            //2D
+            if ((srp==undef) || !base_pcb_layout_ApyAdjSwitchAngleAndHeight || pattern_type=="oled" || pattern_type=="oled_cutout") {
 
-                switch_offset = (location[1][0]-1)/2;  // Coordinate offset based on key shape
+                switch_offset = (key_size_width-1)/2;  // Coordinate offset based on key shape
                 if (pattern_type=="mcu_cutout") {
                     
                     translate([location[2][1]*h_unit+mcu_socket_width/2+1,-location[2][2]*v_unit-mcu_socket_length-2,-pcb_thickness/2-0.01]) {
@@ -171,63 +177,92 @@ module layout_pattern(layout,pattern_type="") {
                             }
                         }
                     }
-                } else {
+                } else if (pattern_type=="standoff" || pattern_type=="standoff_cutout") {
+                    
                     translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
                         rotate([0,0,location[2][0]]) {
                             translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
                                        (location[2][2]-location[0][1])*v_unit,
                                        0]) {
                                 children();
-                                           if (base_pcb_layout_ShowKeycapLegend) {
+                            }
+                        }
+                    }
+                } else if (pattern_type=="via" || pattern_type=="oled" || pattern_type=="oled_cutout") {
+                    
+                    translate([0,0,0]) {
+                        rotate([0,0,location[2][0]]) {
+                            translate([(location[0][0]-location[2][1])*h_unit,
+                                       (location[2][2]-location[0][1])*v_unit,
+                                       0]) {
+                                children();
+                            }
+                        }
+                    }
+                } else {
+
+                    translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
+                        rotate([0,0,location[2][0]]) {
+                            translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
+                                       (location[2][2]-location[0][1])*v_unit,
+                                       0]) {
+                                children();
+                                        if (base_pcb_layout_ShowKeycapLegend && keycapLegend != undef && pattern_type!="stab_socket_cutout" && pattern_type!="stab_socket_base") {
                                                 ShowKeycapLegend_H_add =
                                                       base_pcb_layout_ShowVKeycap == true
-                                                        ? VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+VKeycap_Size[2]
+                                                        ? pcb_thickness/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+keycapStyle[4]
                                                     : base_pcb_layout_ShowVKeySwitch == true
-                                                        ? VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]
+                                                        ? pcb_thickness/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]
                                                     : 0;
-                                                translate([0+h_unit/2-3,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
- color("Black") %text(keycapLegend,size=3);
+                                                    
+                                                translate([0+h_unit/2,-v_unit/2,base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add])     
+ color("Black") %text(keycapLegend,size=3,halign="center",valign="center");
                             }
                             
                             
-    //檢測用
-    if (base_pcb_layout_ShowVKeySwitch && pattern_type=="switch_socket_base_cutout") {
-        //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
-        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[0][2])/2])
-            cube([VKeySwitch_Size[0][0],VKeySwitch_Size[0][1],VKeySwitch_Size[0][2]],center=true);   
-        %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2])/2])
-            cube([VKeySwitch_Size[1][0],VKeySwitch_Size[1][1],VKeySwitch_Size[1][2]],center=true);   
-    }
-    
-    if (base_pcb_layout_ShowVKeycap && pattern_type=="switch_socket_base_cutout") {
-        //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
-        %translate([(h_unit)/2,-v_unit/2,(pcb_thickness)/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]])
-            if (keycapStyle=="" ) {
-                translate([0,0,VKeycap_Size[2]/2])
-                color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*location[1][0],VKeycap_Size[1]*location[1][1],VKeycap_Size[2]],center=true);
-            } else {
-                translate(keycapStyle[1]) rotate(keycapStyle[2])
-                import(keycapStyle[0]);
-            }    
-        
-    
-    }                            
+                                        //檢測用
+                                        if (base_pcb_layout_ShowVKeySwitch && pattern_type=="switch_socket_base_cutout") {
+                                            //軸體 [VKeySwitch_Size_x,VKeySwitch_Size_y,VKeySwitch_Size_z]
+                                            %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[0][2])/2])
+                                                cube([VKeySwitch_Size[0][0],VKeySwitch_Size[0][1],VKeySwitch_Size[0][2]],center=true);   
+                                            %translate([h_unit/2,-v_unit/2,(pcb_thickness+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2])/2])
+                                                cube([VKeySwitch_Size[1][0],VKeySwitch_Size[1][1],VKeySwitch_Size[1][2]],center=true);   
+                                        }
+                                        
+                                        if (base_pcb_layout_ShowVKeycap && pattern_type=="switch_socket_base_cutout") {
+                                            //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
+                                            %translate([(h_unit)/2,-v_unit/2,(pcb_thickness)/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]])
+                                                if (keycapStyle=="" ) {
+                                                    translate([0,0,VKeycap_Size[2]/2])
+                                                    color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*key_size_width,VKeycap_Size[1]*key_size_height,VKeycap_Size[2]],center=true);
+                                                } else {
+                                                    translate(keycapStyle[1]) rotate(keycapStyle[2]) mirror(keycapStyle[3])
+                                                    import(keycapStyle[0]);
+                                                }    
+                                            
+                                        
+                                        }                            
                             
                             
                             }
                         }
                     }
                 }
-            
-            } else {
 
+            } else {
+            //3D
+            
             w=item[2][2][4];
                 
             //rz=0;
             pz=-2;
             
             bx=item[2][2][5];
-            by=item[2][2][6];
+            by=item[2][2][6]; 
+            
+            bx2=key_size_width  * h_unit + bx;
+            by2=key_size_height * v_unit + by;
+            
             bz=2;
             bod=item[2][2][7];
             rx =
@@ -301,15 +336,15 @@ module layout_pattern(layout,pattern_type="") {
                 srp == "N"
                 ? v_unit
                 : srp == "LU"
-                    ? h_unit
+                    ? bx2-bx
                 : srp == "L"
-                    ?  h_unit
+                    ? bx2-bx
                 : srp == "LD"
-                    ? h_unit
+                    ? bx2-bx
                 : srp == "U"
-                    ? h_unit
+                    ? bx2-bx
                 : srp == "D"
-                    ? h_unit                  
+                    ? bx2-bx                  
                 : srp == "RU"
                     ? 0
                 : srp == "R"
@@ -323,19 +358,19 @@ module layout_pattern(layout,pattern_type="") {
                 srp == "N"
                 ? -h_unit
                 : srp == "LU"
-                    ? -by
+                    ? -by2+by
                 : srp == "L"
-                    ? -by
+                    ? -by2+by
                 : srp == "LD"
                     ? 0
                 : srp == "U"
-                    ? -by
+                    ? -by2+by
                 : srp == "D"
                     ? 0                  
                 : srp == "RU"
-                    ? -by
+                    ? -by2+by
                 : srp == "R"
-                    ? -by
+                    ? -by2+by
                 : srp == "RD"
                     ? 0
                 : srp == ""
@@ -368,17 +403,17 @@ module layout_pattern(layout,pattern_type="") {
                  
             bodx =
                 bod == "C"
-                ? -(bx-unit)/2
+                ? -(bx2-unit)/2
                 : bod == "LU"
-                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
+                    ? -(bx2-unit-(unit/2*(location[1][0]-1)))
                 : bod == "L"
-                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
+                    ? -(bx2-unit-(unit/2*(location[1][0]-1)))
                 : bod == "LD"
-                    ? -(bx-unit-(unit/2*(location[1][0]-1)))
+                    ? -(bx2-unit-(unit/2*(location[1][0]-1)))
                 : bod == "U"
-                    ? -(bx-unit)/2
+                    ? -(bx2-unit)/2
                 : bod == "D"
-                    ? -(bx-unit)/2
+                    ? -(bx2-unit)/2
                 : bod == "RU"
                     ? -(unit/2*(location[1][0]-1))
                 : bod == "R"
@@ -391,23 +426,23 @@ module layout_pattern(layout,pattern_type="") {
 
             body =
                 bod == "C"
-                ? (by-unit)/2
+                ? (by2-unit)/2
                 : bod == "LU"
-                    ? (by-unit)-(unit/2*(location[1][1]-1))
+                    ? (by2-unit)-(unit/2*(key_size_height-1))
                 : bod == "L"
-                    ? (by-unit)/2
+                    ? (by2-unit)/2
                 : bod == "LD"
-                    ? (unit/2*(location[1][1]-1))
+                    ? (unit/2*(key_size_height-1))
                 : bod == "U"
-                    ? (by-unit)-(unit/2*(location[1][1]-1))
+                    ? (by2-unit)-(unit/2*(key_size_height-1))
                 : bod == "D"
-                    ? (unit/2*(location[1][1]-1))
+                    ? (unit/2*(key_size_height-1))
                 : bod == "RU"
-                    ? (by-unit)-(unit/2*(location[1][1]-1))
+                    ? (by2-unit)-(unit/2*(key_size_height-1))
                 : bod == "R"
-                    ? (by-unit)/2
+                    ? (by2-unit)/2
                 : bod == "RD"
-                    ? (unit/2*(location[1][1]-1))
+                    ? (unit/2*(key_size_height-1))
                 : bod == ""
                     ? 0 
                 : "" ;    
@@ -435,47 +470,61 @@ module layout_pattern(layout,pattern_type="") {
 //            echo("bodx:",bodx);
 //            echo("body:",body);
             
-            switch_offset = (location[1][0]-1)/2;  // Coordinate offset based on key shape
+            switch_offset = (key_size_width-1)/2;  // Coordinate offset based on key shape
 
 
-            translate([location[2][1]*h_unit,-location[2][2]*v_unit,0]) {
+            translate([(location[2][1])*h_unit,-(location[2][2])*v_unit,0]) {
                 rotate([0,0,location[2][0]]) {
-                    translate([(location[0][0]-location[2][1]+switch_offset)*h_unit,
-                               (location[2][2]-location[0][1])*v_unit,
+                    translate([((location[0][0]+item[2][2][8])-location[2][1]+switch_offset)*h_unit,
+                               (location[2][2]-(location[0][1]+item[2][2][9]))*v_unit,
                                0]) {
-                    if (pattern_type=="switch_socket_cutout") {
-                        rotate_p([rx,ry,rz], [px,py,pz+h]) 
+                    if (pattern_type=="switch_socket_cutout" || 
+                       (pattern_type=="stab_socket_base" && StabStyle!=undef) || 
+                       (pattern_type=="stab_socket_cutout" && StabStyle!=undef)) {
+                       rotate_p([rx,ry,rz], [px,py,pz+h]) 
                         translate([0,0,h]){
                             children();  
                                           }                      
                     } else if (pattern_type=="switch_socket_base_cutout") {
-                        translate([0+bodx,-1*by+body,-1*bz-0.01]) 
-                        cubeStyle([bx,by,bz+0.02],base_pcb_layout_RaisedSwitchBaseStyle);
+                        translate([0+bodx,-1*by2+body,-1*bz-0.01]) 
+                        cubeStyle([bx2,by2,bz+0.02],base_pcb_layout_RaisedSwitchBaseStyle);
                         
                     } else if (pattern_type=="switch_socket_base_cutout2") {
  
      
-                        //掏空凸起部分的內部，預留 w mm壁厚度
-                        //如果突起部分大小>unit,是否內部空腔要擴大
-                        //不擴大,則用 h_unit 以及 v_unit 大小來掏空
-                        if (base_pcb_layout_NoIncreaseInInternalCavity) {
+                        //掏空凸起部分的內部，預留 w mm 壁厚度
+                        //如果突起部分大小 > unit, 內部空腔是否不擴大(base_pcb_layout_NoIncreaseInInternalCavity)
+                        //False: 擴大,則用 (bx2) 以及 (by2) 大小來掏空
+                        //True:　不擴大,則用 h_unit(*key_size_width) 以及 v_unit(*key_size_height) 大小來掏空
+                        //1U: 只用 h_unit　以及 v_unit 大小來掏空
+                        if (base_pcb_layout_NoIncreaseInInternalCavity==true) {
                             hull(){
                                 rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
-                                translate([w+bodxC,-1*v_unit+w+bodyC,-1*bz-2+h]) 
+                                translate([w+bodxC-(h_unit*(key_size_width-1))/2, -1*v_unit+w+bodyC-(v_unit*(key_size_height-1))/2, -1*bz-2+h]) 
+                                cubeStyle([h_unit*key_size_width-(w*2),v_unit*key_size_height-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                                translate([w+bodxC-(h_unit*(key_size_width-1))/2, -1*v_unit+w+bodyC-(v_unit*(key_size_height-1))/2, -1*bz-2]) 
+                                cubeStyle([h_unit*key_size_width-(w*2),v_unit*key_size_height-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                            }
+               
+                        } else if (base_pcb_layout_NoIncreaseInInternalCavity=="1U") {
+                            hull(){
+                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
+                                translate([w+bodxC, -1*v_unit+w+bodyC, -1*bz-2+h]) 
                                 cubeStyle([h_unit-(w*2),v_unit-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
 
-                                translate([w+bodxC,-1*v_unit+w+bodyC,-1*bz-2]) 
+                                translate([w+bodxC, -1*v_unit+w+bodyC, -1*bz-2]) 
                                 cubeStyle([h_unit-(w*2),v_unit-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
                             }
                
                         } else {
                             hull(){
                                 rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
-                                translate([w+bodx,-1*by+w+body,-1*bz-2+h]) 
-                                cubeStyle([bx-(w*2),by-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
+                                translate([w+bodx,-1*by2+w+body,-1*bz-2+h]) 
+                                cubeStyle([bx2-(w*2),by2-(w*2),bz+0.01],base_pcb_layout_RaisedSwitchBaseStyle);
 
-                                translate([w+bodx,-1*by+w+body,-1*bz-2]) 
-                                cubeStyle([bx-(w*2),by-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                                translate([w+bodx,-1*by2+w+body,-1*bz-2]) 
+                                cubeStyle([bx2-(w*2),by2-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
                             }
                         }
                             
@@ -491,45 +540,54 @@ module layout_pattern(layout,pattern_type="") {
                             difference(){
                             hull(){
                                 rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
-                                translate([w+bodx,-1*by+w+body,-1*bz-2+h]) 
-                                cubeStyle([(bx-(w*2))*iScale,(by-(w*2))*iScale,(bz+0.01)*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
+                                translate([w+bodx,-1*by2+w+body,-1*bz-2+h]) 
+                                cubeStyle([(bx2-(w*2))*iScale,(by2-(w*2))*iScale,(bz+0.01)*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
 
-                                translate([w+bodx,-1*by+w+body,-1*bz-2]) 
-                                cubeStyle([(bx-(w*2))*iScale,(by-(w*2))*iScale,bz*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
+                                translate([w+bodx,-1*by2+w+body,-1*bz-2]) 
+                                cubeStyle([(bx2-(w*2))*iScale,(by2-(w*2))*iScale,bz*iScale],base_pcb_layout_RaisedSwitchBaseStyle);
                             }
                         
-                                translate([w+bodx-1,-1*by+w+body-1,-1*bz-2-1]) 
-                                cubeStyle([(bx-(w*2)*iScale)+2,(by-(w*2))*iScale+2,bz*iScale+1+iCutBottom],base_pcb_layout_RaisedSwitchBaseStyle);                        
+                                translate([w+bodx-1,-1*by2+w+body-1,-1*bz-2-1]) 
+                                cubeStyle([(bx2-(w*2)*iScale)+2,(by2-(w*2))*iScale+2,bz*iScale+1+iCutBottom],base_pcb_layout_RaisedSwitchBaseStyle);                        
                         }
-                                                        
-                            
-                            
+                                                                                    
                     } else {
                         difference() {
                             union() {
 
                                 //建立凸起的部分
+//                                    //去除凸出底部的部分
+//                                    difference() {
                                 hull(){
-                                    //去除凸出底部的部分
-                                    difference() {
                                         rotate_p([rx,ry,rz], [px,py,pz+h]) 
-                                    translate([0+bodx,-1*by+body,-1*bz+h]) 
-                                    cubeStyle([bx,by,bz],base_pcb_layout_RaisedSwitchBaseStyle);
-                                        translate([0+bodx-2.5,-1*by+body-2.5,-1*bz-20]) 
-                                    cube([bx+5,by+5,20]);
+                                    translate([0+bodx,-1*by2+body,-1*bz+h]) 
+                                    cubeStyle([bx2,by2,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                        translate([0+bodx,-1*by2+body,-1*bz]) 
+                        cubeStyle([bx2,by2,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+
+                        translate([0+bodx,-1*by2+body,-1*bz-19]) 
+                                    cubeStyle([bx2,by2,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+
                                     }
-                                    translate([0+bodx,-1*by+body,-1*bz]) 
-                                    cubeStyle([bx,by,bz],base_pcb_layout_RaisedSwitchBaseStyle);
-                                }
-                                
-                                //建立choc基座
+//                                        translate([0+bodx-2.5,-1*by2+body-2.5,-1*bz-20]) 
+//                                    cube([bx2+5,by2+5,20]);
+//                                    }
+                        //填補空間
+//                        translate([0+bodx-0.05,-1*by2+body+0.05,-1*bz]) 
+//                        cubeStyle([bx2+0.1,by2+0.1,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+
+//                        translate([0+bodx,-1*by2+body,-1*bz]) 
+//                        cubeStyle([bx2,by2,bz],base_pcb_layout_RaisedSwitchBaseStyle);
+                        
+
+                        //建立choc基座
                                 rotate_p([rx,ry,rz], [px,py,pz+h]) 
                                 translate([0,0,h])
                                     children();
-
                             }
-                            translate([(bx)/2,-(by)/2,-(pcb_thickness+20)/2])
-                            cube([bx+5,by+5,20],center=true);
+                            translate([0+bodx-2.5,-1*by2+body-2.5,-(20+pcb_thickness/2)]) 
+                            cube([bx2+5,by2+5,20]);
                             //掏空凸起部分的內部，預留 w mm壁厚度
 //                            hull(){
 //                                rotate_p([rx,ry,rz], [px,py,pz-2+h]) 
@@ -540,16 +598,17 @@ module layout_pattern(layout,pattern_type="") {
 //                                cubeStyle([bx-(w*2),by-(w*2),bz],base_pcb_layout_RaisedSwitchBaseStyle);
 //                            }
                         }
-                        if (base_pcb_layout_ShowKeycapLegend) {
+                        //translate([0+h_unit/2,-1*by2+v_unit/2+body,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])
+                        if (base_pcb_layout_ShowKeycapLegend && keycapLegend != undef && pattern_type!="stab_socket_cutout" && pattern_type!="stab_socket_base") {
                             ShowKeycapLegend_H_add =
                                   base_pcb_layout_ShowVKeycap == true
-                                    ? VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+VKeycap_Size[2]
+                                    ? pcb_thickness/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+keycapStyle[4]
                                 : base_pcb_layout_ShowVKeySwitch == true
-                                    ? VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]
+                                    ? pcb_thickness/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]
                                 : 0;
                             rotate_p([rx,ry,rz], [px,py,pz+h]) 
-                                translate([0+h_unit/2-3,-1*by+v_unit/2+body,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add+2])     
-                                color("Black") %text(keycapLegend,size=3);
+                                translate([0+h_unit/2,-v_unit/2,h+base_pcb_layout_ShowKeycapLegend_H+ShowKeycapLegend_H_add])     
+                                color("Black") %text(keycapLegend,size=3,halign="center",valign="center");
                         }
                         
                         
@@ -568,12 +627,12 @@ module layout_pattern(layout,pattern_type="") {
     if (base_pcb_layout_ShowVKeycap) {
         //鍵帽 [VKeycap_Size_x,VKeycap_Size_y,VKeycap_Size_z]
         rotate_p([rx,ry,rz], [px,py,pz+h]) 
-        %translate([(h_unit)/2,-v_unit/2,(pcb_thickness)/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+h])
+        %translate([(h_unit)/2,-v_unit/2,(pcb_thickness)/2+VKeySwitch_Size[0][2]+VKeySwitch_Size[1][2]+h+total_travel*0])
             if (keycapStyle=="" ) {
                 translate([0,0,VKeycap_Size[2]/2])
-                color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*location[1][0],VKeycap_Size[1]*location[1][1],VKeycap_Size[2]],center=true);
+                color(VKeycap_Color,VKeycap_Alpha) cube([VKeycap_Size[0]*key_size_width,VKeycap_Size[1]*location[1][1],VKeycap_Size[2]],center=true);
             } else {
-                translate(keycapStyle[1]) rotate(keycapStyle[2])
+                translate(keycapStyle[1]) rotate(keycapStyle[2]) mirror(keycapStyle[3])
                 import(keycapStyle[0]);
             }    
 
@@ -835,4 +894,86 @@ t3 = center==true ?  [0,0,0]:[diameter/2,diameter/2,rc_size/2];
     
     }
 
+}
+
+//== Cut out on PCB ==============
+    
+module polyline(points, r=1) {
+    for (i = [0 : len(points)-2]) {
+        hull() {
+            translate(points[i]) sphere(r);
+            translate(points[i+1]) sphere(r);
+        }
+    }
+}
+
+module polycube(points, r=0.5, h=1,ds=false) {
+    for (i = [0 : len(points)-2]) {
+        translate([0,0,-h/2+0.3])
+        hull() {
+            translate(points[i]) cylinder(h=h,r=r,center=true);
+            translate(points[i+1]) cylinder(h=h,r=r,center=true);
+        }
+    }
+    if (ds==true) {
+    
+        for (i = [0 : len(points)-2]) {
+            translate([0,0,-h/2+0.3])
+            hull() {
+                translate([points[i][0],points[i][1],-points[i][2]]) cylinder(h=h,r=r,center=true);
+                translate([points[i+1][0],points[i+1][1],-points[i+1][2]]) cylinder(h=h,r=r,center=true);
+            }
+        }
+    
+    
+    }
+    
+}
+
+module polypoint(points, r=1,$fn=100) {
+    for (i = [0 : len(points)-1]) {
+//        hull() {
+            translate(points[i]) sphere(r);
+//            translate(points[i+1]) sphere(r);
+//        }
+    }
+}
+
+module polyhole(points, r=1,h=10,$fn=100) {
+    for (i = [0 : len(points)-1]) {
+        translate([0,0,0])
+            translate(points[i]) cylinder(h=h,r=r,center=true);
+
+    }
+}
+
+module polyhole_cube(points, size=1,h=10) {
+    for (i = [0 : len(points)-1]) {
+        translate([0,0,0])
+            translate(points[i]) cube([size,size,height],center=true);
+
+    }
+}
+
+
+//polydiode: points=[[rx,ry,rz],[x,y,z]], r=0.8;
+module polydiode(points, r=0.8,h=10,$fn=100) {
+    for (i = [0 : len(points)-1]) {
+        translate(points[i][1]) 
+        rotate(points[i][0])
+        union()
+        {
+            //diode
+            translate([0,0,1])
+            cube([3.5,2,2],center=true);
+
+            //hole
+            translate([-2.4,0,1])
+            rotate([-0,0,90])
+            cylinder(h=h,r=r,center=true);
+            translate([2.4,0,1])
+            rotate([-0,0,90])
+            cylinder(h=h,r=r+0.1,center=true);
+        }
+    }
 }
