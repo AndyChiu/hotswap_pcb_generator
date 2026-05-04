@@ -16,11 +16,11 @@ use <via.scad>
 use <IDC\IDC_Holder.scad>
 use <oled.scad>
 
-module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout, pcb_outer_layout,oled_layout) {
+module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout, pcb_outer_layout,oled_layout,base_pcb_layout_IDC_Hole) {
     
     difference() {
         
-        pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout);
+        pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout,base_pcb_layout_IDC_Hole);
         
         if (base_pcb_layout_DesignMode==false || $preview==false) {
             
@@ -102,9 +102,8 @@ module pcb(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_
     }
 }
 
-module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout) {
+module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microswitch_layout, trrs_layout, stab_layout, standoff_layout, via_layout,pcb_outer_layout,oled_layout,base_pcb_layout_IDC_Hole) {
     difference() {
-    
             union() {
                 //Andy add:
                 difference() {
@@ -299,16 +298,18 @@ module pcb_base(switch_layout, mcu_layout,ec11_layout, evqwgd001_layout, microsw
     if (base_pcb_layout_outer_EdgeFrame=="RoundedCorners") {
         difference() {
              pcb_layout_outer(base_pcb_layout_outer, base_pcb_layout_outer_EdgeFrame_hight,-2,base_pcb_layout_outer_EdgeFrame_size_x,base_pcb_layout_outer_EdgeFrame_size_y,"EdgeFrameOuter");
-           pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrameInner");   
+           pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrameInner");
+           //IDC座與接口挖空
+           pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);
         }
     } else if (base_pcb_layout_outer_EdgeFrame=="Basic") {
         difference() {
              pcb_layout_outer(base_pcb_layout_outer, base_pcb_layout_outer_EdgeFrame_hight,-2,base_pcb_layout_outer_EdgeFrame_size_x,base_pcb_layout_outer_EdgeFrame_size_y,"EdgeFrame");
            pcb_layout_outer(base_pcb_layout_outer,base_pcb_layout_outer_EdgeFrame_hight+0.02,-2-0.01,0,0,"EdgeFrame");   
+           //IDC座與接口挖空
+           pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);
         }
-
     }
-
 }
 
 module pcb_layout_outer(groups, LE_height=2, trans_z=-2,resize_x=0,resize_y=0,modeType="") {
@@ -430,7 +431,7 @@ module pcb_layout_Cable_Hole(group) {
                                     point[0][1]*v_unit_ratio,
                                     point[0][2]])
         rotate(point[1])
-        color(point[2]) #cylinder(h=point[3][0],r=point[3][1],center=true,$fn=30);
+        color(point[2]) cylinder(h=point[3][0],r=point[3][1],center=true,$fn=30);
 
         
         if (base_pcb_layout_Rubber_Pads_DesignMode) {
@@ -523,13 +524,13 @@ module pcb_layout_Indented_Text(group) {
 //TEST
 difference(){
     
-    pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final,base_pcb_layout_outer, base_OLED_layout);
+    pcb(switch_layout_final, mcu_layout_final,ec11_layout_final, evqwgd001_layout_final, microswitch_layout_final, trrs_layout_final, stab_layout_final, standoff_layout_final, via_layout_final,base_pcb_layout_outer, base_OLED_layout, base_pcb_layout_IDC_Hole);
 
     //圓形矽膠墊挖洞
     pcb_layout_Rubber_Pads(base_pcb_layout_Rubber_Pads);   
 
-    //IDC座與接口挖空
-    pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);   
+//    //IDC座與接口挖空
+//    pcb_layout_IDC_Hole(base_pcb_layout_IDC_Hole);   
     
     ////Indented_Text TEST
     pcb_layout_Indented_Text(base_pcb_layout_Indented_Text); 

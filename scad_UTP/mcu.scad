@@ -254,8 +254,11 @@ module socketed_mcu3(borders=[0,0,0,0]) {
         for (row = [-1,1]) {
             for (pin = [0:mcu_pin_count/2-1]) {
                 //inside
-                translate([row*(mcu_width)/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
+//                translate([row*(mcu_width)/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
+//                    cylinder(h=mcu_base_thickness3+1,d=wire_diameter*1.5);
+                translate([row*(mcu_width-1.5)/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
                     cylinder(h=mcu_base_thickness3+1,d=wire_diameter*1.5);
+                    
                 //outside
                 translate([row*(mcu_width/2+2.5),mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,-0.5]) 
                     cylinder(h=mcu_base_thickness3+1,d=wire_diameter*1.5);
@@ -266,13 +269,21 @@ module socketed_mcu3(borders=[0,0,0,0]) {
                     mcu_base_thickness3-wire_diameter/2
                 ]) rotate([0,row*90,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                //mid
+                translate([
+                    row*((mcu_width+mcu_wire_channels_length)/2-2),
+                    mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,
+                    pcb_thickness+1
+                ]) rotate([0,row*90,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+
                 //bottom
                 translate([
                     row*((mcu_width+mcu_wire_channels_length)/2-3.5-0.2),
                     mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,
                     wire_diameter/2
                 ]) rotate([0,row*90,0])
-                cube([wire_diameter,wire_diameter,2.5],true);                
+                cube([wire_diameter,wire_diameter,2.8],true);                
             }
         }
         
@@ -283,12 +294,18 @@ module socketed_mcu3(borders=[0,0,0,0]) {
     
             for (pin = [0:2]) {
                 //inside L
-                translate([(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+//                translate([(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+//                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                translate([(pin)*mcu_pin_pitch,iLastRow+0.75,-wire_diameter/3]) 
                     cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                    
                 //inside R
-                translate([-(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+//                translate([-(pin)*mcu_pin_pitch,iLastRow+0,-wire_diameter/3]) 
+//                    cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
+                translate([-(pin)*mcu_pin_pitch,iLastRow+0.75,-wire_diameter/3]) 
                     cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
-                //outside L
+
+                    //outside L
                 translate([(pin)*mcu_pin_pitch,iLastRow-2.5,-wire_diameter/3]) 
                     cylinder(h=mcu_base_thickness3-wire_diameter/2,d=wire_diameter*1.5);
                 //outside R
@@ -306,23 +323,81 @@ module socketed_mcu3(borders=[0,0,0,0]) {
                         mcu_base_thickness3-wire_diameter/2
                     ]) rotate([90,0,0])
                 cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                
+                //mid L
+                translate([
+                        (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
+                        pcb_thickness+1
+                    ]) rotate([90,-180,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);
+                //mid R
+                translate([
+                        -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2,
+                        pcb_thickness+1
+                    ]) rotate([90,0,0])
+                cube([wire_diameter,wire_diameter,mcu_wire_channels_length],true);                
                 //botton L
                 translate([
                         (pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2.7,
                         wire_diameter/2
                     ]) rotate([90,-180,0])
-                cube([wire_diameter,wire_diameter,2.5],true);
+                cube([wire_diameter,wire_diameter,2.8],true);
                 //botton R
                 translate([
                         -(pin)*mcu_pin_pitch,iLastRow+wire_diameter-mcu_wire_channels_length/2+2.7,
                         wire_diameter/2
                     ]) rotate([90,0,0])
-                cube([wire_diameter,wire_diameter,2.5],true);
+                cube([wire_diameter,wire_diameter,2.8],true);
 
             }
         }
     }
 
+    // Wire Channels L&R
+    for (row = [-1,1]) {
+        for (pin = [0:mcu_pin_count/2-1]) {
+            //inside
+            difference()
+            {
+            translate([row*(mcu_width+0.5)/2,mcu_pin_offset+(pin+0.5)*mcu_pin_pitch,pcb_thickness]) 
+                cylinder(h=0.5,d=wire_diameter*1,$fn=50);
+                    
+
+            translate([row*((mcu_width-0)/2-0.5),mcu_pin_offset+(pin+0.5)*mcu_pin_pitch-(wire_diameter*2)/2+wire_diameter,pcb_thickness]) 
+                cube([wire_diameter*0.8,wire_diameter*2,1],center=true);
+            }
+        }
+    }               
+    if (mcu_name=="Elite_C" || mcu_name=="RP2040_Zero") {
+        iLastRow =(0+0.5)*mcu_pin_pitch-1.5;
+        for (pin = [0:2]) {
+            difference()
+            {
+            union()
+            {
+            //inside L
+            translate([(pin)*mcu_pin_pitch,iLastRow-0.3,pcb_thickness]) 
+                cylinder(h=0.5,d=wire_diameter*1,$fn=50);
+                    
+            //inside R
+            translate([-(pin)*mcu_pin_pitch,iLastRow-0.3,pcb_thickness]) 
+                cylinder(h=0.5,d=wire_diameter*1,$fn=50);
+            }
+                
+            union()
+            {
+            //inside L
+            translate([(pin)*mcu_pin_pitch-(wire_diameter*2)/2+wire_diameter,iLastRow-0.3+(wire_diameter*0.8)/1.5+0.25,pcb_thickness])
+                cube([wire_diameter*2,wire_diameter*0.8,1],center=true);
+
+                    
+            //inside R
+            translate([(-pin)*mcu_pin_pitch-(wire_diameter*2)/2+wire_diameter,iLastRow-0.3+(wire_diameter*0.8)/1.5+0.25,pcb_thickness])
+                cube([wire_diameter*2,wire_diameter*0.8,1],center=true);
+            }
+            }
+        }
+   }
 
 }
 
