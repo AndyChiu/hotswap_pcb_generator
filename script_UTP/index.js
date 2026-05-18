@@ -372,8 +372,10 @@ base_pcb_layout_Cable_Hole=[
 /* The interconnecting holes of the raised shaft seat of the PCB board can be used to process the circuit through the bottom through-hole
    挖PCB板的凸起軸座的互通孔道，可用於將線路由底部穿孔的方式處理
     [[location],[rotate],[cube],"Color"],
-    [[translate],[rotate],"'color",[cylinder_h,cylinder_r],"text"],
-    =[[ x, y, z ],[r_x, r_y, r_x],"Color code",[c_h, c_r],"text],
+    [[translate],[rotate],"'color",["Type",[extra data]],"text"],
+    "Type"="cylinder" or "cube"
+    [extra data] depete type
+    =[[ x, y, z ],[r_x, r_y, r_x],"Color code",["cylinder",[c_h, c_r]],"text],
 */
 
 ];

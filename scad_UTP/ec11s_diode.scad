@@ -62,15 +62,15 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
     union()
     {
     //EC11使用空間
-    cube([11.8+0.2 ,12.1+0.2 ,ec11_height+0.01],center=true);
-    cube([ 8.7+0.2 ,13+0.2   ,ec11_height+0.01],center=true);
-    cube([7,15.5,ec11_height+0.01],center=true);
+    cube([11.8+0.4 ,12.1+0.4 ,ec11_height+0.01],center=true);
+    cube([ 8.7+0.4 ,13+0.4   ,ec11_height+0.01],center=true);
+    cube([7,15.5+0.2,ec11_height+0.01],center=true);
 
 //    translate([0,0,1.2])
 //    cube([7,ec11_socket_size,ec11_height],center=true);
 
     //固定座空位
-    cube([15.3+0.3, 1.8+0.3, ec11_height+0.01],center=true);
+    #cube([15.3+0.4, 1.8+0.4, ec11_height+0.01],center=true);
 
     //中央下凹
 //    translate([0,0,-0.5])
@@ -143,6 +143,7 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
             [[0,0, 45],[3,-2.5,ec11_height/2-0.75]], //左邊
             [[0,0,-45],[16,-2.5,ec11_height/2-0.75]], //右邊
             [[0,0,45],[16,-16.5,ec11_height/2-0.75]], //右下
+            [[0,0,-45],[3,-16.5,ec11_height/2-0.75]], //左下
         ];
         p_line1=[
             [6.22,0.47,4],
@@ -155,11 +156,13 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
             [18,-11.3],
             [-1.42,-7.5],
             [20.52,-7.5],
-            [20.52,-11.3]
+            [20.52,-11.3],
+            [-1.42,-11.3],
+            [1,-11.3],
         ];
 
         polydiode(p_diode);
-        polyhole(p_hole,r=0.8);
+        polyhole(p_hole,r=0.9);
 
         for (z=[3,-2])
         {
@@ -175,6 +178,10 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
         rotate([0,0,-90])
         cube([3,1,1],center=true);
 
+        translate([1.1,-12.8,z])
+        rotate([0,0,-90])
+        cube([3,1,1],center=true);
+
         translate([18,-5.8,z])
         rotate([0,0,-90])
         cube([3,1,1],center=true);
@@ -187,7 +194,15 @@ module ec11dsocket_cutout(borders=[1,1,1,1], rotate_column=false) {
         rotate([0,0,-135])
         cube([3,1,1],center=true);
 
+        translate([6,-19,z])
+        rotate([0,0,135])
+        cube([3,1,1],center=true);
+
         translate([-0.16,-7.37,z])
+        rotate([0,0,0])
+        cube([3,1,1],center=true);
+
+        translate([-0.16,-11.3,z])
         rotate([0,0,0])
         cube([3,1,1],center=true);
 
