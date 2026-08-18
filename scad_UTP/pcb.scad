@@ -434,7 +434,7 @@ module pcb_layout_Cable_Hole(group) {
 //        if (point[2] != "") 
 //            {}
         if (point[3][0]=="cylinder") {
-            color(point[2]) cylinder(h=point[3][1][0],r=point[3][1][1],center=true,$fn=30);
+            #color(point[2]) cylinder(h=point[3][1][0],r=point[3][1][1],center=true,$fn=30);
         } else if (point[3][0]=="cube") {
             #color(point[2]) cube([point[3][1][0], point[3][1][1], point[3][1][2]],center=true);
         

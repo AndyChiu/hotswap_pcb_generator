@@ -897,7 +897,17 @@ t3 = center==true ?  [0,0,0]:[diameter/2,diameter/2,rc_size/2];
 }
 
 //== Cut out on PCB ==============
-    
+//polyline(points, r=1)
+//polycube(points, r=0.5, h=1,ds=false) 
+//polypoint(points, r=1)
+//  translate(points[i]) sphere(r);
+//polyhole(points, r=1,h=10)
+//  translate(points[i]) cylinder(h=h,r=r,center=true);
+//polyhole_cube(points, size=1,h=10) 
+//polydiode(points, r=0.8,h=10,$fn=100)
+//          points=[[rx,ry,rz],[x,y,z]]
+
+//polyline(points, r=1)     
 module polyline(points, r=1) {
     for (i = [0 : len(points)-2]) {
         hull() {
@@ -907,7 +917,8 @@ module polyline(points, r=1) {
     }
 }
 
-module polycube(points, r=0.5, h=1,ds=false) {
+//polycube(points, r=0.5, h=1,ds=false) 
+module polycube(points, r=0.5, h=1,ds=false,ds_offset=0) {
     for (i = [0 : len(points)-2]) {
         translate([0,0,-h/2+0.3])
         hull() {
@@ -920,8 +931,8 @@ module polycube(points, r=0.5, h=1,ds=false) {
         for (i = [0 : len(points)-2]) {
             translate([0,0,-h/2+0.3])
             hull() {
-                translate([points[i][0],points[i][1],-points[i][2]]) cylinder(h=h,r=r,center=true);
-                translate([points[i+1][0],points[i+1][1],-points[i+1][2]]) cylinder(h=h,r=r,center=true);
+                translate([points[i][0],points[i][1],-points[i][2]+ds_offset]) cylinder(h=h,r=r,center=true);
+                translate([points[i+1][0],points[i+1][1],-points[i+1][2]+ds_offset]) cylinder(h=h,r=r,center=true);
             }
         }
     
@@ -930,6 +941,8 @@ module polycube(points, r=0.5, h=1,ds=false) {
     
 }
 
+//polypoint(points, r=1)
+//  translate(points[i]) sphere(r);
 module polypoint(points, r=1,$fn=100) {
     for (i = [0 : len(points)-1]) {
 //        hull() {
@@ -939,6 +952,8 @@ module polypoint(points, r=1,$fn=100) {
     }
 }
 
+//polyhole(points, r=1,h=10)
+//  translate(points[i]) cylinder(h=h,r=r,center=true);
 module polyhole(points, r=1,h=10,$fn=100) {
     for (i = [0 : len(points)-1]) {
         translate([0,0,0])
@@ -947,16 +962,17 @@ module polyhole(points, r=1,h=10,$fn=100) {
     }
 }
 
+//polyhole_cube(points, size=1,h=10) 
 module polyhole_cube(points, size=1,h=10) {
     for (i = [0 : len(points)-1]) {
         translate([0,0,0])
-            translate(points[i]) cube([size,size,height],center=true);
+            translate(points[i]) cube([size,size,h],center=true);
 
     }
 }
 
-
-//polydiode: points=[[rx,ry,rz],[x,y,z]], r=0.8;
+//polydiode(points, r=0.8,h=10,$fn=100)
+//          points=[[rx,ry,rz],[x,y,z]]
 module polydiode(points, r=0.8,h=10,$fn=100) {
     for (i = [0 : len(points)-1]) {
         translate(points[i][1]) 

@@ -12,15 +12,15 @@ Switch Board + Holder(含固定架,用於單PCB鍵盤):
 
 */
 
-sSW1 = ["mx","choc","chocV2","chocMini","ks27","ks33v3","mx_low","romer_g","redragon_low","alps"];
+sSW1 = ["mx","choc","chocV2","chocMini","ks27","ks33v3","mx_low","romer_g","redragon_low","alps","fraly"];
 
-sSW2 = ["choc_holder","mx_holder","mx_s_holder","mx_s_holder2","ks27_holder","ks33v3_holder","redragon_low_holder","alps_holder"];
+sSW2 = ["choc_holder","mx_holder","mx_s_holder","mx_s_holder2","ks27_holder","ks33v3_holder","redragon_low_holder","alps_holder","fraly_holder"];
 
-sSW3 = ["ks27_holder"];
+sSW3 = ["fraly","fraly_holder","choc","choc_holder","ks33v3","ks33v3_holder"];
 
+sSW5 = ["fraly_holder"];
 
-sSW = sSW3;
-
+sSW = sSW5;
 
 for(i=[0:1:len(sSW)-1]){
     echo (sSW[i]);

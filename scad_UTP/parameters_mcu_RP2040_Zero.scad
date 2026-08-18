@@ -30,3 +30,4 @@ mcu_RetentionTabs_width = 2;
 mcu_RetentionTabs_x = mcu_socket_width/2-mcu_RetentionTabs_length/2;
 mcu_RetentionTabs_y1 = 0; //Offset RetentionTabs y1
 mcu_RetentionTabs_y2 = 0; //Offset RetentionTabs y1
+mcu_SecondWireChannels = false;

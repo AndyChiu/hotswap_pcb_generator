@@ -184,7 +184,8 @@ unit_choc = 18;
 h_unit_choc = 18;
 v_unit_choc = 17;
 
-choc_socket_size=15;
+choc_socket_size=ks_fraly[2][0];
+fraly_socket_size=ks_fraly[2][0];
 
 unit_ks27 = 18;
 h_unit_ks27 = 18;
@@ -194,13 +195,13 @@ unit_redragon_low = 18;
 h_unit_redragon_low = 18;
 v_unit_redragon_low = 17;
 
-ks27_socket_size=15;
+ks27_socket_size=ks_ks27[2][0];
 
-alps_socket_size=17;
+alps_socket_size=ks_alps[2][0];
 alps_socket_size_w=16.4;
 alps_socket_size_d=13.6-0.6;
 
-redragon_low_socket_size=15;
+redragon_low_socket_size=ks_redragon_low[2][0];
 redragon_low_socket_size_w=14.5;
 redragon_low_socket_size_d=13.8;
 
